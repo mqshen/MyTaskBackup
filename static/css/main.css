@@ -1406,3 +1406,61 @@ margin: -8px 0 0;
 padding-bottom: 15px;
 display: block;
 }
+article.todolist.expanded header.expanded_content header {
+padding: 0;
+border: none;
+box-shadow: none;
+}
+div.sheet.project>div.sheet_body>section>header, div.sheet.project>div.sheet_body>div>section>header {
+padding: 10px 0;
+}
+article.todolist.expanded.new header.expanded_content {
+margin-bottom: 30px;
+margin-top: 3px;
+max-width: 300px;
+}
+article.todolist.expanded header.expanded_content header h3 {
+border-bottom: none;
+margin-left: -1px;
+padding-left: 0;
+padding-bottom: 5px;
+}
+article.todolist header h3 {
+font-size: 15px;
+margin-bottom: 0;
+}
+article.todolist.expanded header.expanded_content header input {
+padding: 5px 0;
+border-bottom: 1px dotted #b3b3b3;
+}
+article.todolist.expanded header.expanded_content header input, article.todolist.expanded header.expanded_content header textarea {
+margin: 0;
+}
+form .submit a.cancel {
+vertical-align: baseline;
+text-decoration: underline;
+}
+.text_entry textarea, .text_entry input[type=text] {
+color: black;
+padding: 0;
+margin: 0;
+width: 99%;
+background: #fff;
+border: none;
+outline: none;
+line-height: inherit;
+-webkit-appearance: none;
+box-shadow: none;
+}
+article.todolist>ul>li.edit_mode>form>textarea {
+width: 460px;
+margin: 3px 0 -5px -2px;
+line-height: 17px;
+height: 18px;
+padding: 0;
+-webkit-appearance: none;
+outline: none;
+border: none;
+border-bottom: 1px dotted #b3b3b3;
+box-shadow: none;
+}

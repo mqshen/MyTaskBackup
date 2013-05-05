@@ -17,7 +17,7 @@ h1, h2, h3, h4, h5, h6 {
 font-weight: bold;
 }
 label, input[type="text"], input[type="password"], input[type="email"], input[type="number"], input[type="tel"], textarea {
-font-size: 13px;
+font-size: 15px;
 }
 input[type="text"], input[type="password"], input[type="email"], input[type="number"], input[type="tel"], textarea {
 min-height: 34px;
@@ -138,4 +138,7 @@ tbody {
 display: table-row-group;
 vertical-align: middle;
 border-color: inherit;
+}
+ul li, ol li {
+margin-bottom: 5px;
 }
