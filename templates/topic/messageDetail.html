@@ -1,0 +1,129 @@
+{% extends "../base.html" %}
+
+{% block title %}MyTask{% end %}
+
+{% block body%}
+
+    <div class="container stack_container" style="width: 960px;">
+        <div class="panel sheet project active blank_slate inactive">
+            <header>
+                <h1><a data-restore-position="" href="/project/{{project.id}}">{{project.title}}</a></h1>
+            </header>
+            <div class="panel sheet message" style="margin-left: 20px; margin-bottom: -20px;">
+                <header>
+                    <h1 style="display: none">Post a new message</h1>
+                </header>
+                <div class="sheet_body">
+                    <section class="perma">
+                        <div id="message" class="has_tools">
+                            <article class="message">
+                                <header>
+                                    <h3>{{message.title}}</h3>
+                                    <p>
+                                        由miaoqiShen在<time data-time-ago="" datetime="2013-05-04T04:19:00Z" style="">an hour ago</time>发布
+                                    </p>
+                                </header>
+                                <a data-replace-stack="true" href="/people/4061968-miaoqishen">
+                                    <img class="avatar" height="59" src="/avatar/{{message.own.avatar}}" 
+                                        title="{{message.own.name}}" width="59">
+                                </a>
+                                <div class="formatted_content" data-embeddable="">
+                                    {{message.content}}
+                                </div>
+                                <div class="attachments">
+                                    <div id="attachments_for_message_11182345">
+                                        <div class="image_grid_view">
+                                            <table class="in_3_columns">
+                                                <tbody>
+                                                    {% for i, attachment in enumerate([attachment for attachment in message.attachments 
+                                                        if attachment.fileType == '0']) %}
+                                                        {% if i % 3 == 0 %}
+                                                        <tr class="images">
+                                                        {% end %}
+                                                        <td class="occupied">
+                                                            <article class="image">
+                                                                <figure class="thumbnail proportinal">
+                                                                    <a href="/attachment/{{attachment.url}}" target="_blank">
+                                                                        <div class="background" style="height: 174px; width: 262px;">
+                                                                            <img alt="" class="thumbnail" src="/attachment/{{attachment.url}}">
+                                                                        </div>
+                                                                    </a>
+                                                                </figure>
+                                                            </article>
+                                                        </td>
+                                                        {% if i % 3 == 2 or i == len(message.attachments) - 1 %}
+                                                        </tr>
+                                                        {% end %}
+                                                    {% end %}
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <ul class="attachments">
+                                            {% for attachment in [attachment for attachment in message.attachments 
+                                                if attachment.fileType != '0'] %}
+                                                <li>
+                                                    <a href="/attachment/{{attachment.url}}" target="_blank">
+                                                        <img src="{{static_url("images/document.png")}}">
+                                                        <span>{{attachment.name}}</span>
+                                                    </a>
+                                                    <div class="tags">
+                                                        <ul class="tags">
+                                                        </ul>
+                                                    </div>
+                                                </li>
+                                            {% end %}
+                                        </ul>
+                                    </div>
+                                </div>
+                                <footer>
+                                    <section class="comments">
+                                        <h4>讨论</h4>
+                                        <article class="comment new expanded">
+                                            <img alt="Avatar" class="avatar" src="/avatar/{{currentUser.avatar}}" title="">
+                                            <div class="expanded_content">
+                                                <form action="/project/{{project.id}}/message/{{message.id}}/comment">
+                                                    <header class="text_entry">
+                                                        <textarea class="body" id="message_content" name="content" rows="7" style="display: none;width: 550px;" 
+                                                            placeholder="Type your message here...">
+                                                        </textarea>
+                                                        <div data-behavior="pending_attachments file_drop_target" data-sortable="true" class="attachments">
+                                                            <span class="prompt_graphic"></span>
+                                                            <div class="file_input_button">
+                                                                <span data-without-features="files_api">
+                                                                    上传文件
+                                                                </span>
+                                                                <span class="file_input_container">
+                                                                    <input name="file" type="file" multiple="" tabindex="-1">
+                                                                    <a class="decorated" data-behavior="local_file_picker" href="#" tabindex="-1">
+                                                                        选择要上传的文件
+                                                                    </a>
+                                                                </span>
+                                                            </div>
+                                                            <ul class="pending_attachments ui-sortable" style=""></ul>
+                                                        </div>
+                                                    </header>
+                                                    <footer>
+                                                        <div class="submit">
+                                                            <button class="action_button green" name="commit" data-toggle="submit" >发表评论</button>
+                                                        </div>
+                                                    </footer>
+                                                </form>
+                                            <div>
+                                        </article>
+                                    </section>
+                                </footer>
+                            </article>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% end %}
+
+{% block script %}
+    $(function(){
+        $("#message_content").editor()
+    })
+{% end %}
