@@ -5,9 +5,10 @@ import sys
 import time
 
 from forms.validators import StopValidation, u, unicode, next
+from datetime import datetime
 
 __all__ = (
-    'TextField', 'ListField', 'FileField'
+    'TextField', 'ListField', 'FileField', 'IntField', 'DateField'
 )
 
 _unset_value = object()
@@ -283,4 +284,31 @@ class FileField(Field):
     def _value(self):
         return self.data is not None or u('')
 
+class IntField(Field):
+    """
+    this field is the file update
+    """
+    def process_formdata(self, valuelist):
+        if valuelist and len(valuelist[0]) > 0:
+            self.data = valuelist[0]
+        else:
+            self.data = None                                                                                                                                                                                 
+    def _value(self):
+        return self.data is not None or u('')
+
+
+class DateField(Field):
+    #把字符串转成datetime  
+    def string_toDatetime(self, string):  
+        return datetime.strptime(string, "%Y-%m-%d %H:%M:%S")
+    """
+    this field is the file update
+    """
+    def process_formdata(self, valuelist):
+        if valuelist and len(valuelist[0]) > 0:
+            self.data = self.string_toDatetime(valuelist[0].decode("utf-8"))
+        else:
+            self.data = None                                                                                                                                                                                 
+    def _value(self):
+        return self.data is not None or u('')
 

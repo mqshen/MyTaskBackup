@@ -23,7 +23,7 @@
             var self = this
             function processResponse(reponseData) {
                 if(self.$element.data("doResponse")) {
-                    self.$element.data("doResponse")(reponseData) 
+                    self.$element.data("doResponse")(reponseData, self.$element) 
                     self.resetForm()
                 }
                 else {

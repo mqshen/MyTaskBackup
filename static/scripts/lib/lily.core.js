@@ -180,11 +180,11 @@ $.extend( $.lily, {
         return orginRequestData
     },
     showWait : function(target) {
-    	var waitObj = $('<img src="' + $.lily.contextPath + '/resources/images/empty.gif" class="tiny-load">');
+    	var waitObj = $('<span class="wait" ></span>');
+
     	waitObj.css({
     		width: target.width(),
     		height: target.height(),
-    		padding: target.css("padding"),
     		float: target.css("float"),
     		margin: target.css("margin")
     	})
@@ -192,7 +192,7 @@ $.extend( $.lily, {
     	waitObj.insertAfter(target);
     },
     hideWait: function(target) {
-    	target.next('img').remove();
+    	target.next('.wait').remove();
     	target.css("display", "")
     }
 });

@@ -8,7 +8,7 @@ from sqlalchemy import Column, Integer, String, DateTime, Boolean, ForeignKey, T
 from sqlalchemy.orm import relationship
 
 
-__all__ = ['TodoList']
+__all__ = ['TodoList', 'TodoItem']
 
 class TodoList(db.Model):
     id = Column(Integer, primary_key=True)
@@ -27,6 +27,8 @@ class TodoItem(db.Model):
     own_id = Column(Integer, ForeignKey('user.id'))
     todolist_id = Column(Integer, ForeignKey('todolist.id'))
     worker_id = Column(Integer, ForeignKey('user.id'))
+    project_id = Column(Integer, ForeignKey('project.id'))
+    team_id = Column(Integer, ForeignKey('team.id'))
     deadline = Column(DateTime)
     createTime = Column(DateTime)
     

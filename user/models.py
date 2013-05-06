@@ -32,3 +32,4 @@ class User(db.Model):
 
     ownedProjects = relationship("Project", backref="own")
     ownedMessages = relationship("Message", backref="own")
+    todoItems = relationship("TodoItem", primaryjoin="User.id == TodoItem.worker_id", backref="worker")

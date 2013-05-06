@@ -20,11 +20,13 @@ class BaseHandler(tornado.web.RequestHandler):
     def get_current_user(self):
         return self.session['user'] if self.session and 'user' in self.session else None
     
-    def writeSuccessResult(self, model, successUrl=None):
+    def writeSuccessResult(self, model, **kwargs):
         result = serialize(model)
         result.update(successJson)
-        if successUrl is not None:
-            result.update({"successUrl" : successUrl})
+        for key in kwargs:
+            item = kwargs[key]
+            if item is not None:
+                result.update({key : serialize(item)})
         self.write(json_encode(result))
     
     def writeFailedResult(self):

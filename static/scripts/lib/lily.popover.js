@@ -59,16 +59,22 @@
                 
                 that.$content.fadeIn()
                 function processResponse(data) {
-                	var obj = '<span class="assignee">' + data.todoItem.worker.name  + '&nbsp;</span>'
-                	 + '<span class="due">' + $.lily.format.formatDate(data.todoItem.deadLine, 'yyyy-mm-dd') + '</span>';
-                	that.$element.html(obj);
+                    var date = data.deadline
+                    var workerName = data.worker.name
+                    console.log(date)
+                    that.$element.find('[name=deadLineText]').text(date.substring(0, 10));
+                    that.$element.find('[name=workerName]').text(workerName);
                 	$.lily.hideWait(that.$element);
                 }
                 function dateSelectCallback(date) {
+                    var workerId = that.$content.find("select").val()
+                    var workerName = that.$content.find("select").find("option:selected").text()
+                    that.$element.find('input[name=deadLine]').val($.lily.format.formatDate(date, 'yyyy-mm-dd 23:59:59'));
+                    that.$element.find('input[name=workerId]').val(workerId);
                 	if(that.$element.attr("data-remote") == "true") {
                 		that.hide()
                 		var url = that.$element.attr("href");
-                		var requestData = $.lily.collectRequestData(that.$content);
+                		var requestData = $.lily.collectRequestData(that.$element);
                 		requestData[that.$element.attr("data-date-name")] = $.lily.format.formatDate(date, 'yyyy-mm-dd 23:59:59')
                 		$.lily.showWait(that.$element);
                 		$.lily.ajax({url: url,
@@ -79,8 +85,8 @@
                 	    })
                 	}
                 	else {
-                    	that.$element.next('input').val($.lily.format.formatDate(date, 'yyyy-mm-dd 23:59:59'));
-                    	that.$element.text($.lily.format.formatDate(date))
+                    	that.$element.find('[name=deadLineText]').text($.lily.format.formatDate(date));
+                    	that.$element.find('[name=workerName]').text(workerName);
                     	that.hide();
                 	}
                 }

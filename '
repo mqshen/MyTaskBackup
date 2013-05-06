@@ -163,25 +163,11 @@
                                                         <span class="pill has_balloon blank showing exclusively_expanded expanded"
                                                             data-toggle="popover" data-conent="#tpl-todo-popover"
                                                             data-hovercontent-strategy="visibility">
-                                                            <a class="popover-btn" data-toggle="popover" 
-                                                                data-remote="true" href="/project/{{project.id}}/todolist/{{todolist.id}}/todoitem/{{todoItem.id}}" 
-                                                                data-conent="#tpl-todo-popover">
-                                                                <input type="hidden" data-toggle="remote" name="deadLine">
-                                                                <input type="hidden" data-toggle="remote" name="workerId">
-                                                                <span name="workerName"> 
-                                                                {% if todoItem.worker is None %}
-                                                                    未分配
-                                                                {% else %}
-                                                                    {{todoItem.worker.name}}
-                                                                {% end %}
+                                                            <a class="popover-btn" cla href="javascript:;"  data-toggle="popover" data-conent="#tpl-todo-popover">
+                                                                <span data-blank-text="Unassigned">
+                                                                    unassigned
                                                                 </span>
-                                                                <span class="separator"> · </span>
-                                                                <time name="deadLineText">
-                                                                {% if todoItem.deadline is None %}
-                                                                    无截止日期
-                                                                {% else %}
-                                                                    {{todoItem.deadline.strftime("%Y-%m-%d")}}
-                                                                {% end %}
+                                                                <time data-blank-text="No due date">
                                                                 </time>
                                                             </a>
                                                         </span>
@@ -323,11 +309,10 @@ $(function(){
         else
             contentStr += 'unassigned'
 
-                    	
-        contentStr += '</span><span class="separator"> · </span>'
+        contentStr += '</span>'
             + '<time>'
         if(responseData.deadline)
-            contentStr += responseData.deadline.substring(0, 10)
+            contentStr += responseData.worker.name
 
             + '</time>'
             + '</a>'
