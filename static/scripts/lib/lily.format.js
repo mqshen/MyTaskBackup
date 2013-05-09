@@ -38,6 +38,11 @@
 	String.prototype.times = function(count) {
     	return count < 1 ? '' : new Array(count + 1).join(this);
   	}
+
+
+    String.prototype.endsWith = function(suffix) {
+        return this.indexOf(suffix, this.length - suffix.length) !== -1;
+    }
 	
 	/**
 	 * 字符串左补0到指定位数
@@ -88,6 +93,8 @@
 	 * @returns {boolean} 
 	 */
 	Date.prototype.isSameDay = function( compareDate ) {
+        if(typeof compareDate != 'object')
+            return false;
 		return ( this.getFullYear() === compareDate.getFullYear() && this.getMonth() === compareDate.getMonth() && this.getDate() === compareDate.getDate() );
 	};
 	
@@ -180,6 +187,12 @@
 		isPositiveNumber: function(s) {
 			return ( $.lily.format.REGEXP_POSITIVENUMBER.test(s) );
 		},
+
+        isSameStart: function(one, another, index) {
+            if(one.length < index || another < index)
+                return false
+            return one.substring(0,index) == another.sbustring(0, index)
+        },
 		
 		/**
 		* 判断输入变量是否是英文字母、数字、或者英文字母和数字的组合

@@ -3,7 +3,7 @@ Created on Feb 4, 2013
 
 @author: GoldRatio
 '''
-from .models import User 
+from .models import User, Team
 import logging
 import tornado
 from tornado.options import options
@@ -31,6 +31,7 @@ class LoginHandler(BaseHandler):
                                form.email.data, 
                                form.password.data)).encode('utf-8'))
             password_md5 = m.hexdigest()
+            print(password_md5)
             currentUser = User.query.filter_by(email=form.email.data, password=password_md5).first()
         if currentUser is None:
             self.render("login.html", form = form, errorMessage = self._error_message)
@@ -77,9 +78,22 @@ class SettingHandler(BaseHandler):
         db.session.commit()
         self.writeSuccessResult(user, successUrl='/')
 
+class PeopleHandler(BaseHandler):
+    @tornado.web.authenticated
+    def get(self):
+        currentUser = self.current_user
+        teamId = self.session["currentTeamId"]
+        team = Team.query.filter_by(id=teamId).first()
+        self.render("user/peoples.html", currentUser= currentUser, team= team)
 
+class NewPeopleHandler(BaseHandler):
+    @tornado.web.authenticated
+    def get(self):
+        self.render("user/newPeople.html")
 
 handlers = [
     ('/login', LoginHandler),
     ('/settings', SettingHandler),
+    ('/people', PeopleHandler),
+    ('/people/new', NewPeopleHandler),
 ]

@@ -76,6 +76,9 @@ class TodoItemDetailHandler(BaseHandler):
             if todoItem is not None:
                 todoItem.worker_id = form.workerId.data
                 todoItem.deadline = form.deadLine.data
+                if len(form.description.data) > 0 :
+                    todoItem.description = form.description.data
+                    
                 db.session.add(todoItem)
                 db.session.commit()
                 worker = None
@@ -83,8 +86,21 @@ class TodoItemDetailHandler(BaseHandler):
                     worker = User.query.filter_by(id=todoItem.worker_id).first()
                 self.writeSuccessResult(todoItem, worker=worker)
 
+class TodoItemModifyHandler(BaseHandler):
+    _error_message = ""
+
+    @tornado.web.authenticated
+    def post(self, projectId, todoListId, todoItemId, operation):
+        todoItem = TodoItem.query.filter_by(id=todoItemId).first()
+        if operation == "trash" :
+            db.session.delete(todoItem)
+            db.session.commit()
+
+        self.writeSuccessResult(todoItem)
+
 handlers = [
     ('/project/([0-9]+)/todolist', TodoListHandler),
     ('/project/([0-9]+)/todolist/([0-9]+)/todoitem', TodoItemHandler),
     ('/project/([0-9]+)/todolist/([0-9]+)/todoitem/([0-9]+)', TodoItemDetailHandler),
+    ('/project/([0-9]+)/todolist/([0-9]+)/todoitem/([0-9]+)/([a-zA-Z]+)', TodoItemModifyHandler),
 ]

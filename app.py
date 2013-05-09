@@ -5,6 +5,7 @@ import redis
 from core.session import RedisSessionStore
 from tornado.options import options
 from core.urlResolver import urlResolver
+from core.quemail import QueMail
 
 class Application(tornado.web.Application):
     def __init__(self, settings):
@@ -13,6 +14,14 @@ class Application(tornado.web.Application):
         r = redis.Redis(connection_pool=pool)
         self.session_store = RedisSessionStore(r)
         tornado.web.Application.__init__(self, handlers, **settings)
+        
+        qm = QueMail.get_instance()
+        qm.init(options.smtp.get("host"), options.smtp.get("user"), options.smtp.get("password"))
+        qm.start()
+
+    def __del__(self):
+        qm = QueMail.get_instance()
+        qm.end()
 
 def main():
     options.parse_config_file("conf/config.conf")

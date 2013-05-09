@@ -17,24 +17,12 @@
 
     process: function(button) {
         var $button = $(button)
+        this.$button = $button
         var url = $button.attr("href")
         var that = this
         function processResponse(responseData) {
-            if(url.match(/running$/)) {
-                $('.assignee', that.$element).text(responseData.user.name)
-                var workerStr = '<span class="runner on" title="' + responseData.user.name + '正在做这条任务">' + 
-                    '<img alt="' + responseData.user.name + '" class="avatar" src="' + responseData.contextPath + '/avatar/' + responseData.user.avatarUrl + '"></span>'
-                $(workerStr).insertBefore($('.todo-content', that.$element))
-                $.lily.hideWait($button)
-                that.$element.addClass("running")
-            }
-            else if(url.match(/pause$/)) {
-                $('.assignee', that.$element).text(responseData.user.name)
-                $('.runner', that.$element).remove()
-                $.lily.hideWait($button)
-                that.$element.addClass("running")
-                $button.css("display", "")
-                that.$element.removeClass("running")
+            if(url.match(/trash$/)) {
+                $button.closest('li').remove()
             }
             else if(url.match(/\/done$/)) {
                 if(!that.$completeContainer) {
@@ -60,16 +48,28 @@
                 $.lily.hideWait($button)
             }
         }
-        $button.css("display", "none")
         $.lily.showWait($button)
+        $button.css("display", "none")
+        var confirmMessage = $button.attr("data-confirm")
+        if(confirmMessage) {
+            if(!confirm(confirmMessage)) {
+                that.resetButton()
+                return
+            }
+        }
         $.lily.ajax({url: url,
             dataType: 'json',
             type: 'POST',
             processResponse: processResponse
         })
         
+    },
+
+    resetButton: function() {
+        $.lily.hideWait(this.$button)
+        $button.css("display", "")
     }
-  }
+}
 
 
  /* PLUGIN DEFINITION
@@ -107,7 +107,7 @@
  /* DATA-API
   * =============== */
 
-  $(document).on('click.todo.data-api', '[data-toggle^=remote]', function (e) {
+  $(document).on('click.todo.data-api', '[data-toggle^=post]', function (e) {
     var $btn = $(e.target)
     if($btn[0].nodeName.toLowerCase() == 'a')
         e.preventDefault()

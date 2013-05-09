@@ -62,9 +62,9 @@
                     var date = data.deadline
                     var workerName = data.worker.name
                     console.log(date)
-                    that.$element.find('[name=deadLineText]').text(date.substring(0, 10));
-                    that.$element.find('[name=workerName]').text(workerName);
-                	$.lily.hideWait(that.$element);
+                    that.$element.find('[name=deadlineDate]').text(date.substring(0, 10));
+                    that.$element.find('[name="worker.name"]').text(workerName);
+                    $.lily.hideWait(that.$element)
                 }
                 function dateSelectCallback(date) {
                     var workerId = that.$content.find("select").val()
@@ -85,7 +85,7 @@
                 	    })
                 	}
                 	else {
-                    	that.$element.find('[name=deadLineText]').text($.lily.format.formatDate(date));
+                    	that.$element.find('[name=deadlineDate]').text($.lily.format.formatDate(date));
                     	that.$element.find('[name=workerName]').text(workerName);
                     	that.hide();
                 	}

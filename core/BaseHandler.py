@@ -3,6 +3,7 @@ from core.session import Session
 
 from core.escape import json_encode
 from core.util import serialize
+from core.database import db
 
 
 successJson = {"returnCode": "000000"}
@@ -20,13 +21,23 @@ class BaseHandler(tornado.web.RequestHandler):
     def get_current_user(self):
         return self.session['user'] if self.session and 'user' in self.session else None
     
-    def writeSuccessResult(self, model, **kwargs):
-        result = serialize(model)
+    def writeSuccessResult(self, model=None, **kwargs):
+        result = None
+        if model is not None:
+            if isinstance(model, list):
+                result = {"content": [serialize(item) for item in model]}
+            else:
+                result = serialize(model)
+        else:
+            result = {}
         result.update(successJson)
         for key in kwargs:
             item = kwargs[key]
             if item is not None:
-                result.update({key : serialize(item)})
+                if isinstance(item, db.Model):
+                    result.update({key : serialize(item)})
+                else:
+                    result.update({key : item})
         self.write(json_encode(result))
     
     def writeFailedResult(self):

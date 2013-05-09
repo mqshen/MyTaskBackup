@@ -307,7 +307,7 @@ class TornadoArgumentsWrapper(dict):
         try:
             values = []
             for v in self[key]:
-                values.append(v)
+                values.append(v.decode("utf-8"))
             return values
         except KeyError:
             raise AttributeError

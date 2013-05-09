@@ -147,7 +147,23 @@ $.extend( $.lily, {
 
         $('[data-toggle=remote],[data-toggle=datepick]' , sourceElement).each(function () {
     		var $this = $(this)
-    		orginRequestData[$this.attr("name")] = $this.val()
+            var value = $this.val()
+            if(value && !$.lily.format.isEmpty(value) ){
+                var name = $this.attr("name")
+                if(name.endsWith("[]")){
+                    name = name.substring(0, name.length - 2)
+        	        if(orginRequestData[name]) {
+                    	orginRequestData[name].push(value)
+        	        }
+        	        else {
+        	        	orginRequestData[name] = []
+        	        	orginRequestData[name].push(value)
+        	        }
+                }
+                else {
+                    orginRequestData[name] = value
+                }
+            }
     	})
 
         $('[data-toggle="select"]', sourceElement).each(function() {
@@ -186,6 +202,7 @@ $.extend( $.lily, {
     		width: target.width(),
     		height: target.height(),
     		float: target.css("float"),
+            padding: target.css("padding"),
     		margin: target.css("margin")
     	})
     	target.hide();
@@ -194,6 +211,30 @@ $.extend( $.lily, {
     hideWait: function(target) {
     	target.next('.wait').remove();
     	target.css("display", "")
+    },
+
+    fillHtml: function($obj, data) {
+        var name = $obj.attr("name")
+        if(!name)
+            return 
+        var dateType = "text"
+        if(name.endsWith("Date")){
+            dateType = "date"
+            name = name.substring(0, name.length - 4)
+        }
+        var nameArray = name.split(".")
+        var value = data
+        for(var i in nameArray){
+            value = value[nameArray[i]]
+            if(!value)
+                break
+        }
+        if(!value)
+            return
+        if(dateType == "date")
+            value = value.substring(0, 10)
+        if(value)
+		    $obj.html(value)
     }
 });
 })( jQuery ); 

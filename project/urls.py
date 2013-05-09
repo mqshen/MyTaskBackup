@@ -3,7 +3,8 @@ Created on Feb 4, 2013
 
 @author: GoldRatio
 '''
-from .models import Project
+from .models import Project, InviteUser, InviteProject
+from operation.models import Operation
 from topic.models import Message 
 from todo.models import TodoList
 from user.models import Team, User
@@ -11,16 +12,26 @@ import logging
 import tornado
 from tornado.options import options
 from core.BaseHandler import BaseHandler 
-from forms import Form, TextField, ListField
+from forms import Form, TextField, ListField, IntField
 from datetime import datetime
 from core.database import db
 import json
+from core.quemail import QueMail, Email
 
+from uuid import uuid4
 
 class ProjectForm(Form):
     name = TextField('name')
     description = TextField('description')
     member = ListField('member')
+
+class ProjectAccessForm(Form):
+    userId = IntField('userId')
+    operation = TextField('operation')
+
+class TeamAccessForm(Form):
+    message = TextField('message')
+    email = ListField('email')
 
 class ProjectHandler(BaseHandler):
 
@@ -40,10 +51,16 @@ class ProjectHandler(BaseHandler):
         for userId in form.member.data:
             users.append(User.query.filter_by(id=userId).first())
 
+        now = datetime.now()
         project = Project(title=form.name.data, description=form.description.data, 
-                own_id=currentUser.id, team_id=teamId, createTime=datetime.now(), users = users)
+                own_id=currentUser.id, team_id=teamId, createTime= now, users = users)
         db.session.add(project)
         db.session.flush()
+
+        operation = Operation(own_id = currentUser.id, createTime= now, operation_type=0, target_type=0,
+                target_id=project.id, title= project.title, team_id= teamId, project_id= project.id)
+
+        db.session.add(operation)
 
 
         db.session.commit()
@@ -71,9 +88,61 @@ class ProjectDetailHandler(BaseHandler):
         self.render("project/projectDetail.html", project= project, messages= messages, todolists= todolists)
 
 
+class ProjectAccessHandler(BaseHandler):
+    @tornado.web.authenticated
+    def get(self, projectId):
+        project = Project.query.filter_by(id=projectId).first()
+        teamId = self.session["currentTeamId"]
+        team = Team.query.filter_by(id=teamId).first()
+        currentUser = self.current_user
+        self.render("project/projectAccess.html", project= project, team= team, currentUser= currentUser)
+
+    @tornado.web.authenticated
+    def post(self, projectId):
+        form = ProjectAccessForm(self.request.arguments, locale_code=self.locale.code)
+        if(form.operation.data == "add"):
+            db.session.execute("insert into project_user_rel values(:project_id, :user_id)", {"project_id":projectId, "user_id":form.userId.data})
+        else:
+            db.session.execute("delete from project_user_rel where project_id= :project_id and user_id = :user_id", 
+                    {"project_id":projectId, "user_id":form.userId.data})
+
+        db.session.commit()
+
+        self.writeSuccessResult(successUrl='/')
+
+class TeamAccessHandler(BaseHandler):
+    @tornado.web.authenticated
+    def get(self, projectId):
+        project = Project.query.filter_by(id=projectId).first()
+        self.render("project/projectAccess.html", project= project)
+
+    @tornado.web.authenticated
+    def post(self, projectId):
+        form = ProjectAccessForm(self.request.arguments, locale_code=self.locale.code)
+        qm = QueMail.get_instance()
+
+        inviteProject = InviteProject(project_id= projectId) 
+        db.session.add(inviteProject)
+        db.session.flush()
+        inviteId = inviteProject.id
+        teamId = self.session["currentTeamId"]
+        currentUser = self.current_user
+        subject = "%s邀请您加入"%currentUser.name
+        for email in form.email.data :
+            hashCode = uuid4().hex
+            inviteUser = InviteUser(id= hashCode, email=email, invite_id=inviteId, team_id = teamId)
+            db.session.add(inviteUser)
+            html = self.render_string("email/invite.html", **kwargs)
+            qm.send(Email(subject= subject, text= html, adr_to= email, adr_from= options.smtp.get("user")))
+
+        db.session.commit()
+        self.writeSuccessResult(inviteProject, successUrl='/')
+
 handlers = [
     ('/', ProjectHandler),
     ('/project', ProjectHandler),
     ('/project/([0-9]+)', ProjectDetailHandler),
+    ('/project/([0-9]+)/access', ProjectAccessHandler),
     ('/project/new', NewProjectHandler),
+    ('/access', TeamAccessHandler),
 ]

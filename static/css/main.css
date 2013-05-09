@@ -1469,4 +1469,317 @@ background: url(../images/dots-white.gif) no-repeat left center !important;
 text-indent: -9999px;
 border: none;
 padding: 0px 15px 0px 15px;
+display: block;
+}
+div.sheet>header h1, div.sheet div.sheet_body>section>header h1, div.sheet div.sheet_body>div>section>header h1 {
+font-size: 18px;
+line-height: 18px;
+font-weight: normal;
+}
+section.invite h2 {
+color: black;
+font-size: 14px;
+line-height: 20px;
+font-weight: normal;
+margin: 0;
+padding: 0;
+}
+section.invite div.invitees {
+margin-bottom: 20px;
+}
+section.invite div.invitee.field {
+position: relative;
+margin: 0px;
+border: 0px;
+height: 30px;
+}
+section.invite div.invitee.field.blank.person div.icon, section.invite div.invitee.field.disabled.person div.icon {
+background-position: 0px 0px;
+}
+section.invite div.invitee.field div.icon {
+position: absolute;
+left: 0;
+bottom: 0;
+width: 25px;
+height: 25px;
+background: 0px 0px url(../images/invitee_field_icons.png) no-repeat;
+}
+section.invite div.invitee.field div.input {
+position: absolute;
+left: 30px;
+bottom: 0px;
+right: 0px;
+border-bottom: 1px dotted #bbb;
+}
+section.invite div.invitee.field input {
+display: block;
+position: absolute !important;
+background: transparent !important;
+left: 0;
+bottom: -4px;
+width: 100%;
+border: 0;
+font-size: 14px;
+line-height: 25px;
+padding: 3px 0px 2px !important;
+height: 30px;
+outline: none;
+color: #000;
+}
+section.invite textarea {
+position: relative;
+font-weight: normal;
+font-size: 14px;
+padding: 5px;
+height: 66px;
+width: 100%;
+display: block;
+border: 1px dotted #bbb;
+outline: none;
+box-sizing: border-box;
+-moz-box-sizing: border-box;
+resize: none;
+}
+div.sheet.accesses div.columns>div.column:first-child {
+width: 390px;
+border-right: 1px solid #ddd;
+margin-right: -1px;
+}
+div.sheet.accesses div.columns>div.column {
+float: left;
+min-height: 680px;
+}
+section.accesses, section.group_accesses {
+margin: 0;
+padding: 0 0 0px 30px;
+}
+article.access {
+margin: 15px 0px;
+}
+article.access>div.wrapper {
+position: relative;
+padding: 0px 10px 0px 105px;
+height: 90px;
+}
+article.access h1 {
+font-size: 21px;
+line-height: 24px;
+margin: 0;
+padding: 3px 0 0;
+}
+article.access div.controls {
+padding-top: 6px;
+font-size: 12px;
+line-height: 14px;
+}
+article.access img.avatar {
+position: absolute;
+top: 0px;
+left: 0;
+height: 90px;
+width: 90px;
+display: block;
+box-sizing: border-box;
+-moz-box-sizing: border-box;
+}
+section.invite div.invitee.field.focused.person div.icon {
+background-position: 0px -25px;
+}
+section.invite div.invitee.field a.remove {
+position: absolute;
+right: 0;
+bottom: 7px;
+display: inline-block;
+padding: 0;
+width: 16px;
+height: 16px;
+background: url(../images/circular_x_black_16.png);
+opacity: 0.2;
+vertical-align: bottom;
+cursor: hand;
+}
+div.sheet.accesses div.columns>div.column h3 {
+    margin: 5px 0px 5px 15px;
+    font-size: 16px;
+    font-weight: normal;
+}
+section.invite a.remove {
+    display: none;
+}
+section.accesses a.add {
+    display: none;
+}
+section.global_activity {
+margin: 20px auto 0;
+text-shadow: 0 1px #fff;
+}
+section.global_activity h1 {
+font-weight: normal;
+text-align: center;
+margin-bottom: 20px;
+}
+section.stream {
+color: #777;
+}
+section.stream div.day {
+width: 100px;
+margin-left: 423px;
+color: black;
+}
+section.stream div.day a {
+display: block;
+width: 98px;
+height: 94px;
+background: white;
+font-weight: bold;
+border: 7px solid #dcd9d3;
+text-decoration: none;
+-webkit-border-radius: 100px;
+-moz-border-radius: 100px;
+border-radius: 100px;
+}
+a.decorated {
+color: #1c5c76;
+text-decoration: underline;
+}
+section.stream div.project {
+color: black;
+font-weight: bold;
+border-bottom: 7px solid #dcd9d3;
+padding-top: 2px;
+padding-bottom: 2px;
+}
+section.stream div.project.left, section.stream article.event.left {
+border-right: 7px solid #dcd9d3;
+}
+section.stream div.project>a {
+color: #1c5c76;
+text-decoration: underline;
+}
+article.event {
+zoom: 1;
+font-size: 15px;
+width: 475px;
+word-wrap: break-word;
+}
+section.stream article.event.left div.time {
+float: right;
+text-align: right;
+}
+section.stream div.project:after, section.stream article.event:after {
+content: ".";
+display: block;
+height: 0;
+clear: both;
+visibility: hidden;
+}
+section.stream article.event>div.time {
+width: 60px;
+padding: 12px 10px 0;
+color: #aa9c84;
+font-size: 13px;
+}
+section.stream article.event>div.avatar {
+padding: 12px 0 0 0;
+width: 50px;
+float: left;
+}
+section.stream article.event.left div.action {
+padding-right: 15px;
+}
+section.stream article.event>div.action {
+padding: 12px;
+color: black;
+font-size: 15px;
+line-height: 1.2em;
+width: 320px;
+margin-left: 50px;
+word-wrap: break-word;
+font-weight: bold;
+}
+section.stream div.day a>span {
+display: table-cell;
+width: 98px;
+height: 97px;
+vertical-align: middle;
+text-align: center;
+line-height: 16px;
+font-size: 17px;
+}
+section.stream div.day a>span time {
+display: block;
+font-weight: normal;
+font-size: 11px;
+color: #bbb;
+}
+section.stream div.day a>span>span {
+text-decoration: underline;
+}
+section.stream div.project, section.stream article.event {
+zoom: 1;
+font-size: 15px;
+width: 475px;
+word-wrap: break-word;
+}
+section.stream div.project.right, section.stream article.event.right {
+border-left: 7px solid #dcd9d3;
+margin-left: 475px;
+}
+section.stream div.project.right {
+padding-left: 10px;
+}
+section.stream div.project.right div.time, section.stream article.event.right div.time {
+float: left;
+}
+div.panel.home_tab>nav {
+width: 150px;
+position: absolute;
+}
+div.panel.people_index nav.people_nav a {
+width: 83px;
+height: 98px;
+margin-top: -6px;
+background-repeat: no-repeat;
+background-image: url(../images/people_buttons.png);
+}
+div.panel.home_tab>nav a {
+position: relative;
+display: block;
+font-size: 13px;
+z-index: 2;
+}
+div.panel.people_index nav.people_nav a>span {
+left: -11px;
+bottom: 0;
+width: 102px;
+}
+div.panel.home_tab>nav a>span {
+position: absolute;
+display: block;
+text-align: center;
+line-height: 14px;
+color: #1c5c76;
+text-decoration: underline;
+}
+div.panel.people_index section.people {
+margin-bottom: 30px;
+}
+div.panel.home_tab>section {
+margin-left: 150px;
+}
+div.panel.people_index section.people.cards article.person {
+width: 140px;
+float: left;
+margin: 0 62px 15px 0;
+padding-bottom: 10px;
+text-align: center;
+word-wrap: break-word;
+}
+div.panel.people_index section.people.cards article.person h3 {
+font-size: 16px;
+line-height: 19px;
+margin-bottom: 0;
+margin-top: 0px;
+color: #1c5c76;
+text-decoration: underline;
 }

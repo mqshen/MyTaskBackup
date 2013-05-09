@@ -306,7 +306,7 @@ class DateField(Field):
     """
     def process_formdata(self, valuelist):
         if valuelist and len(valuelist[0]) > 0:
-            self.data = self.string_toDatetime(valuelist[0].decode("utf-8"))
+            self.data = self.string_toDatetime(valuelist[0])
         else:
             self.data = None                                                                                                                                                                                 
     def _value(self):

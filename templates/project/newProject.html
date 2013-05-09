@@ -32,7 +32,7 @@
                                     {% for member in team.members %}
                                     <article class="person btn"  data-content="{{member.id}}" data-toggle="select" name="member">
                                         <div class="avatar">
-                                            <img class="avatar" height="40" src="{{ member.avatar }}" title="" width="140">
+                                            <img class="avatar" height="40" src="/avatar/{{ member.avatar }}" title="" width="140">
                                         </div>
                                         <h3>
                                             <a href="/member/{{ member.id }}">{{ member.name }}</a>

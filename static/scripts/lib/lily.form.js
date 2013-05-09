@@ -40,6 +40,8 @@
 
         resetForm: function() {
 		    this.$submitButton.attr("disabled", false).text(this.oldText)
+            if(this.$element.attr("data-save"))
+                return
             this.$element[0].reset()
         }
 
