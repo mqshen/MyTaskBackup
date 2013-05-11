@@ -6,6 +6,8 @@ Created on May 2, 2013
 from sqlalchemy.orm import class_mapper
 from tornado.options import options
 
+from core.database import db
+
 def serialize(model):
     """Transforms a model into a dictionary which can be dumped to JSON."""
     # first we get the names of all the columns on your model
@@ -18,3 +20,10 @@ def serialize(model):
     # then we return their values in a dict
     
     return result
+
+def getSequence(name):
+    """get sequecne for mysql """
+    db.session.execute("UPDATE counter SET value = LAST_INSERT_ID(value+1) WHERE name = :name", {"name": name})
+    result = db.session.execute("SELECT LAST_INSERT_ID()").first()
+    db.session.commit()
+    return result[0]

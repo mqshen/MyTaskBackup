@@ -22,7 +22,7 @@
 
                 <article class="person">
                     <div class="avatar">
-                        <a href="/2203367/people/4061968-miaoqishen">
+                        <a href="/people/{{people.id}}">
                             <img class="avatar" height="140" src="/avatar/{{people.avatar}}" title="{{people.name}}" width="140">
                         </a>
                     </div>
@@ -31,6 +31,26 @@
                     </h3>
                 </article>
                 {% if i % 4 == 3 or i == len(team.members) - 1 %}
+                    </div>
+                {% end %}
+            {% end %}
+            {% for i, people in enumerate(team.invitedUser) %}
+                {% if i % 4 == 0 %}
+                    <div class="row">
+                {% end %}
+
+                <article class="person">
+                    <div class="avatar">
+                        <a href="javascript:;">
+                            <img class="avatar" height="140" src="/avatar/default" title="{{people.email}}" width="140">
+                        </a>
+                    </div>
+                    <h3>
+                        <a href="javascript:;">{{people.email}}</a>
+                        <span class="role">(已邀请)</span>
+                    </h3>
+                </article>
+                {% if i % 4 == 3 or i == len(team.invitedUser) - 1 %}
                     </div>
                 {% end %}
             {% end %}

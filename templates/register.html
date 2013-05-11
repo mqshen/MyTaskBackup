@@ -21,21 +21,29 @@
 </div>
 <div id="logon">
     <div class="auth-form" id="login">
-        <form accept-charset="UTF-8" action="/login" method="post">
+        <form accept-charset="UTF-8" action="/register" method="post">
 			{% module xsrf_form_html() %}
             <div class="auth-form-header">
-                <h1>Sign in</h1>
+                <h1>注册</h1>
             </div>
             <div class="auth-form-body">
                 <label for="login_field">
+                    用户名
+                </label>
+                <input autofocus="autofocus" class="input-block" id="login_field" name="name" tabindex="1" type="text">
+                <label for="login_field">
+                    团队名称
+                </label>
+                <input class="input-block" id="login_field" name="teamTitle" tabindex="2" type="text">
+                <label for="login_field">
                   Email
                 </label>
-                <input autocapitalize="off" autofocus="autofocus" class="input-block" id="login_field" name="email" tabindex="1" type="email">
+                <input class="input-block" id="login_field" name="email" tabindex="3" type="email">
                 <label for="password">
-                  密码<a href="/login/forgot_password">(忘记密码？)</a>
+                    密码
                 </label>
-                <input autocomplete="disabled" class="input-block" id="password" name="password" tabindex="2" type="password">
-                <input class="button" name="commit" tabindex="3" type="submit" value="登录">
+                <input autocomplete="disabled" class="input-block" id="password" name="password" tabindex="4" type="password">
+                <input class="button" name="commit" tabindex="3" type="submit" value="注册">
           </div>
         </form>
     </div>

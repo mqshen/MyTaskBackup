@@ -1289,11 +1289,6 @@ table tr.avatar th {
 padding: 0 0 18px 0;
 text-align: right;
 }
-table tr th {
-vertical-align: top;
-padding-top: 10px;
-min-width: 65px;
-}
 tr.avatar th img {
 background: #fff;
 padding: 1px;
@@ -1782,4 +1777,281 @@ margin-bottom: 0;
 margin-top: 0px;
 color: #1c5c76;
 text-decoration: underline;
+}
+div.panel.global_invite div.step {
+background: white;
+width: 85px;
+height: 85px;
+margin: 0 auto;
+color: brown;
+border: 7px solid #dcd9d3;
+-webkit-border-radius: 80px 80px 80px 0;
+-moz-border-radius: 80px 80px 80px 0;
+border-radius: 80px 80px 80px 0;
+-webkit-transform: rotate(-45deg);
+-moz-transform: rotate(-45deg);
+-ms-transform: rotate(-45deg);
+transform: rotate(-45deg);
+}
+div.panel.global_invite div.step span {
+font-size: 16px;
+width: 85px;
+height: 85px;
+display: table-cell;
+vertical-align: middle;
+text-align: center;
+-webkit-transform: rotate(45deg);
+-moz-transform: rotate(45deg);
+-ms-transform: rotate(45deg);
+transform: rotate(45deg);
+}
+div.panel.global_invite div.row section.invite {
+padding-bottom: 25px;
+}
+div.panel.global_invite div.row section {
+background: white;
+width: 50%;
+margin: 0 auto;
+padding: 25px 25px 10px;
+border: 7px solid #dcd9d3;
+-webkit-border-radius: 8px;
+-moz-border-radius: 8px;
+border-radius: 8px;
+}
+div.panel.global_invite div.row div.vertical {
+width: 0;
+height: 40px;
+border-left: 7px solid #dcd9d3;
+margin: 0 auto;
+}
+div.panel.global_invite div.row section>header>h1 {
+font-size: 18px;
+line-height: 18px;
+font-weight: normal;
+margin-bottom: 15px;
+}
+div.panel.global_invite table th {
+    min-width: 14px;
+text-align: left;
+vertical-align: top;
+line-height: 16px;
+padding-bottom: 9px;
+}
+div.panel.global_invite table td input[type=checkbox], div.panel.global_invite table th input[type=checkbox] {
+font-size: medium;
+}
+div.panel.global_invite div.row section.done p {
+color: #777;
+}
+div.panel.global_invite div.row p {
+margin-bottom: 3px;
+line-height: 16px;
+}
+div.panel.global_invite div.row section.done {
+text-align: center;
+padding-top: 30px;
+padding-bottom: 30px;
+}
+div.panel.global_invite div.row button[data-toggle="submit"] {
+margin: 0 auto 10px;
+padding: 10px 30px;
+font-family: "ProximaNova","Helvetica Neue",helvetica,arial,sans-serif;
+font-size: 24px;
+color: #fff;
+text-shadow: 0 1px 1px rgba(0,0,0,0.2);
+background-color: #8fc857;
+background-image: -moz-linear-gradient(#8fc857, #5c9425);
+background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#8fc857), to(#5c9425));
+background-image: -webkit-linear-gradient(#8fc857, #5c9425);
+background-image: -ms-linear-gradient(#8fc857, #5c9425);
+background-image: linear-gradient(#8fc857, #5c9425);
+border: 1px solid #561;
+-webkit-border-radius: 8px;
+-moz-border-radius: 8px;
+border-radius: 8px;
+}
+div.sheet.person.overview>header.person {
+margin: 0;
+padding: 20px 30px 10px !important;
+background: rgba(0,0,0,0.04);
+text-shadow: 1px 1px #fff;
+border: 0 !important;
+border-bottom: 1px solid rgba(0,0,0,0.04) !important;
+-webkit-border-radius: 3px 3px 0 0;
+-moz-border-radius: 3px 3px 0 0;
+border-radius: 3px 3px 0 0;
+zoom: 1;
+}
+div.sheet.person.overview>header.person figure {
+float: left;
+margin-bottom: 0;
+margin-right: 20px;
+}
+div.sheet.person.overview>header.person h2 {
+font-size: 24px;
+font-weight: bold;
+line-height: 26px;
+color: #000;
+margin: 10px 0 0;
+border: 0;
+}
+div.sheet.person.overview>header.person h3 {
+font-size: 16px;
+font-weight: normal;
+}
+div.sheet.person.overview>header.person:after {
+content: ".";
+display: block;
+height: 0;
+clear: both;
+visibility: hidden;
+}
+div.sheet.person.overview>div.sheet_body {
+margin-top: 30px;
+}
+div.sheet.person.overview>div.sheet_body section {
+padding: 0 0 30px 0;
+position: relative;
+}
+div.sheet.person.overview>div.sheet_body section>header.todos {
+margin-bottom: -21px;
+}
+div.sheet.person.overview>div.sheet_body section>header.left {
+height: auto;
+margin-left: 0;
+margin-bottom: 12px;
+border: 0 !important;
+}
+div.sheet.person.overview>div.sheet_body section>header.left h1 {
+color: brown;
+font-weight: normal;
+font-size: 18px;
+}
+div.sheet.person>div.sheet_body section.todos>header h1, div.sheet.person>div.sheet_body section.todos>header p {
+display: inline;
+margin-right: 0.5em;
+}
+article.today_todo {
+    padding: 10px;
+position: relative;
+min-height: 60px;
+background: #fcf6c0;
+margin-bottom: 10px;
+-moz-border-radius: 4px;
+-webkit-border-radius: 4px;
+border-radius: 4px;
+-webkit-box-shadow: 0 1px 2px rgba(0,0,0,0.25);
+-moz-box-shadow: 0 1px 2px rgba(0,0,0,0.25);
+box-shadow: 0 1px 2px rgba(0,0,0,0.25);
+}
+article.today_todo h5 {
+position: absolute;
+right: 10px;
+top: 10px;
+width: 116px;
+height: 75px;
+padding: 0;
+overflow: hidden;
+background: url("../images/member-todo-today.png") no-repeat left top;
+color: #a39c68;
+text-indent: -999px;
+opacity: .5;
+}
+
+
+article.today_todo div.nubbin {
+background: #fcf6c0;
+}
+article.today_todo div.nubbin>div.spacer {
+background: #fcf6c0;
+}
+article.today_todo textarea {
+background: #fcf6c0;
+}
+body.users div#header {
+margin: 0;
+padding: 40px 10px;
+}
+div#header h2 a{
+    font-size: 40px;
+width: 138px;
+margin: 25px;
+padding: 41px 0 0;
+height: 0;
+text-indent: -999em;
+}
+body.users div.products {
+margin: 30px auto 0;
+padding: 0 0 65px;
+}
+html > body.basecamp_only.users div.product div.header {
+-webkit-border-top-left-radius: 3px;
+-webkit-border-top-right-radius: 3px;
+-moz-border-radius-topleft: 3px;
+-moz-border-radius-topright: 3px;
+border-top-left-radius: 3px;
+border-top-right-radius: 3px;
+}
+html > body.basecamp_only div.page_header h2, html > body.basecamp_only div#header ul.nav a, html > body.basecamp_only div#other_products div, html > body.basecamp_only div#other_products div a, html > body.basecamp_only div#other_products div em, html > body.basecamp_only.users div.product div.header, html > body.basecamp_only.edit_identity div#affected_accounts {
+color: #7D7A75;
+}
+body.users div.product div.header {
+color: #888;
+margin: 0;
+background: #fff;
+height: 40px;
+cursor: pointer;
+text-align: center;
+-webkit-border-top-left-radius: 8px;
+-webkit-border-top-right-radius: 8px;
+-moz-border-radius-topleft: 8px;
+-moz-border-radius-topright: 8px;
+border-top-left-radius: 8px;
+border-top-right-radius: 8px;
+}
+body.users > div.rocket div.account div.name, body.users div.product div.name {
+margin: 0 0 5px 0;
+font-size: 18px;
+font-weight: bold;
+padding: 10px 0 0;
+text-align: center;
+}
+body.users div.account {
+text-align: center;
+position: relative;
+zoom: 1;
+}
+body.users div.account a {
+display: block;
+text-decoration: none;
+color: #333;
+border-top: 1px solid #ddd;
+padding: 10px 0 0;
+zoom: 1;
+}
+body.users > div.rocket div.account span.logo, body.users div.product div.account span.logo {
+margin: 0 auto 3px;
+width: 64px;
+height: 0;
+background: url("../images/logo_64.png") no-repeat left top;
+display: block;
+padding: 70px 0 0;
+overflow: hidden;
+text-decoration: none;
+border: none;
+background-color: none;
+position: relative;
+}
+body.users div.accounts {
+padding: 0 0 8px;
+margin-bottom: 30px;
+background: #fff;
+text-align: center;
+zoom: 1;
+-webkit-border-bottom-right-radius: 8px;
+-webkit-border-bottom-left-radius: 8px;
+-moz-border-radius-bottomright: 8px;
+-moz-border-radius-bottomleft: 8px;
+border-bottom-right-radius: 8px;
+border-bottom-left-radius: 8px;
 }

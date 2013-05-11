@@ -31,4 +31,4 @@ class TodoItem(db.Model):
     team_id = Column(Integer, ForeignKey('team.id'))
     deadline = Column(DateTime)
     createTime = Column(DateTime)
-    
+

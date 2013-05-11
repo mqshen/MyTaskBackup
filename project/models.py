@@ -8,7 +8,7 @@ from sqlalchemy import Column, Integer, String, DateTime, Boolean, ForeignKey, T
 from sqlalchemy.orm import relationship
 
 
-__all__ = ['Project', 'InviteUser', 'InviteProject']
+__all__ = ['Project'] 
 
 project_user_rel = Table('project_user_rel', db.Model.metadata,
     Column('project_id', Integer, ForeignKey('project.id')),
@@ -29,14 +29,5 @@ class Project(db.Model):
     documentNum = Column(Integer, default=0)
 
     users = relationship("User", secondary=project_user_rel, backref="projects")
-
-class InviteUser(db.Model):
-    id = Column(String(60), primary_key=True)
-    email = Column(String(60))
-    invite_id = Column(Integer)
-    team_id = Column(Integer)
-
-class InviteProject(db.Model):
-    id = Column(Integer, primary_key=True)
-    project_id = Column(Integer)
+    todoItems = relationship("TodoItem", backref="project")
 

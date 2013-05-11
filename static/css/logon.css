@@ -1,3 +1,23 @@
+div#header {
+font-size: 12px;
+text-align: right;
+height: 40px;
+padding: 15px 30px;
+margin: 0 -30px;
+border-bottom: 1px solid #e5e5e5;
+}
+div#header {
+margin: 0;
+padding: 5px 40px 10px 40px;
+}
+a {
+color: #4183c4;
+text-decoration: none;
+}
+div#header div.logo {
+position: absolute;
+font-size: 40px;
+}
 .auth-form {
     width: 400px;
     margin: 80px auto;

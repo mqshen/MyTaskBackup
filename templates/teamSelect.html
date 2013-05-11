@@ -1,0 +1,44 @@
+<html>
+	<head>
+        <title>{% block title %}MyTask{% end %}</title>
+	    <link rel="stylesheet" href="{{ static_url("css/public.css")}}" type="text/css"/>
+	    <link rel="stylesheet" href="{{ static_url("css/main.css")}}" type="text/css"/>
+    </head>
+    <body class="users">
+        <div class="container">
+            <div id="header">
+                <h2><a href="/">MyTask</a></h2>
+            </div>
+            <form action="/user_ordering" id="users" method="post">
+                <div class="products drag_region reorder_region clearfix" style="width: 248px;">
+                    <div class="product drag_container reorder_container">
+                        <div class="liner">
+                            <div class="header drag_target">
+                                <div class="liner">
+                                    <div class="name">
+                                        选择一个团队
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="accounts drag_region reorder_region">
+                                {% for team in currentUser.teams %}
+                                <div class="account drag_container drag_target reorder_container menu_container bcx" >
+                                    <a href="/team/{{team.id}}" class="bcx">
+                                        <span class="logo basecamp trial">
+                                        </span>
+                                        <div class="name">
+                                            <div>{{team.title}}</div>
+                                            <div class="loading"></div>
+                                        </div>
+                                    </a>
+                                </div>
+                                {% end %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    <script src="{{ static_url("scripts/lib/jquery.js")}}" type="text/javascript"></script>
+    </body>
+</html>

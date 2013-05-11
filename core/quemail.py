@@ -26,6 +26,7 @@ import logging
 import time
 
 from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
 from email.utils import make_msgid, formatdate
 
 from time import sleep
@@ -124,7 +125,7 @@ class Email(object):
         self.subject = props.get('subject', None)
         self.adr_to = props.get('adr_to', None)
         self.adr_from = props.get('adr_from', None)
-        self.mime_type = props.get('mime_type', 'plain')
+        self.mime_type = props.get('mime_type', 'html')
         
     def __str__(self):
         return "Email to: %s, from: %s, sub: %s" % (self.adr_to, self.adr_from, self.subject)
@@ -133,7 +134,8 @@ class Email(object):
         '''
         Creates standardized email with valid header
         '''
-        msg = MIMEText(self.text, self.mime_type, 'utf-8')
+        msg = MIMEMultipart()
+        msg.attach(MIMEText(self.text, self.mime_type, 'utf-8'))
         msg['Subject'] = self.subject
         msg['From'] = self.adr_from
         msg['To'] = self.adr_to

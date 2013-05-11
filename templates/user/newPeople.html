@@ -7,7 +7,7 @@
     <div class="panel global_invite people">
         <form action="/people" class="invite" data-remote="true" method="post">
             <div class="step">
-                <span>Step 1</span>
+                <span>第一步</span>
             </div>
             <div class="row">
                 <section class="invite">
@@ -15,12 +15,12 @@
                         <h1 style="font-weight:bold; margin-bottom: 10px">邀请用户</h1>
                         <h1>输入要邀请用户的Email:</h1>
                     </header>
-                    <div class="invitees" data-behavior="invitees">
+                    <div class="invitees" data-behavior="invitees" id="invitees">
                         <div class="person invitee field blank">
                             <div class="autocomplete_people">
                                 <div class="icon"></div>
                                 <div class="input">
-                                    <input type="text" value="" spellcheck="false">
+                                    <input type="text" name="email[]" value="" spellcheck="false" data-toggle="remote">
                                 </div>
                                 <div class="suggestions" data-role="suggestions_view">
                                     <ol class="suggestions">
@@ -30,9 +30,10 @@
                         </div>
                     </div>
                 </section>
+                <div class="vertical"></div>
             </div>
             <div class="step">
-                <span>Step 2</span>
+                <span>第二步</span>
             </div>
             <div class="row">
                 <section>
@@ -44,22 +45,25 @@
                     </p>
                     <table class="accesses" data-display="invite_projects">
                         <tbody>
+                            {% for project in team.projects %}
                             <tr data-project-id="2409861">
                                 <th>
-                                    <input id="invite_project_2409861" name="project_ids[]" type="checkbox" value="2409861">
+                                    <input id="invite_project_2409861" name="projectId[]" data-toggle="remote" type="checkbox" value="{{project.id}}">
                                 </th>
                                 <td>
                                     <label for="invite_project_2409861">
-                                        Explore Basecamp!
+                                        {{project.title}}
                                     </label>
                                 </td>
                             </tr>
+                            {% end %}
                         </tbody>
                     </table>
                 </section>
+                <div class="vertical"></div>
             </div>
             <div class="step">
-                <span>Step 3</span>
+                <span>第三步</span>
             </div>
             <div class="row">
                 <section class="superpowers">
@@ -70,7 +74,7 @@
                         <tbody>
                             <tr data-project-id="2409861">
                                 <th>
-                                    <input id="can_create_projects" name="can_create_projects" type="checkbox" value="1">
+                                    <input id="can_create_projects" name="canCreateProjects" type="checkbox" value="1" data-toggle="remote">
                                 </th>
                                 <td>
                                     <label for="invite_project_2409861">
@@ -80,7 +84,7 @@
                             </tr>
                             <tr data-project-id="2409861">
                                 <th>
-                                    <input id="admin" name="admin" type="checkbox" value="1">
+                                    <input id="admin" name="admin" type="checkbox" value="1" data-toggle="remote">
                                 </th>
                                 <td>
                                     <label for="invite_project_2409861">
@@ -91,14 +95,15 @@
                         </tbody>
                     </table>
                 </section>
+                <div class="vertical"></div>
             </div>
             <div class="step">
-                <span>Step 4</span>
+                <span>第四步</span>
             </div>
             <div class="row">
                 <section class="done">
                     <p class="submit">
-                        <input name="commit" type="submit" value="Send the invitation">
+                        <button name="commit" data-toggle="submit" >发送邀请</button>
                     </p>
                     <p>每个用户将会收到一封带有加入团队的邮件.</p>
                 </section>
@@ -110,6 +115,7 @@
 
 {% block script %}
 $(function(){
+    $('#invitees').autoAdd()
 })
 
 {% end %}

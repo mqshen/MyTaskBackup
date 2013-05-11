@@ -3,6 +3,7 @@ from core.session import Session
 
 from core.escape import json_encode
 from core.util import serialize
+from user.models import User
 from core.database import db
 
 
@@ -20,6 +21,14 @@ class BaseHandler(tornado.web.RequestHandler):
 
     def get_current_user(self):
         return self.session['user'] if self.session and 'user' in self.session else None
+    
+    def rawRender(self, templateName, **kwargs):
+        super().render(templateName, **kwargs)
+
+    def render(self, templateName, **kwargs):
+        currentUserId = self.current_user
+        user = User.query.filter_by(id=currentUserId).first()
+        super().render(templateName, currentUser=user , **kwargs)
     
     def writeSuccessResult(self, model=None, **kwargs):
         result = None
