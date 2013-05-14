@@ -38,8 +38,8 @@
                             </div>
                             <div>
                                 <span class="wrapper">
-                                    <input 
-                                        data-url="/project/{{project.id}}/todo//toggle" name="todo_complete" type="checkbox" value="1">
+                                    <input href="/project/{{project.id}}/todolist/{{todoItem.todolist_id}}/todoitem/{{todoItem.id}}/done"
+                                        name="todo_complete" data-toggle="post" type="checkbox" value="1">
                                     <span class="content" >
                                         <a href="/project/{{project.id}}/todo/" class="editable" data-type="textarea" name="description">
                                             {{ todoItem.description }}
@@ -78,6 +78,8 @@
                         </li>
                         {% end %}
                         {% end %}
+                    </ul>
+                    <ul class="completed truncated" style="display: none;">  
                     </ul>
                 </article>
                 <article class="todolist">
@@ -170,6 +172,7 @@
 
 {% block script %}
 $(function(){
+
 })
 
 {% end %}

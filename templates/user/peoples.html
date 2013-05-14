@@ -6,6 +6,7 @@
 <div class="container flat_container" >
     <div class="panel home_tab people_index groups_blank_slate" >
         <title>People</title>
+        {% if currentUser.privilege and currentUser.privilege > 1 %}
         <nav class="people_nav">
             <span class="position_reference">
                 <a data-bare-workspace="true" data-behavior="bounce" href="/people/new">
@@ -14,6 +15,7 @@
                 <div class="blank_slate_arrow"></div>
             </span>
         </nav>
+        {% end %}
         <section class="people cards">
             {% for i, people in enumerate(team.members) %}
                 {% if i % 4 == 0 %}

@@ -26,9 +26,8 @@ class BaseHandler(tornado.web.RequestHandler):
         super().render(templateName, **kwargs)
 
     def render(self, templateName, **kwargs):
-        currentUserId = self.current_user
-        user = User.query.filter_by(id=currentUserId).first()
-        super().render(templateName, currentUser=user , **kwargs)
+        currentUser = self.current_user
+        super().render(templateName, currentUser=currentUser, **kwargs)
     
     def writeSuccessResult(self, model=None, **kwargs):
         result = None

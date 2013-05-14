@@ -8,7 +8,7 @@ from forms.validators import StopValidation, u, unicode, next
 from datetime import datetime
 
 __all__ = (
-    'TextField', 'ListField', 'FileField', 'IntField', 'DateField'
+    'TextField', 'ListField', 'FileField', 'IntField', 'DateField', 'BooleanField'
 )
 
 _unset_value = object()
@@ -312,3 +312,14 @@ class DateField(Field):
     def _value(self):
         return self.data is not None or u('')
 
+class BooleanField(Field):
+    """
+    this field is the file update
+    """
+    def process_formdata(self, valuelist):
+        if valuelist :
+            self.data = True
+        else:
+            self.data = False
+    def _value(self):
+        return self.data is not None or False

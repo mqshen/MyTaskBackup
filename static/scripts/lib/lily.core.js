@@ -147,6 +147,8 @@ $.extend( $.lily, {
 
         $('[data-toggle=remote],[data-toggle=datepick]' , sourceElement).each(function () {
     		var $this = $(this)
+            if($this.attr("type") == "checkbox" && !$this.attr("checked"))
+                return
             var value = $this.val()
             if(value && !$.lily.format.isEmpty(value) ){
                 var name = $this.attr("name")
@@ -196,7 +198,7 @@ $.extend( $.lily, {
         return orginRequestData
     },
     showWait : function(target) {
-    	var waitObj = $('<span class="wait" ></span>');
+    	var waitObj = $('<a class="wait" href="javascript:;">nbsp;</a>');
 
     	waitObj.css({
     		width: target.width(),
@@ -205,6 +207,11 @@ $.extend( $.lily, {
             padding: target.css("padding"),
     		margin: target.css("margin")
     	})
+        if(target.css("display") == 'inline-block')
+            waitObj.css({
+                display: target.css("display"),
+                "vertical-align": "top"
+            })
     	target.hide();
     	waitObj.insertAfter(target);
     },

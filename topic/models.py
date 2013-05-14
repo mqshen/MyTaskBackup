@@ -8,7 +8,7 @@ from sqlalchemy import Column, Integer, String, DateTime, Boolean, ForeignKey, T
 from sqlalchemy.orm import relationship
 
 
-__all__ = ['Message']
+__all__ = ['Message', 'Comment']
 
 class Message(db.Model):
     id = Column(Integer, primary_key=True)

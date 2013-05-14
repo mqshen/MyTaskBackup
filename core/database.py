@@ -137,7 +137,7 @@ class DjangoQuery(Query):
 
 
 class Model(object):
-    id = Column(Integer, primary_key=True)  # primary key
+    '''id = Column(Integer, primary_key=True)  # primary key'''
     query = None
 
     @declared_attr

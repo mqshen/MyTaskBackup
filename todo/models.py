@@ -30,5 +30,6 @@ class TodoItem(db.Model):
     project_id = Column(Integer, ForeignKey('project.id'))
     team_id = Column(Integer, ForeignKey('team.id'))
     deadline = Column(DateTime)
+    done = Column(Integer, default=0)
     createTime = Column(DateTime)
 

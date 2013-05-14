@@ -5,6 +5,7 @@ Created on Feb 4, 2013
 '''
 from user.models import User
 from .models import TodoList, TodoItem
+from operation.models import Operation
 from attachment.models import Attachment
 from project.models import Project
 import logging
@@ -36,11 +37,20 @@ class TodoListHandler(BaseHandler):
     def post(self, projectId):
         form = TodoListForm(self.request.arguments, locale_code=self.locale.code)
         if form.validate():
-            teamId = self.session["currentTeamId"]
             currentUser = self.current_user
+            teamId = currentUser.teamId
+            now = datetime.now()
             todoList = TodoList(title=form.title.data, 
-                own_id=currentUser.id, project_id= projectId, team_id=teamId, createTime=datetime.now())
+                own_id=currentUser.id, project_id= projectId, team_id=teamId, createTime= now)
             db.session.add(todoList)
+
+            db.session.flush()
+
+            url = '/project/%s/todolist/%d'%(projectId, todoList.id)
+            operation = Operation(own_id = currentUser.id, createTime= now, operation_type=0, target_type=3,
+                target_id=todoList.id, title= todoList.title, team_id= teamId, project_id= projectId, url= url)
+            db.session.add(operation)
+
             db.session.commit()
             self.writeSuccessResult(todoList)
 
@@ -51,12 +61,20 @@ class TodoItemHandler(BaseHandler):
     def post(self, projectId, todoListId):
         form = TodoItemForm(self.request.arguments, locale_code=self.locale.code)
         if form.validate():
-            teamId = self.session["currentTeamId"]
             currentUser = self.current_user
+            teamId = currentUser.teamId
+            now = datetime.now()
             todoItem = TodoItem(description=form.description.data, 
                 own_id=currentUser.id, todolist_id= todoListId, project_id= projectId, worker_id= form.workerId.data,
-                deadline= form.deadLine.data, team_id=teamId, createTime=datetime.now())
+                deadline= form.deadLine.data, team_id=teamId, createTime= now)
             db.session.add(todoItem)
+            db.session.flush()
+
+            url = '/project/%s/todolist/%s/todoitem/%d'%(projectId, todoListId, todoItem.id)
+            operation = Operation(own_id = currentUser.id, createTime= now, operation_type=0, target_type=4,
+                target_id=todoItem.id, title= todoItem.description, team_id= teamId, project_id= projectId, url= url)
+            db.session.add(operation)
+
             db.session.commit()
             worker = None
             if todoItem.worker_id is not None:
@@ -70,8 +88,8 @@ class TodoItemDetailHandler(BaseHandler):
     def post(self, projectId, todoListId, todoItemId):
         form = TodoItemForm(self.request.arguments, locale_code=self.locale.code)
         if form.validate():
-            teamId = self.session["currentTeamId"]
             currentUser = self.current_user
+            teamId = currentUser.teamId
             todoItem = TodoItem.query.filter_by(id=todoItemId).first()
             if todoItem is not None:
                 todoItem.worker_id = form.workerId.data
@@ -92,10 +110,36 @@ class TodoItemModifyHandler(BaseHandler):
     @tornado.web.authenticated
     def post(self, projectId, todoListId, todoItemId, operation):
         todoItem = TodoItem.query.filter_by(id=todoItemId).first()
+        currentUser = self.current_user
+        teamId = currentUser.teamId 
+        now = datetime.now()
         if operation == "trash" :
             db.session.delete(todoItem)
-            db.session.commit()
 
+            url = '/project/todolist/%s/todoitem/%d'%(todoListId, todoItem.id)
+            myOperation = Operation(own_id = currentUser.id, createTime= now, operation_type=3, target_type=4,
+                target_id=todoItem.id, title= todoItem.description, team_id= teamId, project_id= projectId, url= url)
+            db.session.add(myOperation)
+
+        elif operation == "undone" :
+            url = '/project/todolist/%s/todoitem/%d'%(todoListId, todoItem.id)
+            myOperation = Operation(own_id = currentUser.id, createTime= now, operation_type=10, target_type=4,
+                target_id=todoItem.id, title= todoItem.description, team_id= teamId, project_id= projectId, url= url)
+            db.session.add(myOperation)
+
+            todoItem.done = 0
+            db.session.add(todoItem)
+        elif operation == "done" :
+            url = '/project/todolist/%s/todoitem/%d'%(todoListId, todoItem.id)
+            myOperation = Operation(own_id = currentUser.id, createTime= now, operation_type=9, target_type=4,
+                target_id=todoItem.id, title= todoItem.description, team_id= teamId, project_id= projectId, url= url)
+            db.session.add(myOperation)
+            
+            todoItem.deadline = now
+            todoItem.done = 1
+            db.session.add(todoItem)
+
+        db.session.commit()
         self.writeSuccessResult(todoItem)
 
 handlers = [

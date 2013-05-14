@@ -30,4 +30,5 @@ class Project(db.Model):
 
     users = relationship("User", secondary=project_user_rel, backref="projects")
     todoItems = relationship("TodoItem", backref="project")
+    operations = relationship("Operation", backref="project")
 

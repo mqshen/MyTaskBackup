@@ -1,3 +1,5 @@
+{% from tornado.options import options %}
+<!DOCTYPE html>
 <html>
 	<head>
         <title>{% block title %}MyTask{% end %}</title>
@@ -54,6 +56,21 @@
     <script type="text/javascript">
         {% block script %} $(function(){}) {% end %}
     </script>
+    <script type="text/javascript">
+$(function(){
+    var WebSocket = window.WebSocket || window.MozWebSocket;
+    if (WebSocket) {
+        try {
+            var socket = new WebSocket('ws://{{options.domain}}/updates');
+        } catch (e) {}
+    }
 
+    if (socket) {
+        socket.onmessage = function(event) {
+            console.log(event.data)
+        }
+    }
+}) 
+    </script>
     </body>
 </html>

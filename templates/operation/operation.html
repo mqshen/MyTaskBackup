@@ -32,8 +32,8 @@ function callback(responseData) {
             actionStr += '<div class="day">'
                 + '<a href="/2203367/summary/2013-05-07" class="decorated">'
                 + '<span>'
-                + '<span>May 7</span>'
-                + '<time date-days-ago="" >Tuesday</time>'
+                + '<span>' + createTime.format("mm-dd") + '</span>'
+                + '<time date-days-ago="" >' + $.lily.param.getDisplay("WEEK_DAY", createTime.getDay()) + '</time>'
                 + '</span>'
                 + '</a>'
                 + '</div>'
@@ -46,19 +46,20 @@ function callback(responseData) {
             if(!flag)
                 lastIndex = (lastIndex + 1) % 2
             actionStr += '<div class="project chiral ' + classArray[lastIndex] + '" style="">'
-                + '<a data-default-stack="true" href="/2203367/projects/2742854-test11">test11</a>'
+                + '<a data-default-stack="true" href="/project/' + operation.project.id + '">' + operation.project.title + '</a>'
                 + '</div>'
         }
         flag = false
         lastProjectId = operation.project_id
+
         actionStr += '<article class="event chiral ' + classArray[lastIndex] + '" data-side="left">'
             + '<div class="time">'
             + '<span class="time_only">'
-            + '<time data-local-time="" datetime="2013-05-07T09:09:09Z" style="">5:09pm</time>'
+            + '<time data-local-time="" datetime="2013-05-07T09:09:09Z" style="">' + createTime.format("hh:mi") + '</time>'
             + '</span>'
             + '</div>'
             + '<div class="avatar">'
-            + '<a data-stacker="false" href="/2203367/people/4061968-miaoqishen">'
+            + '<a data-stacker="false" href="/people/' + operation.own.id + '">'
             + '<img class="avatar" height="48" src="/avatar/' + operation.own.avatar + '" title="' + operation.own.name + '" width="48">'
             + '</a>'
             + '</div>'
@@ -70,7 +71,7 @@ function callback(responseData) {
             + $.lily.param.getDisplay("OPERATION_TYPE", operation.operation_type) 
             + $.lily.param.getDisplay("TARGET_TYPE", operation.target_type)
             + '<span class="suffix">:</span> '
-            + '<a class="decorated" href="/project/2742854-test11">test11</a>'
+            + '<a class="decorated" href="' + operation.url + '">' + operation.title+ '</a>'
             + '</span>'
             + '</div>'
             + '</article>'

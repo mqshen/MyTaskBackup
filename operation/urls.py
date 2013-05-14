@@ -26,9 +26,10 @@ class OperationHandler(BaseHandler):
 
     @tornado.web.authenticated
     def post(self):
+        currentUser = self.current_user
+        teamId = currentUser.teamId
         form = PageForm(self.request.arguments, locale_code=self.locale.code)
-        teamId = self.session["currentTeamId"]
-        operations = Operation.query.options(eagerload('own')).filter_by(team_id= teamId).limit(self.PAGE_SIZE).offset(form.begin.data * self.PAGE_SIZE).all()
+        operations = Operation.query.options(eagerload('own')).filter_by(team_id= teamId).order_by(Operation.createTime.desc()).limit(self.PAGE_SIZE).offset(form.begin.data * self.PAGE_SIZE).all()
 
         self.writeSuccessResult(operations)
 

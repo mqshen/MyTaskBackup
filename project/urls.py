@@ -12,6 +12,7 @@ import logging
 import tornado
 from tornado.options import options
 from core.BaseHandler import BaseHandler 
+import core.web 
 from forms import Form, TextField, ListField, IntField
 from datetime import datetime
 from core.database import db
@@ -31,15 +32,16 @@ class ProjectHandler(BaseHandler):
 
     @tornado.web.authenticated
     def get(self):
-        teamId = self.session["currentTeamId"]
-        projects = Project.query.filter_by(team_id=teamId).all()
+        currentUser = self.current_user
+        teamId = currentUser.teamId 
+        projects = Project.query.join(Project.users).filter(User.id==currentUser.id, Project.team_id==teamId).all()
         self.render("project/project.html", projects= projects)
 
     @tornado.web.authenticated
     def post(self):
-        teamId = self.session["currentTeamId"]
-        form = ProjectForm(self.request.arguments, locale_code=self.locale.code)
         currentUser = self.current_user
+        teamId = currentUser.teamId 
+        form = ProjectForm(self.request.arguments, locale_code=self.locale.code)
         
         users = []
         for userId in form.member.data:
@@ -51,13 +53,17 @@ class ProjectHandler(BaseHandler):
         db.session.add(project)
         db.session.flush()
 
+        url = "/project/%d"%project.id
         operation = Operation(own_id = currentUser.id, createTime= now, operation_type=0, target_type=0,
-                target_id=project.id, title= project.title, team_id= teamId, project_id= project.id)
+                target_id=project.id, title= project.title, team_id= teamId, project_id= project.id, url= url)
 
         db.session.add(operation)
 
 
         db.session.commit()
+        
+        currentUser.projects.append(project.id)
+        self.session["user"] = currentUser
         self.writeSuccessResult(project, successUrl='/')
 
 
@@ -65,7 +71,8 @@ class NewProjectHandler(BaseHandler):
 
     @tornado.web.authenticated
     def get(self):
-        teamId = self.session["currentTeamId"]
+        currentUser = self.current_user
+        teamId = currentUser.teamId 
         team = Team.query.filter_by(id=teamId).first()
         self.render("project/newProject.html", team= team)
 
@@ -75,6 +82,7 @@ class NewProjectHandler(BaseHandler):
 
 class ProjectDetailHandler(BaseHandler):
     @tornado.web.authenticated
+    @core.web.authenticatedProject
     def get(self, projectId):
         project = Project.query.filter_by(id=projectId).first()
         messages = Message.query.filter_by(project_id=projectId).order_by(Message.createTime).limit(5).all()
@@ -84,14 +92,16 @@ class ProjectDetailHandler(BaseHandler):
 
 class ProjectAccessHandler(BaseHandler):
     @tornado.web.authenticated
+    @core.web.authenticatedProject
     def get(self, projectId):
         project = Project.query.filter_by(id=projectId).first()
         teamId = self.session["currentTeamId"]
         team = Team.query.filter_by(id=teamId).first()
         currentUser = self.current_user
-        self.render("project/projectAccess.html", project= project, team= team, currentUser= currentUser)
+        self.render("project/projectAccess.html", project= project, team= team)
 
     @tornado.web.authenticated
+    @core.web.authenticatedProject
     def post(self, projectId):
         form = ProjectAccessForm(self.request.arguments, locale_code=self.locale.code)
         if(form.operation.data == "add"):

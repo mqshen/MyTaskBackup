@@ -4,6 +4,7 @@ Created on Feb 4, 2013
 @author: GoldRatio
 '''
 from .models import Message, Comment
+from operation.models import Operation
 from attachment.models import Attachment
 from project.models import Project
 import logging
@@ -34,13 +35,20 @@ class MessageHandler(BaseHandler):
     def post(self, projectId):
         form = MessageForm(self.request.arguments, locale_code=self.locale.code)
         if form.validate():
-            teamId = self.session["currentTeamId"]
             currentUser = self.current_user
+            teamId = currentUser.teamId
+            now = datetime.now()
             message = Message(title=form.title.data, content=form.content.data, 
-                own_id=currentUser.id, project_id= projectId, team_id=teamId, createTime=datetime.now())
+                own_id=currentUser.id, project_id= projectId, team_id=teamId)
             db.session.add(message)
             db.session.flush()
             messageId = message.id
+
+            url = "/project/%s/message/%d"%(projectId, message.id)
+            operation = Operation(own_id = currentUser.id, createTime= now, operation_type=1, target_type=1,
+                target_id=messageId, title= message.title, team_id= teamId, project_id= projectId, url= url)
+            db.session.add(operation)
+
             for attachment in form.attachment.data:
                 attachment = Attachment.query.filter_by(url=attachment).first()
                 if attachment is not None:
@@ -64,15 +72,15 @@ class MessageDetailHandler(BaseHandler):
         project = Project.query.filter_by(id=projectId).first()
         message = Message.query.filter_by(id=messageId).first()
         currentUser = self.current_user
-        self.render("topic/messageDetail.html", project= project, message= message, currentUser= currentUser)
+        self.render("topic/messageDetail.html", project= project, message= message)
 
 class CommentHandler(BaseHandler):
     @tornado.web.authenticated
     def post(self, projectId, messageId):
         form = CommentForm(self.request.arguments, locale_code=self.locale.code)
         if form.validate():
-            teamId = self.session["currentTeamId"]
             currentUser = self.current_user
+            teamId = currentUser.teamId
             comment = Comment(content=form.content.data, message_id=messageId ,
                 own_id=currentUser.id, project_id= projectId, team_id=teamId, createTime=datetime.now())
             db.session.add(comment)

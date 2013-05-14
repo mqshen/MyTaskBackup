@@ -26,22 +26,17 @@
             }
             else if(url.match(/\/done$/)) {
                 if(!that.$completeContainer) {
-                    var test = that.$element.closest('ul')
-                    that.$completeContainer = test.parent().find(".todos-completed")
+                    var test = that.$element.closest('article')
+                    that.$completeContainer = test.find("ul.completed")
                 }
-                if(that.$completeContainer.length == 0) {
-                	that.$element.fadeOut()
-                }
-                else {
-                	$button.attr("href", url.substring(0, url.length - 4) + "undone")
-                	that.$element.addClass("completed").appendTo(that.$completeContainer)
-                }
+                $button.attr("href", url.substring(0, url.length - 4) + "undone")
+                that.$element.addClass("completed").appendTo(that.$completeContainer)
                 $.lily.hideWait($button)
             }
             else if(url.match(/\/undone$/)) {
                 if(!that.$uncompleteContainer) {
-                    var test = that.$element.closest('ul')
-                    that.$uncompleteContainer = test.parent().find(".todos-uncompleted")
+                    var test = that.$element.closest('article')
+                    that.$uncompleteContainer = test.find("ul.todos")
                 }
                 $button.attr("href", url.substring(0, url.length - 6) + "done")
                 that.$element.removeClass("completed").appendTo(that.$uncompleteContainer)

@@ -95,8 +95,8 @@ class AvatarHandler(BaseHandler):
     def post(self):
         fileDescription = self.request.body
         if fileDescription is not None:
-            teamId = self.session["currentTeamId"]
             currentUser = self.current_user
+            teamId = currentUser.teamId
 
             contentType = self.request.headers.get("Content-Type")
             if contentType not in options.allowImageFileType:
@@ -122,6 +122,8 @@ class AvatarHandler(BaseHandler):
             user.avatar= fileName 
             db.session.add(user)
             db.session.commit()
+            currentUser.avatar = user.avatar
+            self.session["user"] = currentUser
 
             self.writeSuccessResult(user)
     
@@ -188,8 +190,8 @@ class AttachmentHandler(BaseHandler):
     def post(self):
         fileDescription = self.request.body
         if fileDescription is not None:
-            teamId = self.session["currentTeamId"]
             currentUser = self.current_user
+            teamId = currentUser.teamId
 
             contentType = self.request.headers.get("Content-Type")
             if contentType in options.allowImageFileType:

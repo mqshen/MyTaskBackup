@@ -1,0 +1,85 @@
+{% extends "../base.html" %}
+
+{% block title %}MyTask{% end %}
+
+{% block body%}
+    <div class="container flat_container calendar_container">
+        <div class="panel calendar">
+            <div id="calendar_display_singleton" class="calendar_display calendar_list_visible" >
+                <div class="right">
+                    <div class="sheet">
+                        <header id="calendar_navigation_singleton" class="calendar_navigation" data-autoview="">
+                            <button class="toggle_calendar_list hide action_button" >
+                                <span class="hide">⇤ Hide calendar list</span>
+                            </button>
+                            <button class="toggle_calendar_list show action_button" style="display:none">
+                                <span class="show">Show a list of calendars ⇥</span>
+                            </button>
+                            <nav>
+                                <button class="action_button prev">
+                                    ◀
+                                </button>
+                                <button class="action_button next">
+                                    ▶
+                                </button>
+                            </nav>
+                            <h1 data-behavior="expandable" class="calendar_title">
+                                <a href="#" data-behavior="jump_to_month">
+                                    May 2013
+                                </a>
+                                <div id="calendar_jump_singleton" class="position_reference" style="display: none;" data-autoview="">
+                                    <div class="calendar_jump balloon top_left_side">
+                                        <span class="arrow"></span>
+                                        <span class="arrow"></span>
+                                    </div>
+                                </div>
+                            </h1>
+                        </header>
+                    </div>
+                </div>
+
+                <div class="left">
+                    <aside class="calendar_list">
+                        <div id="calendar_list_singleton" class="calendar_list">
+                            <section class="calendars">
+                                <div class="new_calendar_event">
+                                    <a href="#" data-behavior="add_calendar" class="decorated">+ Add a calendar</a>
+                                </div>
+                                <h4>日历</h4>
+                                <ul class="have_not_been_shared">
+                                    <li class="calendar" id="calendar_451504" data-bucket-type="calendar" data-bucket-id="451504">
+                                        <span class="swatch" style="background-color: #2c5322">
+                                            <a href="#" class="active" data-behavior="toggle_bucket"></a>
+                                        </span>
+                                        <a href="#" data-behavior="zoom_in" title="Only show this calendar">General</a>
+                                        <a href="#" data-behavior="edit_bucket" title="">Settings</a>
+                                    </li>
+                                </ul>
+                                <div class="calendar_list_blank_slate">
+                                    <div class="blank_slate_arrow"></div>
+                                    <div>
+                                        <h5>Share your calendars</h5>
+                                        <p>Click Settings to share your calendars with other people.</p>
+                                    </div>
+                                </div>
+                            </section>
+                            <section class="calendars">
+                                <h4>Projects</h4>
+                                <ul>
+                                    <li data-bucket-type="project" data-bucket-id="2409861" class="">
+                                        <span class="swatch" style="background-color: #3185c5">
+                                            <a href="#" class="active" data-behavior="toggle_bucket"></a>
+                                        </span>
+                                        <a href="#" title="Only show this calendar">Explore Basecamp!</a>
+                                        <a href="#" title="Change this calendar's name, color, and more">Settings</a>
+                                    </li>
+                                </ul>
+                            </section>
+                        </div>
+                    </aside>
+                </div>
+            </div>
+        </div>
+    </div>
+{% end %}
+
