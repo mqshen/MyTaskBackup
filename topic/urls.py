@@ -15,12 +15,14 @@ from core.BaseHandler import BaseHandler
 from forms import Form, TextField, ListField
 from datetime import datetime
 from core.database import db
+import core.web
 
 
 class MessageForm(Form):
     title = TextField('title')
     content = TextField('content')
     attachment = ListField('attachment')
+    attachmentDel = ListField('attachmentDel')
 
 class CommentForm(Form):
     content = TextField('content')
@@ -68,11 +70,48 @@ class NewMessageHandler(BaseHandler):
 
 class MessageDetailHandler(BaseHandler):
     @tornado.web.authenticated
+    @core.web.authenticatedProject
     def get(self, projectId, messageId):
         project = Project.query.filter_by(id=projectId).first()
         message = Message.query.filter_by(id=messageId).first()
         currentUser = self.current_user
         self.render("topic/messageDetail.html", project= project, message= message)
+
+    @tornado.web.authenticated
+    @core.web.authenticatedProject
+    def post(self, projectId, messageId, **kwargs):
+        form = MessageForm(self.request.arguments, locale_code=self.locale.code)
+        project = Project.query.filter_by(id=projectId).first()
+        message = Message.query.filter_by(id=messageId).first()
+        currentUser = self.current_user
+        teamId = currentUser.teamId
+        now = datetime.now()
+        message.title = form.title.data
+        message.content = form.content.data
+        messageId = message.id
+
+        url = "/project/%s/message/%d"%(projectId, messageId)
+        operation = Operation(own_id = currentUser.id, createTime= now, operation_type=4, target_type=1,
+            target_id=messageId, title= message.title, team_id= teamId, project_id= projectId, url= url)
+
+        db.session.add(operation)
+
+        for attachment in form.attachment.data:
+            attachment = Attachment.query.filter_by(url=attachment).first()
+            if attachment is not None:
+                attachment.project_id = projectId
+                attachment.message_id = messageId
+                attachment.team_id = teamId
+                db.session.add(attachment)
+                
+        for url in form.attachmentDel.data:
+            for attachment in message.attachments:
+                if attachment.url == url:
+                    message.attachments.remove(attachment)
+
+        db.session.add(message)
+        db.session.commit()
+        self.writeSuccessResult(message)
 
 class CommentHandler(BaseHandler):
     @tornado.web.authenticated

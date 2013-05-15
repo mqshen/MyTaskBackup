@@ -11,6 +11,7 @@ from sqlalchemy.orm import relationship
 __all__ = ['Message', 'Comment']
 
 class Message(db.Model):
+    eagerRelation = ['attachments']
     id = Column(Integer, primary_key=True)
     title = Column(String(60))
     content = Column(Text)

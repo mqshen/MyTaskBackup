@@ -2123,3 +2123,224 @@ padding-bottom: 40px;
 div.calendar_container {
 width: 100% !important;
 }
+div.formatted_content p, div.formatted_content div, div.formatted_content ol, div.formatted_content ul, body.wysiwyg_editor p, body.wysiwyg_editor div, body.wysiwyg_editor ol, body.wysiwyg_editor ul {
+margin: 0;
+}
+div.formatted_content ul, div.formatted_content ol, body.wysiwyg_editor ul, body.wysiwyg_editor ol {
+margin: 0;
+padding: 0 0 0 40px;
+}
+aside.tools {
+position: absolute;
+right: -45px;
+top: 0;
+padding-left: 10px;
+padding-bottom: 6px;
+background-color: #fff;
+overflow: visible !important;
+}
+.has_tools {
+position: relative;
+}
+aside.tools>.tool:first-child {
+border-top: none;
+}
+aside.tools>.tool {
+width: 115px;
+display: block;
+float: right;
+clear: both;
+border-top: 1px solid #e5e5e5;
+border-bottom: 1px solid #e5e5e5;
+margin-top: -1px;
+padding: 5px 20px 4px 0;
+min-height: 21px;
+overflow: hidden;
+-webkit-transition: width 0.3s;
+-moz-transition: width 0.3s;
+transition: width 0.3s;
+}
+aside.tools>.tool a {
+padding: 0;
+color: #1c5c76;
+text-decoration: underline;
+}
+div.edit_mode input {
+    width: 885px;
+border: 0px;
+border-bottom: 1px solid #ccc;
+}
+div.edit_mode .editor_toolbar ,
+div.edit_mode .wysihtml5-sandbox{
+padding: 0 65px;
+}
+.attachment_tool {
+    display: none;
+}
+div.edit_mode .attachment_tool {
+    display: block;
+}
+ul.pending_attachments li {
+    margin-bottom: 25px;
+}
+div.edit_mode .image_grid_view {
+    display: none;
+}
+div.edit_mode .file_attachments{
+    display: none;
+}
+ul.pending_attachments>li div.icon {
+float: left;
+margin: -8px 2px 0 -3px;
+width: 32px;
+height: 32px;
+vertical-align: top;
+}
+ul.pending_attachments>li:after {
+content: ".";
+display: block;
+height: 0;
+clear: both;
+visibility: hidden;
+}
+#image_enlarger {
+position: fixed;
+top: 0px;
+left: 0px;
+right: 0px;
+bottom: 0px;
+z-index: 1002;
+font-family: "Lucida Grande","Segoe UI",helvetica,sans-serif;
+}
+#image_enlarger button.close {
+height: 24px;
+width: 24px;
+position: absolute;
+top: 10px;
+right: 10px;
+border: 0px;
+padding: 0px;
+margin: 0px;
+background: url(../images/close.png);
+}
+#image_enlarger.with_nav>figure {
+top: 40px;
+bottom: 180px;
+}
+#image_enlarger>figure {
+position: absolute;
+top: 40px;
+left: 20px;
+right: 20px;
+bottom: 70px;
+}
+#image_enlarger nav {
+position: fixed;
+left: 0px;
+right: 0px;
+bottom: 0px;
+text-align: center;
+height: 100px;
+}
+#image_enlarger nav>div.images.scrolling {
+border-left-width: 1px;
+border-right-width: 1px;
+}
+#image_enlarger nav>div.images {
+position: absolute;
+top: 0px;
+bottom: 0px;
+left: 50px;
+right: 50px;
+overflow: hidden;
+border: 0 solid #666;
+}
+#image_enlarger nav>div.images table {
+margin: 0px auto;
+border-spacing: 0px;
+position: relative;
+left: 0px;
+}
+#image_enlarger nav>div.images td:first-child {
+padding-left: 20px;
+}
+#image_enlarger nav>div.images td {
+height: 100px;
+padding: 0px 10px;
+vertical-align: middle;
+}
+#image_enlarger>figure>div.table_wrapper {
+position: relative;
+display: table;
+width: 100%;
+height: 100%;
+}
+#image_enlarger>figure>div.table_wrapper>div.cell_wrapper {
+width: 100%;
+height: 100%;
+display: table-cell;
+text-align: center;
+vertical-align: middle;
+}
+#image_enlarger nav>div.images td img {
+display: block;
+max-height: 70px;
+max-width: 70px;
+border: 1px solid rgba(255,255,255,0.2);
+cursor: pointer;
+}
+#image_enlarger nav button.arrow.left {
+left: 0px;
+background-position: 0px 35px;
+}
+#image_enlarger nav button.arrow[disabled] {
+opacity: 0;
+cursor: default;
+}
+#image_enlarger nav button.arrow {
+position: absolute;
+top: 0px;
+bottom: 0px;
+width: 50px;
+margin: 0;
+border: 0;
+padding: 0;
+background: url(../images/arrows.png) no-repeat;
+opacity: 0.4;
+}
+.arrow {
+font-size: 0;
+line-height: 0;
+width: 0;
+border-style: solid;
+border-width: 12px;
+}
+.shade {
+-moz-transition-property: visibility,background;
+-moz-transition-duration: 300ms;
+-moz-transition-delay: 300ms,0;
+-webkit-transition-property: visibility,background;
+-webkit-transition-duration: 0,300ms;
+-webkit-transition-delay: 300ms,0;
+visibility: hidden;
+background: rgba(0,0,0,0);
+position: fixed;
+top: 0;
+bottom: 0;
+left: 0;
+right: 0;
+z-index: 1001;
+-moz-transition-delay: 0;
+-webkit-transition-delay: 0;
+visibility: visible;
+background: rgba(0,0,0,0.85);
+}
+#image_enlarger nav>div.images td img.activated {
+border: 4px solid #ff6;
+padding: 1px;
+margin: -4px;
+}
+#image_enlarger nav button.arrow.right {
+right: 0px;
+background-position: -50px 35px;
+}

@@ -15,7 +15,7 @@ $.extend( $.lily, {
 		if (xhr.upload ) {
             var file = options.file
 
-            if(options.thumbnail) {
+            if(options.thumbnail && options.isImage) {
                 var imageReader = new FileReader();
                 imageReader.onload = (function(aFile) {
                     return function(e) {

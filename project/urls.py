@@ -95,7 +95,8 @@ class ProjectAccessHandler(BaseHandler):
     @core.web.authenticatedProject
     def get(self, projectId):
         project = Project.query.filter_by(id=projectId).first()
-        teamId = self.session["currentTeamId"]
+        currentUser = self.current_user
+        teamId = currentUser.teamId 
         team = Team.query.filter_by(id=teamId).first()
         currentUser = self.current_user
         self.render("project/projectAccess.html", project= project, team= team)

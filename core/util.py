@@ -16,7 +16,9 @@ def serialize(model):
     if hasattr(model, 'eagerRelation'):
         for key in model.eagerRelation:
             value = getattr(model, key)
-            if value:
+            if isinstance(value, list):
+                result.update({key: [serialize(item) for item in value]})
+            else:
                 result.update({key: serialize(value)})
         columns.extend(model.eagerRelation)
     # then we return their values in a dict

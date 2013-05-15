@@ -15,26 +15,42 @@
                 </header>
                 <div class="sheet_body">
                     <section class="perma">
-                        <div id="message" class="has_tools">
+                        <div id="message" class="has_tools editable_container" href="/project/{{project.id}}/message/{{message.id}}">
                             <article class="message">
                                 <header>
-                                    <h3>{{message.title}}</h3>
+                                    <h3 class="editable" name="title" id="message_title">{{message.title}}</h3>
                                     <p>
                                     由{{message.own.name}}在<time data-time-ago="" datetime="2013-05-04T04:19:00Z" style="">{{message.createTime}}</time>发布
                                     </p>
                                 </header>
-                                <a data-replace-stack="true" href="/people/4061968-miaoqishen">
-                                    <img class="avatar" height="59" src="/avatar/{{message.own.avatar}}" 
-                                        title="{{message.own.name}}" width="59">
+                                <a data-replace-stack="true" href="/people/{{message.own.id}}">
+                                    <img class="avatar" 
+                                        height="59" src="/avatar/{{message.own.avatar}}" title="{{message.own.name}}" width="59">
                                 </a>
-                                <div class="formatted_content" data-embeddable="">
+                                <div class="formatted_content editable" data-embeddable="" data-type="textarea" name="content">
                                     {{message.content}}
                                 </div>
-                                <div class="attachments">
+                                <div class="attachments editable" data-type="html">
+                                    <div class="attachment_tool">
+                                        <span class="prompt_graphic"></span>
+                                        <div class="file_input_button">
+                                            <span data-with-features="files_api">
+                                            上传文件
+                                            </span>
+                                            <span class="file_input_container">
+                                                <input name="attachment" type="file" multiple="" id="messageAttachment" tabindex="-1">
+                                                <a class="decorated" data-behavior="local_file_picker" href="#" tabindex="-1">
+                                                    选择要上传的文件
+                                                </a>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <ul class="pending_attachments ui-sortable" id="attachments_container">
+                                    </ul>
                                     <div id="attachments_for_message_11182345">
                                         <div class="image_grid_view">
                                             <table class="in_3_columns">
-                                                <tbody>
+                                                <tbody id="image_attachment">
                                                     {% for i, attachment in enumerate([attachment for attachment in message.attachments 
                                                         if attachment.fileType == '0']) %}
                                                         {% if i % 3 == 0 %}
@@ -45,7 +61,9 @@
                                                                 <figure class="thumbnail proportinal">
                                                                     <a href="/attachment/{{attachment.url}}" target="_blank">
                                                                         <div class="background" style="height: 174px; width: 262px;">
-                                                                            <img alt="" class="thumbnail" src="/attachment/{{attachment.url}}">
+                                                                            <img alt="" class="thumbnail editable" src="/attachment/{{attachment.url}}" 
+                                                                            data-type="image" data-content="{{attachment.url}}" data-width="{{attachment.width}}"
+                                                                                data-append="#attachments_container" data-height="{{attachment.height}}">
                                                                         </div>
                                                                     </a>
                                                                 </figure>
@@ -58,12 +76,14 @@
                                                 </tbody>
                                             </table>
                                         </div>
-                                        <ul class="attachments">
+                                        <ul class="file_attachments" id="file_attachments">
                                             {% for attachment in [attachment for attachment in message.attachments 
                                                 if attachment.fileType != '0'] %}
                                                 <li>
                                                     <a href="/attachment/{{attachment.url}}" target="_blank">
-                                                        <img src="{{static_url("images/document.png")}}">
+                                                        <img src="{{static_url("images/document.png")}}" class="editable"
+                                                            data-type="file" data-content="{{attachment.url}}" 
+                                                            data-append="#attachments_container" data-content="{{attachment.url}}">
                                                         <span>{{attachment.name}}</span>
                                                     </a>
                                                     <div class="tags">
@@ -113,6 +133,13 @@
                                     </section>
                                 </footer>
                             </article>
+                            <aside class="tools">
+                                <div class="tool" data-role="tool">
+                                    <a class="edit" id="message_edit" data-url="/project/{{project.id}}/message/{{message.id}}" data-toggle="editorTrigger" href="javascript:;">
+                                        编辑
+                                    </a>
+                                </div>
+                            </aside>
                         </div>
                     </section>
                 </div>
@@ -125,5 +152,55 @@
 {% block script %}
     $(function(){
         $("#message_content").editor()
+
+        $('#message_edit').data("doResponse", function(data){
+            var $imageContainer = $('#image_attachment')
+            var $fileContainer = $('#file_attachments')
+            $fileContainer.empty()
+            $imageContainer.empty()
+            var $images 
+            var imageNum = 0
+            for(var i in data.attachments) {            
+                var attachment = data.attachments[i]
+                if(attachment.fileType == 0) { 
+                    if( imageNum % 3 == 0)
+                        $images = $('<tr class="images"></tr>')
+                    ++imageNum
+                    var image = '<td class="occupied">'
+                        + '<article class="image">'
+                        + '<figure class="thumbnail proportinal">'
+                        + '<a href="/attachment/' + attachment.url + '" target="_blank">'
+                        + '<div class="background" style="height: 174px; width: 262px;">'
+                        + '<img alt="" class="thumbnail editable" src="/attachment/' + attachment.url
+                        + '" data-type="image" data-append="#attachments_container" >'
+                        + '</div>'
+                        + '</a>'
+                        + '</figure>'
+                        + '</article>'
+                        + '</td>'
+                    $images.append(image)
+                    if( imageNum % 3 == 2)
+                        $imageContainer.append($images) 
+                }
+                else {
+                    var $fileObj = $('<li>'
+                        + '<a href="/attachment/' + attachment.url + '" target="_blank">'
+                        + '<img src="{{static_url("images/document.png")}}" class="editable" data-type="file" data-content="' 
+                        + attachment.url + '" data-append="#attachments_container">'
+                        + '<span>' + attachment.name + '</span>'
+                        + '</a>'
+                        + '<div class="tags">'
+                        + '<ul class="tags">'
+                        + '</ul>'
+                        + '</div>'
+                        + '</li>')
+                    $fileContainer.append($fileObj)
+
+                }
+            }
+            if(imageNum %3 != 2)
+                $imageContainer.append($images) 
+        })
+        $('#image_attachment').imageView()
     })
 {% end %}

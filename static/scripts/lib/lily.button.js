@@ -37,8 +37,11 @@
             $(this.$element.attr("data-hidden")).toggle()
 
     }
-    if(this.$element.attr("data-toggle") == "button-delete") {
+    else if(this.$element.attr("data-toggle") == "button-delete") {
     	this.$element.parent().remove()
+    }
+    else if(this.$element.attr("data-toggle") == "button-hide") {
+    	this.$element.parent().hide()
     }
     
     var $parent = this.$element.closest('[data-toggle="buttons-radio"]')
@@ -96,8 +99,11 @@
     $(document).on('click.button.data-api', '[data-toggle^=remove]', function (e) {
         var $btn = $(e.target)
         if (!$btn.hasClass('remove')) $btn = $btn.closest('.remove')
-        if($btn.attr("data-content"))
-            $btn.parent().hide()
+        if($btn.attr("data-content")) {
+            var $target = $btn.parent()
+            $target.hide()
+            $target.removeClass("selected")
+        }
         else
             $btn.parent().remove()
 

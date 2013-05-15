@@ -73,10 +73,17 @@
 
             var file = $this.get(0).files[0]
 
+            var isImage = file.type.indexOf("image") > -1
             var $attachmentsContainer = $('#attachments_container')
-            var $fileObj = $('<li class="image uploading selected" data-toggle="select" name="attachment">'
+            var fileObj = '<li class="image uploading selected" data-toggle="select" name="attachment">'
                 + '<a class="remove" data-toggle="remove" href="javascript:;"><span>Remove</span></a>'
-                + '<span class="name">' + file.name + '</span></li>')
+
+            if(!isImage) {
+                fileObj += '<div class="icon"><img src="{{static_url("images/document.png")}}" class="file_icon" width="32" height="32"></div>' 
+            }
+            fileObj += '<span class="name">' + file.name + '</span></li>'
+
+            $fileObj = $(fileObj)
 
             var $progressBar = $('<div class="progress"></div>')
             var $progress = $('<div>')
@@ -85,12 +92,13 @@
             $fileObj.append($progressBar)
 
             var $image = $('<img class="thumbnail">')
-            $fileObj.prepend($image)
+            if(isImage)
+                $fileObj.prepend($image)
 
             function fileUploadCallback(data) {
                 $fileObj.attr("data-content", data.url)
                 $progress.css("width", '100%')
-                $fileObje.removeClass("uploading")
+                $fileObj.removeClass("uploading")
             }
             function progress(e) {
                 var pc = parseInt(100 - (e.loaded / e.total * 100));
@@ -104,7 +112,8 @@
                 file: file,
                 progress: progress,
                 callback: fileUploadCallback,
-                thumbnail: $image
+                thumbnail: $image,
+                isImage: isImage
             }) 
         }
         $("#messageAttachment").bind("change", fileupload)

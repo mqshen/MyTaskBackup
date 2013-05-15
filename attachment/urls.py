@@ -13,7 +13,6 @@ from tornado.options import options
 from tornado.web import RequestHandler
 from core.BaseHandler import BaseHandler 
 from forms import Form, TextField, FileField
-from datetime import datetime
 from core.database import db
 from uuid import uuid4
 from tornado.options import options
@@ -194,8 +193,13 @@ class AttachmentHandler(BaseHandler):
             teamId = currentUser.teamId
 
             contentType = self.request.headers.get("Content-Type")
+            width = 0
+            height = 0
             if contentType in options.allowImageFileType:
                 fileType = '0'
+                stream = BytesIO(fileDescription)
+                image = Image.open(stream)
+                width, height = image.size
             elif contentType in options.allowDocumentFileType:
                 fileType = '1'
             else:
@@ -210,8 +214,8 @@ class AttachmentHandler(BaseHandler):
             with open(filePath, 'wb') as out:
                 out.write(fileDescription) 
 
-            attachment = Attachment(url= fileName, name= filename, contentType= contentType, 
-                    fileType= fileType, own_id=currentUser.id, createTime=datetime.now())
+            attachment = Attachment(url= fileName, name= filename, contentType= contentType, width= width, height= height,
+                    fileType= fileType, own_id=currentUser.id, createTime=datetime.datetime.now())
             db.session.add(attachment)
             db.session.commit()
 

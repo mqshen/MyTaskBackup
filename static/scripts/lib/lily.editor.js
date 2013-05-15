@@ -43,6 +43,7 @@
 
 			this.$editor = $('<iframe class="wysihtml5-sandbox" frameborder="0"></iframe>').load(function(){
                 initFrame.call(self);
+                self.document = self.$editor[0].ownerDocument;
 		    });
 			this.$element.hide();
 		    this.window = window;	

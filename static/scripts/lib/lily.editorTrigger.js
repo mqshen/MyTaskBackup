@@ -13,7 +13,6 @@
             this.$editorContainer = this.$target.clone()
             this.$editorContainer.removeClass() 
             this.$editorContainer.addClass("edit_mode") 
-            this.$editorContainer.css("display", "none")
             var $form = $('<form class="' + this.$target.attr("data-target-class") + '" method="post" action="' + this.$target.attr("href") + '" data-save="true"></form>')
 			var self = this
 			function doResponse(data) {
@@ -22,50 +21,52 @@
                     $.lily.fillHtml($this, data)
 				})
 				self.toggle()
+                var myResponse = self.$element.data("doResponse")
+                if(myResponse)
+                    myResponse(data)
 			}
 			$form.data('doResponse', doResponse);
+                
 			$('.editable', this.$editorContainer).each(function(){
 				var $this = $(this)
 				var $obj;
 				var dataType = $this.attr("data-type");
 				if(dataType == "textarea") {
-					$obj = $('<textarea style="resize: none; overflow: hidden; min-height: 18px;" data-toggle="remote"></textarea>')
+					$obj = $('<textarea style="resize: none; overflow: hidden; min-height: 18px;width: 800px" data-toggle="remote"></textarea>')
+				    $obj.val($this.html().trim())
 				}
                 else if(dataType == "html") {
                     $obj = $this.clone()
                 }
+                else if(dataType == "image") {
+                    var $this = $(this)
+                    var result = '<li class="image selected" data-toggle="select" name="attachment" data-content="' + $this.attr("data-content")
+                        + '" data-orgin-statues="selected"><img class="thumbnail" src="' + $this.attr("src")
+                        + '"><a class="remove" data-toggle="remove" data-content="f" href="javascript:;"><span>Remove</span></a>'
+                        + '<span class="name">1.jpg</span><div class="progress"><div style="width: 100%;"></div></div></li>'
+                    $obj = $(result)
+                }
 				else if(dataType == "file") {
-					var fileUploadContainer = $('<div class="file_input_button">' 
-						+ '<span class="prompt_graphic"></span><span class="file_input_container">'
-						+ '<input type="file" name="file" style="opacity:0;height:80;cursor:pointer;font-size:0;position:absolute;">'
-		                + '<a href="javascript:;" class="">上传</a>'
-		                + '</span></div>')
-					
-					$obj = $this.clone()
-					$obj.prepend(fileUploadContainer)
-					self.$fileEditContainer = $('.file-list', $obj)
-					
-					$('[type="file"]', fileUploadContainer).bind("change", function() {
-						var $this = $(this)
-	                    $.ajaxFileUpload({
-	                        url: $.lily.contextPath + '/attachment',
-	                        secureuri: false,
-	                        fileElement: $this,
-	                        dataType: 'json',
-	                        success: function (reponseData, status) {      
-	                        	self.fileUploadCallback(reponseData)
-	                        }
-	                    })
-	                })
+                    var $this = $(this)
+                    var result = '<li class="selected" data-toggle="select" name="attachment" data-content="' + $this.attr("data-content")
+                        + '" data-orgin-statues="selected"><a class="remove" data-toggle="remove" data-content="f" href="javascript:;"><span>Remove</span></a>'
+                        + '<div class="icon"><img src="' + $this.attr("src") + '" class="file_icon" width="32" height="32">'
+                        + '</div><span class="name">' + '2.pdf' + '</span><div class="progress"><div style="width: 100%;"></div></div></li>'
+                    $obj = $(result)
 				}
 				else {
-					$obj = $('<input type="text" >')
+					$obj = $('<input type="text" data-toggle="remote">')
+				    $obj.val($this.html().trim())
 				}
 				$obj.attr("name", $this.attr("name"))
 				$obj.attr("id", $this.attr("id"))
-				$obj.val($this.html().trim())
-                $obj.appendTo($form)
+                var dataAppend = $this.attr("data-append")
+                if(dataAppend)
+                    $obj.appendTo($(dataAppend, $form))
+                else
+                    $obj.appendTo($form)
 			})
+            this.$editorContainer.css("display", "none")
             this.$editorContainer.empty()
             $form.appendTo(this.$editorContainer)
 			this.$editorContainer.insertAfter(this.$target)
@@ -74,10 +75,61 @@
                 + '<button tabindex="1" class="btn btn-primary" id="btn-post" data-toggle="submit" data-disable-with="正在保存...">保存</button>' 
                 + '<a tabindex="2" href="javascript:;" class="btn btn-x" id="link-cancel-post">取消</a></p>')
 			$buttonObj.appendTo($form)
+            $('textarea', $form).editor()
 			var self = this
 			$('#link-cancel-post', this.$editorContainer).click(function(){
 				self.toggle()
 			})
+
+            function fileupload(event) {
+		        var $this = $(event.target)
+                var file = $this.get(0).files[0]
+                var $attachmentsContainer = $('#attachments_container', $form)
+
+                var isImage = file.type.indexOf("image") > -1
+                var fileObj = '<li class="image uploading selected" data-toggle="select" name="attachment">'
+                    + '<a class="remove" data-toggle="remove" href="javascript:;"><span>Remove</span></a>'
+
+                if(!isImage) {
+                    fileObj += '<div class="icon"><img src="/static/images/document.png" class="file_icon" width="32" height="32"></div>' 
+                }
+                fileObj += '<span class="name">' + file.name + '</span></li>'
+
+                var $fileObj = $(fileObj)
+
+                var $progressBar = $('<div class="progress"></div>')
+                var $progress = $('<div>')
+                $progressBar.append($progress) 
+
+                $fileObj.append($progressBar)
+
+                var $image = $('<img class="thumbnail">')
+                if(isImage)
+                    $fileObj.prepend($image)
+
+                function fileUploadCallback(data) {
+                    $fileObj.attr("data-content", data.url)
+                    $progress.css("width", '100%')
+                    $fileObj.removeClass("uploading")
+                }
+                function progress(e) {
+                    var pc = parseInt(100 - (e.loaded / e.total * 100));
+                    $progress.css("width", pc + '%')
+                }
+
+
+                $attachmentsContainer.append($fileObj)
+                $.lily.uploadFile({
+                    url: '/attachment',
+                    file: file,
+                    progress: progress,
+                    callback: fileUploadCallback,
+                    thumbnail: $image,
+                    isImage: isImage
+                }) 
+            }
+            $("#messageAttachment", $form).bind("change", fileupload)
+
 			this.initialized = true
 		},
 		

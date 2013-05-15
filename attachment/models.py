@@ -19,6 +19,8 @@ class Attachment(db.Model):
     message_id = Column(Integer, ForeignKey('message.id'))
     comment_id = Column(Integer, ForeignKey('comment.id'))
     team_id = Column(Integer, ForeignKey('team.id'))
+    width = Column(Integer)
+    height = Column(Integer)
     fileType = Column(String(1))
     contentType = Column(String(30))
     createTime = Column(DateTime)

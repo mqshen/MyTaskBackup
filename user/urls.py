@@ -97,8 +97,8 @@ class LoginHandler(BaseHandler):
                 self.rawRender("teamSelect.html", currentUser=currentUser)
 
 class TeamHandler(BaseHandler):
-    @core.web.authenticatedTeam
     @tornado.web.authenticated
+    @core.web.authenticatedTeam
     def get(self, teamId):
         currentUser = self.current_user
         currentUser.teamId = teamId
