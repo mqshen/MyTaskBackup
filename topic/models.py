@@ -21,9 +21,11 @@ class Message(db.Model):
     createTime = Column(DateTime)
 
     attachments = relationship("Attachment", backref="message")
+    comments = relationship("Comment", backref="message")
 
 
 class Comment(db.Model):
+    eagerRelation = ['attachments', 'own']
     id = Column(Integer, primary_key=True)
     content = Column(Text)
     own_id = Column(Integer, ForeignKey('user.id'))
@@ -31,3 +33,5 @@ class Comment(db.Model):
     message_id = Column(Integer, ForeignKey('message.id'))
     team_id = Column(Integer, ForeignKey('team.id'))
     createTime = Column(DateTime)
+
+    attachments = relationship("Attachment", backref="comment")

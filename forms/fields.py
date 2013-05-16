@@ -290,11 +290,11 @@ class IntField(Field):
     """
     def process_formdata(self, valuelist):
         if valuelist and len(valuelist[0]) > 0:
-            self.data = valuelist[0]
+            self.data = int(valuelist[0])
         else:
             self.data = None                                                                                                                                                                                 
     def _value(self):
-        return self.data is not None or u('')
+        return self.data is not None or None
 
 
 class DateField(Field):

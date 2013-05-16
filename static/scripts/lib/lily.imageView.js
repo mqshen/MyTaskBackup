@@ -27,6 +27,26 @@
             this.$smallView = $('tr', this.$navContainer)
 
             var self = this
+
+            this.reload()
+
+            this.$navContainer.click(function(e){
+                var btn = e.target
+                self.startDate = new Date()
+                if(btn.nodeName.toLowerCase() == 'img')
+                    self.change($(btn))
+
+            })
+            $('.close', this.$imageViewer).click(function(){
+                self.hide()
+            })
+            this.$imageViewer.append(this.$navContainer)
+        },
+
+        reload: function(){
+            $('figure', this.$imageViewer).remove()
+            this.$smallView.empty()
+            var self = this
             $('img.thumbnail', this.$element).each(function(){
                 var $this = $(this)
                 $this.click(function(e){
@@ -36,10 +56,10 @@
                 var id = $this.attr("data-content")
                 var $largeImage = $('<figure id="enlarged_image_' + id + '" style="display:none;">'
                     + '<div class="table_wrapper"><div class="cell_wrapper">'
-                    + '<img class="enlarged" src = "' + $this.attr("src") +'" data-width="' + $this.attr("data-width") 
+                    + '<img class="enlarged" src = "' + $this.attr("src") +'origin" data-width="' + $this.attr("data-width") 
                     + '" data-height="' + $this.attr("data-height") + '">'
                     + '<figcaption>'
-                    + '<a href="' + $this.attr("src") + '" class="download simple_outline" data-stacker="false" target="_blank">'
+                    + '<a href="' + $this.attr("src") + 'origin" class="download simple_outline" data-stacker="false" target="_blank">'
                     + 'View full size'
                     + '</a>'
                     + '</figcaption>'
@@ -49,19 +69,7 @@
                 var $smallImage = $('<td ><img id="small_image_' + id + '" class="" src="' + $this.attr("src") + '" title="" ></td>')
                 self.$smallView.append($smallImage)
             })
-            this.$navContainer.click(function(e){
-                var btn = e.target
-                if(btn.nodeName.toLowerCase() == 'img')
-                    self.change($(btn))
 
-            })
-            $('.close', this.$imageViewer).click(function(){
-                self.hide()
-            })
-            this.$imageViewer.append(this.$navContainer)
-            $(window).resize(function(){
-                self.resize()
-            })
         },
 
         resize: function() {
@@ -103,22 +111,16 @@
                 self.$lastShowImage.show() 
                 self.$lastShowButton = $('#small_image_' + id, self.$imageViewer)
                 self.$lastShowButton.addClass('activated')
-                $('figure', self.$imageViewer).resize(function() {
-                    var $self = $(this)
-                    console.log($self.height())
-                    $('img', $self).each(function(){
-                        var $this = $(this)
-                        $this.height($self.height())
-
-                    })
-                })
+                self.resize()
             })
-            this.resize()
+            $(window).bind("resize.imageView", function(){
+                self.resize()
+            })
         },
 
         change: function($obj) {
+            console.log(new Date() - this.startDate)
             var id = $obj.attr("id").substring(12)
-            console.log(id)
             this.$lastShowImage.hide() 
             this.$lastShowButton.removeClass('activated')
 
@@ -126,6 +128,7 @@
             this.$lastShowImage.show() 
             this.$lastShowButton = $obj
             this.$lastShowButton.addClass('activated')
+            console.log(new Date() - this.startDate)
         },
 
         hide: function() {
@@ -134,6 +137,7 @@
             this.$imageViewer.hide()
 	    	removeBackdrop.call(this);
             this.isShown = false 
+            $(window).unbind("resize.imageView")
         }
     }
 

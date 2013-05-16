@@ -42,6 +42,7 @@ class User(db.Model):
     ownedProjects = relationship("Project", backref="own")
     ownedMessages = relationship("Message", backref="own")
     ownedOperations = relationship("Operation", backref="own")
+    ownedComments = relationship("Comment", backref="own")
     todoItems = relationship("TodoItem", primaryjoin="User.id == TodoItem.worker_id", backref="worker")
 
 class TeamUserRel(db.Model):

@@ -11,11 +11,15 @@
 	EditorTrigger.prototype = {
 		init: function() {
             this.$editorContainer = this.$target.clone()
-            this.$editorContainer.removeClass() 
             this.$editorContainer.addClass("edit_mode") 
-            var $form = $('<form class="' + this.$target.attr("data-target-class") + '" method="post" action="' + this.$target.attr("href") + '" data-save="true"></form>')
+            var $form = $('<form class="' + this.$target.attr("data-target-class") + '" method="post" action="' 
+                + this.$target.attr("href") + '" data-save="true"></form>')
 			var self = this
 			function doResponse(data) {
+                $('[data-toggle=select]', self.$editorContainer).each(function(){
+					var $this = $(this)
+                    $this.attr("data-orgin-statues","selected")
+                })
 				$('.editable,.echo', self.$target).each(function(){
 					var $this = $(this)
                     $.lily.fillHtml($this, data)
@@ -23,7 +27,7 @@
 				self.toggle()
                 var myResponse = self.$element.data("doResponse")
                 if(myResponse)
-                    myResponse(data)
+                    myResponse(data, self.$element, self.$target)
 			}
 			$form.data('doResponse', doResponse);
                 
@@ -164,7 +168,14 @@
 				this.init()
 			this.$target.toggle()
 			this.$editorContainer.toggle()
-		}
+		},
+
+        distory: function() {
+            this.$editorContainer.remove() 
+            this.$editorContainer = null
+            this.$target = null
+            this.$element.data("editorTrigger", null)
+        }
 
 	}
 

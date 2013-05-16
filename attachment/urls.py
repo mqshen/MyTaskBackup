@@ -195,22 +195,28 @@ class AttachmentHandler(BaseHandler):
             contentType = self.request.headers.get("Content-Type")
             width = 0
             height = 0
+
+            filename = self.request.headers.get("X_filename")
+
+            fileName = generateFileName()
+            attachmentPath = options.attachmentPath
+            filePath = '%s/%s'%(attachmentPath, fileName)
+
             if contentType in options.allowImageFileType:
                 fileType = '0'
                 stream = BytesIO(fileDescription)
                 image = Image.open(stream)
                 width, height = image.size
+                maxSize = (260, 180)
+                image.thumbnail(maxSize, Image.ANTIALIAS)
+                image.save(filePath, 'PNG', optimize = True)
+                filePath += 'origin'
             elif contentType in options.allowDocumentFileType:
                 fileType = '1'
             else:
                 self.writeFailedResult()
                 self.finish()
                 return
-            filename = self.request.headers.get("X_filename")
-
-            fileName = generateFileName()
-            attachmentPath = options.attachmentPath
-            filePath = '%s/%s'%(attachmentPath, fileName)
             with open(filePath, 'wb') as out:
                 out.write(fileDescription) 
 

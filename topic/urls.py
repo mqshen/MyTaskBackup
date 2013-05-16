@@ -26,6 +26,9 @@ class MessageForm(Form):
 
 class CommentForm(Form):
     content = TextField('content')
+    attachment = ListField('attachment')
+    attachmentDel = ListField('attachmentDel')
+
 
 class MessageHandler(BaseHandler):
     _error_message = "email or password incorrect!"
@@ -96,22 +99,66 @@ class MessageDetailHandler(BaseHandler):
 
         db.session.add(operation)
 
+        for url in form.attachmentDel.data:
+            for attachment in message.attachments:
+                if attachment.url == url:
+                    message.attachments.remove(attachment)
+
         for attachment in form.attachment.data:
             attachment = Attachment.query.filter_by(url=attachment).first()
             if attachment is not None:
                 attachment.project_id = projectId
                 attachment.message_id = messageId
                 attachment.team_id = teamId
+                message.attachments.append(attachment)
+                
+        db.session.add(message)
+        db.session.commit()
+        self.writeSuccessResult(message)
+
+class CommentDetailHandler(BaseHandler):
+    @tornado.web.authenticated
+    @core.web.authenticatedProject
+    def get(self, projectId, messageId, commentId):
+        project = Project.query.filter_by(id=projectId).first()
+        message = Message.query.filter_by(id=messageId).first()
+        currentUser = self.current_user
+        self.render("topic/messageDetail.html", project= project, message= message)
+
+    @tornado.web.authenticated
+    @core.web.authenticatedProject
+    def post(self, projectId, messageId, commentId, **kwargs):
+        form = MessageForm(self.request.arguments, locale_code=self.locale.code)
+        message = Message.query.filter_by(id=messageId).first()
+        comment = Comment.query.filter_by(id=commentId).first()
+        currentUser = self.current_user
+        teamId = currentUser.teamId
+        now = datetime.now()
+        comment.content = form.content.data
+        commentId = comment.id
+
+        url = "/project/%s/message/%s/comment/%d"%(projectId, messageId, commentId)
+        operation = Operation(own_id = currentUser.id, createTime= now, operation_type=4, target_type=2,
+            target_id=messageId, title= message.title, digest=comment.content, team_id= teamId, project_id= projectId, url= url)
+
+        db.session.add(operation)
+
+        for attachment in form.attachment.data:
+            attachment = Attachment.query.filter_by(url=attachment).first()
+            if attachment is not None:
+                attachment.project_id = projectId
+                attachment.comment_id = commentId
+                attachment.team_id = teamId
                 db.session.add(attachment)
                 
         for url in form.attachmentDel.data:
             for attachment in message.attachments:
                 if attachment.url == url:
-                    message.attachments.remove(attachment)
+                    comment.attachments.remove(attachment)
 
-        db.session.add(message)
+        db.session.add(comment)
         db.session.commit()
-        self.writeSuccessResult(message)
+        self.writeSuccessResult(comment)
 
 class CommentHandler(BaseHandler):
     @tornado.web.authenticated
@@ -120,10 +167,28 @@ class CommentHandler(BaseHandler):
         if form.validate():
             currentUser = self.current_user
             teamId = currentUser.teamId
+            message = Message.query.filter_by(id=messageId).first()
+            now = datetime.now()
             comment = Comment(content=form.content.data, message_id=messageId ,
-                own_id=currentUser.id, project_id= projectId, team_id=teamId, createTime=datetime.now())
+                own_id=currentUser.id, project_id= projectId, team_id=teamId, createTime= now)
             db.session.add(comment)
+            db.session.flush()
+            commentId = comment.id
+
+            url = "/project/%s/message/%s/comment/%d"%(projectId, messageId, commentId)
+            operation = Operation(own_id = currentUser.id, createTime= now, operation_type=2, target_type=1,
+                target_id=messageId, title= message.title, digest=comment.content, team_id= teamId, project_id= projectId, url= url)
+            db.session.add(operation)
+
+            for attachment in form.attachment.data:
+                attachment = Attachment.query.filter_by(url=attachment).first()
+                if attachment is not None:
+                    attachment.project_id = projectId
+                    attachment.comment_id = commentId
+                    attachment.team_id = teamId
+                    db.session.add(attachment)
             db.session.commit()
+
             self.writeSuccessResult(comment)
 
 handlers = [
@@ -131,4 +196,5 @@ handlers = [
     ('/project/([0-9]+)/message/([0-9]+)', MessageDetailHandler),
     ('/project/([0-9]+)/message/new', NewMessageHandler),
     ('/project/([0-9]+)/message/([0-9]+)/comment', CommentHandler),
+    ('/project/([0-9]+)/message/([0-9]+)/comment/([0-9]+)', CommentDetailHandler),
 ]

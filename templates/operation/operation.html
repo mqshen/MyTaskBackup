@@ -12,17 +12,22 @@
                 </section>
             </section>
         </div>
+        <div id="wait">
+            <span class="wait" style="width: 20px; height: 20px; margin: auto; padding: 0px;"></span>
+        </div>
     </div>
 {% end %}
 
 {% block script %}
 $(function(){
+var isQuery = false
+var lastDay = ''
+var lastProjectId = 0
+var currentPage = 0
+var lastIndex = 1
 function callback(responseData) {
     var $operations = $('#operations')
-    var lastDay = ''
-    var lastProjectId = 0
     var classArray = ["left", "right"]
-    var lastIndex = 1
     var flag = false
     for(var i in responseData.content) {
         var operation = responseData.content[i]
@@ -78,9 +83,14 @@ function callback(responseData) {
             + '</div>'
         $operations.append(actionStr)
     }
+    if(responseData.content.length > 0)
+        isQuery = false 
+    $('#wait').hide()
 }
 
 function queryOperation(begin){
+    isQuery = true
+    $('#wait').show()
     $.lily.ajax({
         url : '/operation',
         data : {begin: begin, size: 30},
@@ -88,6 +98,14 @@ function queryOperation(begin){
 		processResponse : callback
 	});
 }
-queryOperation(0)
+queryOperation(currentPage)
+$(window).scroll(function() {
+    if(isQuery)
+        return
+    var scrolled = $(window).scrollTop()
+    console.log(scrolled + "|" + $(window).height() + "|" + $('body').height())
+    if($('body').height() - $(window).height() - scrolled < 200)
+        queryOperation(++currentPage)
+})
 })
 {% end %}

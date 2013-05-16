@@ -1144,6 +1144,21 @@ height: 59px;
 margin-top: -4px;
 margin-bottom: 10px;
 }
+.new_comment_entry {
+color: #a9a9a9;
+background: #fff;
+padding: 10px;
+border: 1px solid #ccc;
+position: relative;
+margin: 0 300px 0 0;
+-webkit-box-shadow: 0 2px 0 #ddd;
+-moz-box-shadow: 0 2px 0 #ddd;
+box-shadow: 0 2px 0 #ddd;
+-webkit-border-radius: 5px;
+-moz-border-radius: 5px;
+border-radius: 5px;
+zoom: 1;
+}
 .text_entry {
 color: #a9a9a9;
 background: #fff;
@@ -1173,7 +1188,7 @@ max-width: 750px;
 article.message>div.formatted_content {
 margin-left: 78px;
 }
-section.comments article.comment.new.expanded, section.comments article.comment.edit.expanded {
+section.comments article.comment.new.expanded, section.comments article.comment.edit_mode{
 background: #fafafa;
 padding: 9px 12px 12px 9px;
 border: 1px solid #e5e5e5;
@@ -1183,9 +1198,6 @@ border-radius: 10px;
 background-color: #fafafa;
 padding: 9px;
 margin-left: 70px;
-}
-section.comments article.comment.expanded {
-max-width: 600px;
 }
 div.sheet.message.new>div.sheet_body article form div.attachments ul.pending_attachments {
 margin: 0 0 0 54px;
@@ -2177,16 +2189,18 @@ padding: 0 65px;
 .attachment_tool {
     display: none;
 }
-div.edit_mode .attachment_tool {
+div.edit_mode .attachment_tool ,article.edit_mode .attachment_tool {
     display: block;
 }
 ul.pending_attachments li {
     margin-bottom: 25px;
 }
-div.edit_mode .image_grid_view {
+div.edit_mode .image_grid_view ,
+article.edit_mode .image_grid_view {
     display: none;
 }
-div.edit_mode .file_attachments{
+div.edit_mode .file_attachments ,
+article.edit_mode .file_attachments{
     display: none;
 }
 ul.pending_attachments>li div.icon {
@@ -2343,4 +2357,46 @@ margin: -4px;
 #image_enlarger nav button.arrow.right {
 right: 0px;
 background-position: -50px 35px;
+}
+#image_enlarger>figure figcaption {
+text-align: center;
+padding-top: 20px;
+position: absolute;
+width: 100%;
+color: white;
+font-size: 16px;
+line-height: 20px;
+}
+#image_enlarger>figure figcaption a.download {
+text-decoration: none;
+background-color: #262626;
+border: 1px solid #999;
+border-radius: 20px;
+line-height: 1em;
+padding: 5px 14px 6px;
+color: #bfbfbf;
+font-size: 12px;
+display: inline-block;
+margin: -1px;
+margin-left: 5px;
+position: relative;
+top: -1px;
+}
+section.comments article.comment footer.time {
+color: #aa9c84;
+position: relative;
+top: -19px;
+font-size: 13px;
+font-weight: normal;
+}
+section.comments article.comment footer.time a {
+color: #aa9c84;
+}
+div.formatted_content {
+max-width: 540px;
+padding-bottom: 19px;
+}
+form div.attachments ul.pending_attachments {
+margin: 10px 0 0 13px;
+padding-top: 42px;
 }
