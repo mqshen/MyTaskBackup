@@ -482,6 +482,10 @@ width: 40px;
 table.inbox tr+tr td {
 border-top: 1px solid #ececec;
 }
+table.inbox td.comments {
+border: none;
+padding-top: 8px;
+}
 table.inbox td {
 font-size: 14px;
 padding: 4px 0;
@@ -616,6 +620,7 @@ margin: 0 0 0 7px;
 min-height: 6px;
 }
 article.todolist>ul>li {
+margin-top: 5px;
 padding-left: 19px;
 line-height: 20px;
 padding-right: 110px;
@@ -631,6 +636,13 @@ font-size: larger;
 }
 article.todolist>ul>li form {
 display: inline;
+}
+span.pill.delay {
+    color: #d45d51;                                                        
+    background: #fbdbdb
+}
+span.pill.current {
+    background: #FFFF9C
 }
 span.pill {
 font-size: 12px;
@@ -1460,7 +1472,7 @@ box-shadow: none;
 }
 article.todolist>ul>li.edit_mode>form>textarea {
 width: 460px;
-margin: 3px 0 -5px -2px;
+margin: 0px 5px 0px 2px;
 line-height: 17px;
 height: 18px;
 padding: 0;
@@ -2399,4 +2411,21 @@ padding-bottom: 19px;
 form div.attachments ul.pending_attachments {
 margin: 10px 0 0 13px;
 padding-top: 42px;
+}
+table.inbox td.comments span.pill.comments {
+margin: 0 0 0 10px;
+}
+span.pill.circle {
+min-width: 17px;
+padding: 2px 1px;
+line-height: 14px;
+text-align: center;
+}
+span.pill.comments {
+background: #e2e9f8;
+color: #1c5c76 !important;
+}
+div.sheet>header>p, div.sheet div.sheet_body>section>header>p, div.sheet div.sheet_body>div>section>header>p {
+font-size: 13px;
+color: #777;
 }

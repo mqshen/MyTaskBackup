@@ -10,11 +10,19 @@ import tornado
 from core.session import Session
 from datetime import datetime
 import tornado.websocket
+from core.util import serialize
+from core.escape import json_encode
 
-def send_message(teamId, message):
-    for handler in UpdatesHandler.waiters.get(teamId):
+def send_message(userId, teamId, model):
+    for handler in [ handler for handler in UpdatesHandler.waiters.get(teamId) if handler.current_user.id != userId] :
         try:
-            handler.write_message(message)
+            result = None
+            if model is not None:
+                if isinstance(model, list):
+                    result = {"content": [serialize(item) for item in model]}
+                else:
+                    result = serialize(model)
+                handler.write_message(json_encode(result))
         except:
             logging.error('Error sending message', exc_info=True)
 

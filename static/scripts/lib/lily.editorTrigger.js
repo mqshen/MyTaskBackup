@@ -4,7 +4,7 @@
 
 	var EditorTrigger = function(element, options) {
 		this.$element = $(element)
-		this.options = $.extend({}, $.fn.button.defaults, options)
+		this.options = $.extend({}, $.fn.editorTrigger.defaults, options)
 		this.$target = this.$element.closest('.editable_container')
 	}
 
@@ -36,7 +36,9 @@
 				var $obj;
 				var dataType = $this.attr("data-type");
 				if(dataType == "textarea") {
-					$obj = $('<textarea style="resize: none; overflow: hidden; min-height: 18px;width: 800px" data-toggle="remote"></textarea>')
+					$obj = $('<textarea style="resize: none; overflow: hidden; min-height: 18px;" data-toggle="remote"></textarea>')
+                    if($this.attr("name") === "content")
+                        $obj.width("800px")
 				    $obj.val($this.html().trim())
 				}
                 else if(dataType == "html") {
@@ -79,7 +81,7 @@
                 + '<button tabindex="1" class="btn btn-primary" id="btn-post" data-toggle="submit" data-disable-with="正在保存...">保存</button>' 
                 + '<a tabindex="2" href="javascript:;" class="btn btn-x" id="link-cancel-post">取消</a></p>')
 			$buttonObj.appendTo($form)
-            $('textarea', $form).editor()
+            $('textarea[name=content]', $form).editor()
 			var self = this
 			$('#link-cancel-post', this.$editorContainer).click(function(){
 				self.toggle()

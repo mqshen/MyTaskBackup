@@ -31,6 +31,11 @@
                 }
                 $button.attr("href", url.substring(0, url.length - 4) + "undone")
                 that.$element.addClass("completed").appendTo(that.$completeContainer)
+                that.$element.find('.pill').removeClass("delay")
+				$('.editable,.echo', that.$element).each(function(){
+					var $this = $(this)
+                    $.lily.fillHtml($this, responseData)
+				})
                 $.lily.hideWait($button)
             }
             else if(url.match(/\/undone$/)) {

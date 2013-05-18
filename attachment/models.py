@@ -16,8 +16,6 @@ class Attachment(db.Model):
     name = Column(String(100))
     own_id = Column(Integer, ForeignKey('user.id'))
     project_id = Column(Integer, ForeignKey('project.id'))
-    message_id = Column(Integer, ForeignKey('message.id'))
-    comment_id = Column(Integer, ForeignKey('comment.id'))
     team_id = Column(Integer, ForeignKey('team.id'))
     width = Column(Integer)
     height = Column(Integer)

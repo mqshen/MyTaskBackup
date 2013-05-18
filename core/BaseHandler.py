@@ -14,6 +14,9 @@ class BaseHandler(tornado.web.RequestHandler):
     def __init__(self, application, request, **kwargs):
         super(BaseHandler, self).__init__(application, request, **kwargs)
 
+    def write_error(self, status_code, **kwargs):
+        super().render("error/error_default.html")
+
     @property
     def session(self):
         sessionid = self.get_secure_cookie('sid')

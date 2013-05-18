@@ -218,6 +218,22 @@
 				}
 			}, this));
 		},
+        // SAFARI SHIFT KEY + ENTER
+		safariShiftKeyEnter: function(e, key)
+		{
+			if (e.shiftKey && key === 13)
+			{
+				e.preventDefault();
+				this.insertNodeAtCaret($('<span><br /></span>').get(0));
+				this.syncCode();
+				return false;
+			}
+			else
+			{
+				return true;
+			}
+		},
+
 		keyup: function() {
 			this.$editor.keyup($.proxy(function(e) {
 				var key = e.keyCode || e.which;

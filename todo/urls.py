@@ -4,7 +4,7 @@ Created on Feb 4, 2013
 @author: GoldRatio
 '''
 from user.models import User
-from .models import TodoList, TodoItem
+from .models import TodoList, TodoItem, TodoComment
 from operation.models import Operation
 from attachment.models import Attachment
 from project.models import Project
@@ -16,7 +16,13 @@ from core.BaseHandler import BaseHandler
 from forms import Form, TextField, ListField, IntField, DateField
 from datetime import datetime
 from core.database import db
+from websocket.urls import send_message
 
+
+class CommentForm(Form):
+    content = TextField('content')
+    attachment = ListField('attachment')
+    attachmentDel = ListField('attachmentDel')
 
 class TodoItemForm(Form):
     description = TextField('description')
@@ -85,6 +91,14 @@ class TodoItemDetailHandler(BaseHandler):
     _error_message = ""
 
     @tornado.web.authenticated
+    def get(self, projectId, todoListId, todoItemId):
+        project = Project.query.filter_by(id=projectId).first()
+        todoItem = TodoItem.query.filter_by(id=todoItemId).first()
+        self.render("todo/todoItem.html", project= project, todoItem= todoItem, todolist= todoItem.todolist)
+
+
+
+    @tornado.web.authenticated
     def post(self, projectId, todoListId, todoItemId):
         form = TodoItemForm(self.request.arguments, locale_code=self.locale.code)
         if form.validate():
@@ -126,7 +140,6 @@ class TodoItemModifyHandler(BaseHandler):
             myOperation = Operation(own_id = currentUser.id, createTime= now, operation_type=10, target_type=4,
                 target_id=todoItem.id, title= todoItem.description, team_id= teamId, project_id= projectId, url= url)
             db.session.add(myOperation)
-
             todoItem.done = 0
             db.session.add(todoItem)
         elif operation == "done" :
@@ -134,7 +147,8 @@ class TodoItemModifyHandler(BaseHandler):
             myOperation = Operation(own_id = currentUser.id, createTime= now, operation_type=9, target_type=4,
                 target_id=todoItem.id, title= todoItem.description, team_id= teamId, project_id= projectId, url= url)
             db.session.add(myOperation)
-            
+
+            todoItem.worker_id = currentUser.id
             todoItem.deadline = now
             todoItem.done = 1
             db.session.add(todoItem)
@@ -142,9 +156,45 @@ class TodoItemModifyHandler(BaseHandler):
         db.session.commit()
         self.writeSuccessResult(todoItem)
 
+class TodoItemCommentHandler(BaseHandler):
+    @tornado.web.authenticated
+    def post(self, projectId, todolistId, todoitemId):
+        form = CommentForm(self.request.arguments, locale_code=self.locale.code)
+        if form.validate():
+            currentUser = self.current_user
+            teamId = currentUser.teamId
+            now = datetime.now()
+            todoComment = TodoComment(content=form.content.data, todoitem_id=todoitemId,
+                own_id=currentUser.id, project_id= projectId, team_id=teamId, createTime= now, attachments=[])
+            todCommentId = todoComment.id
+
+
+            url = "/project/%s/todolist/%s/todoitem/%s"%(projectId, todolistId, todoitemId)
+
+            for attachment in form.attachment.data:
+                attachment = Attachment.query.filter_by(url=attachment).first()
+                if attachment is not None:
+                    attachment.project_id = projectId
+                    attachment.team_id = teamId
+                    todoComment.attachments.append(attachment)
+
+            db.session.add(todoComment)
+            db.session.flush()
+
+            operation = Operation(own_id = currentUser.id, createTime= now, operation_type=2, target_type=1,
+                target_id=todoitemId, title= "", digest= "", team_id= teamId, project_id= projectId, url= url)
+
+            db.session.add(operation)
+
+            db.session.commit()
+            send_message(currentUser.id, teamId, todoComment)
+
+            self.writeSuccessResult(todoComment)
+
 handlers = [
     ('/project/([0-9]+)/todolist', TodoListHandler),
     ('/project/([0-9]+)/todolist/([0-9]+)/todoitem', TodoItemHandler),
     ('/project/([0-9]+)/todolist/([0-9]+)/todoitem/([0-9]+)', TodoItemDetailHandler),
-    ('/project/([0-9]+)/todolist/([0-9]+)/todoitem/([0-9]+)/([a-zA-Z]+)', TodoItemModifyHandler),
+    ('/project/([0-9]+)/todolist/([0-9]+)/todoitem/([0-9]+)/(done|undone|trash)', TodoItemModifyHandler),
+    ('/project/([0-9]+)/todolist/([0-9]+)/todoitem/([0-9]+)/comment', TodoItemCommentHandler),
 ]

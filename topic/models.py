@@ -10,6 +10,11 @@ from sqlalchemy.orm import relationship
 
 __all__ = ['Message', 'Comment']
 
+attachment_message_rel = Table('attachment_message_rel', db.Model.metadata,
+    Column('attachment_id', Integer, ForeignKey('attachment.id')),
+    Column('message_id', Integer, ForeignKey('message.id'))
+)
+
 class Message(db.Model):
     eagerRelation = ['attachments']
     id = Column(Integer, primary_key=True)
@@ -20,9 +25,16 @@ class Message(db.Model):
     team_id = Column(Integer, ForeignKey('team.id'))
     createTime = Column(DateTime)
 
-    attachments = relationship("Attachment", backref="message")
+    comment_num = Column(Integer, default=0)
+    comment_digest = Column(String(300))
+    attachments = relationship("Attachment", secondary=attachment_message_rel , backref="message")
     comments = relationship("Comment", backref="message")
 
+
+attachment_comment_rel = Table('attachment_comment_rel', db.Model.metadata,
+    Column('attachment_id', Integer, ForeignKey('attachment.id')),
+    Column('comment_id', Integer, ForeignKey('comment.id'))
+)
 
 class Comment(db.Model):
     eagerRelation = ['attachments', 'own']
@@ -34,4 +46,4 @@ class Comment(db.Model):
     team_id = Column(Integer, ForeignKey('team.id'))
     createTime = Column(DateTime)
 
-    attachments = relationship("Attachment", backref="comment")
+    attachments = relationship("Attachment", secondary=attachment_comment_rel , backref="comment")

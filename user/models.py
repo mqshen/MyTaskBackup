@@ -43,6 +43,7 @@ class User(db.Model):
     ownedMessages = relationship("Message", backref="own")
     ownedOperations = relationship("Operation", backref="own")
     ownedComments = relationship("Comment", backref="own")
+    ownedTodoComments = relationship("TodoComment", backref="own")
     todoItems = relationship("TodoItem", primaryjoin="User.id == TodoItem.worker_id", backref="worker")
 
 class TeamUserRel(db.Model):
@@ -84,6 +85,7 @@ class UserObj(object):
         self.avatar = user.avatar
         self.teams = []
         for team in user.teams:
+            print(team)
             self.teams.append(TeamObj(team))
         if teamId:
             self._teamId = teamId

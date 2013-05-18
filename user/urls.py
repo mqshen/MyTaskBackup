@@ -51,7 +51,7 @@ class RegisterHandler(BaseHandler):
         self.rawRender("register.html")
 
     def post(self):
-        form = TeamForm(self.request.arguments, locale_code=self.locale.code)
+        form = RegisterForm(self.request.arguments, locale_code=self.locale.code)
         if form.validate():
             user = User.query.filter_by(email=form.email.data).first()
             if user is not None:
@@ -63,8 +63,11 @@ class RegisterHandler(BaseHandler):
                                form.password.data)).encode('utf-8'))
             password_md5 = m.hexdigest()
             user = User(email=form.email.data, password=password_md5, name=form.name.data, nickName=form.name.data, avatar='default')
-            team = Team(title=form.teamTitle.data, createTime=datetime.now(), members=[user])
-            db.session.add(team)
+            team = Team(title=form.teamTitle.data, createTime=datetime.now())
+
+            teamUserRel = TeamUserRel(privilege=2, member=user, team=team)
+
+            db.session.add(teamUserRel)
             db.session.commit()
             self.set_secure_cookie("sid", self.session.sessionid)
             self.session["user"] = UserObj(user, team.id)
@@ -101,7 +104,7 @@ class TeamHandler(BaseHandler):
     @core.web.authenticatedTeam
     def get(self, teamId):
         currentUser = self.current_user
-        currentUser.teamId = teamId
+        currentUser.teamId = int(teamId)
         self.session["user"] = currentUser
         self.redirect("/")
 

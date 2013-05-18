@@ -15,6 +15,8 @@ from core.BaseHandler import BaseHandler
 from forms import Form, TextField, ListField
 from datetime import datetime
 from core.database import db
+from core.html2text import html2text
+from websocket.urls import send_message
 import core.web
 
 
@@ -43,8 +45,10 @@ class MessageHandler(BaseHandler):
             currentUser = self.current_user
             teamId = currentUser.teamId
             now = datetime.now()
+            digest = html2text(form.content.data)
+
             message = Message(title=form.title.data, content=form.content.data, 
-                own_id=currentUser.id, project_id= projectId, team_id=teamId)
+                own_id=currentUser.id, project_id= projectId, team_id=teamId, comment_digest= digest)
             db.session.add(message)
             db.session.flush()
             messageId = message.id
@@ -58,7 +62,6 @@ class MessageHandler(BaseHandler):
                 attachment = Attachment.query.filter_by(url=attachment).first()
                 if attachment is not None:
                     attachment.project_id = projectId
-                    attachment.message_id = messageId
                     attachment.team_id = teamId
                     db.session.add(attachment)
             db.session.commit()
@@ -108,7 +111,6 @@ class MessageDetailHandler(BaseHandler):
             attachment = Attachment.query.filter_by(url=attachment).first()
             if attachment is not None:
                 attachment.project_id = projectId
-                attachment.message_id = messageId
                 attachment.team_id = teamId
                 message.attachments.append(attachment)
                 
@@ -147,7 +149,6 @@ class CommentDetailHandler(BaseHandler):
             attachment = Attachment.query.filter_by(url=attachment).first()
             if attachment is not None:
                 attachment.project_id = projectId
-                attachment.comment_id = commentId
                 attachment.team_id = teamId
                 db.session.add(attachment)
                 
@@ -167,27 +168,35 @@ class CommentHandler(BaseHandler):
         if form.validate():
             currentUser = self.current_user
             teamId = currentUser.teamId
-            message = Message.query.filter_by(id=messageId).first()
+            message = Message.query.filter_by(id=messageId).with_lockmode("update").first()
             now = datetime.now()
             comment = Comment(content=form.content.data, message_id=messageId ,
                 own_id=currentUser.id, project_id= projectId, team_id=teamId, createTime= now)
             db.session.add(comment)
             db.session.flush()
             commentId = comment.id
+            digest = html2text(form.content.data)
+
+            message.comment_num = message.comment_num + 1
+            message.comment_digest = digest
+
+            db.session.add(message)
 
             url = "/project/%s/message/%s/comment/%d"%(projectId, messageId, commentId)
+
             operation = Operation(own_id = currentUser.id, createTime= now, operation_type=2, target_type=1,
-                target_id=messageId, title= message.title, digest=comment.content, team_id= teamId, project_id= projectId, url= url)
+                target_id=messageId, title= message.title, digest= digest, team_id= teamId, project_id= projectId, url= url)
+
             db.session.add(operation)
 
             for attachment in form.attachment.data:
                 attachment = Attachment.query.filter_by(url=attachment).first()
                 if attachment is not None:
                     attachment.project_id = projectId
-                    attachment.comment_id = commentId
                     attachment.team_id = teamId
                     db.session.add(attachment)
             db.session.commit()
+            send_message(currentUser.id, teamId, comment)
 
             self.writeSuccessResult(comment)
 

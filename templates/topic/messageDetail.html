@@ -20,7 +20,7 @@
                                 <header>
                                     <h3 class="editable" name="title" id="message_title">{{message.title}}</h3>
                                     <p>
-                                    由{{message.own.name}}在<time data-time-ago="" datetime="2013-05-04T04:19:00Z" style="">{{message.createTime}}</time>发布
+                                    由{{message.own.name}}在<time  class="timeago" data-time="{{message.createTime}}" style="">{{message.createTime}}</time>发布
                                     </p>
                                 </header>
                                 <a data-replace-stack="true" href="/people/{{message.own.id}}">
@@ -118,13 +118,13 @@
                                                 <strong>
                                                     {{comment.own.name}}
                                                 </strong>
-                                                -
+                                                :
                                                 <div class="editable" name="content" data-type="textarea">
                                                     {{comment.content}}
                                                 </div>
                                             </div>
                                             <footer class="time">
-                                            在<time data-time-ago="" datetime="2013-05-16T02:25:27Z" style="">{{comment.createTime}}</time>发布
+                                            在<time class="timeago" data-time="{{comment.createTime}}" style="">{{comment.createTime}}</time>发布
                                             {% if currentUser.id == comment.own.id %}
                                                 <span>
                                                     – 
@@ -206,14 +206,17 @@
                                             </div>
                                         </article>
                                         {% end %}
-                                        <article class="comment editable_container" 
+                                        <article class="comment editable_container" id="new_comment_container"
                                             href="/project/{{project.id}}/message/{{message.id}}/comment">
                                             <a href="/people/{comment.own.id}" class="editable" data-type="html">
                                                 <img class="avatar" src="/avatar/{{currentUser.avatar}}">
                                             </a>
                                             <div class="collapsed_content">
                                                 <header class="new_comment_entry no_shadow">
-                                                    <div class="prompt" data-content="new" data-toggle="editorTrigger">发表评论</div>
+                                                    <div class="prompt" data-content="new" data-toggle="editorTrigger" 
+                                                        id="trigger_new_comment">
+                                                        发表评论
+                                                    </div>
                                                     <div class="editable" name="content" data-type="textarea" id="add_comment_content">
                                                     </div>
                                                 </header>
@@ -263,7 +266,11 @@
         $("#message_content").editor()
 
         function doResponse(data, $obj, $container){
-            var dataContent = $obj.attr("data-content")
+            var dataContent = 'new'
+            if(arguments.length > 1)
+                dataContent = $obj.attr("data-content")
+            else
+                $container = $('#new_comment_container')
             var imageContainerSelector = '#image_attachment' 
             var fileContainerSelector = '#file_attachments'
 
@@ -282,7 +289,7 @@
                     + '</div>'
                     + '</div>'
                     + '<footer class="time">'
-                    + '在<time data-time-ago="" datetime="2013-05-16T02:25:27Z" style="">' + data.createTime
+                    + '在<time class="timeago" data-time="' + data.createTime + '" style="">' + data.createTime
                     + '</time>发布<span>–'
                     + '<a class="edit" data-remote="true" href="javascript:;" data-toggle="editorTrigger" data-content="21">'
                     + '编辑</a> 或'
@@ -323,7 +330,8 @@
                 $target.insertBefore($container)
                 imageContainerSelector += data.id
                 fileContainerSelector += data.id
-                $obj.data("editorTrigger").distory()
+                if($obj)
+                    $obj.data("editorTrigger").distory()
             }
             else if(dataContent){
                 imageContainerSelector += dataContent
@@ -373,7 +381,6 @@
                         + '</li>')
                     $fileContainer.append($fileObj)
                 }
-                console.log($images)
             }
             if(imageNum %3 != 2)
                 $imageContainer.append($images) 
@@ -383,9 +390,15 @@
             else {
                 $('.image_grid_view', $target).data("imageView").reload()
             }
+            $.lily.showWarring($target)
+            $('time.timeago').timeago()
         }
         $('.image_grid_view').imageView()
 
         $('[data-toggle=editorTrigger]').data("doResponse", doResponse)
+        $('time.timeago').timeago()
+
+
+        $.lily.webSocketProcess = doResponse
     })
 {% end %}

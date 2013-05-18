@@ -242,6 +242,18 @@ $.extend( $.lily, {
             value = value.substring(0, 10)
         if(value)
 		    $obj.html(value)
+    },
+
+    showWarring: function($obj, highlightColor, duration) {
+        var highlightBg = highlightColor || "#FFFF9C"
+        var animateMs = duration || 1000 // edit is here
+        var originalBg = $obj.css("background-color")
+        if (!originalBg || originalBg == highlightBg)
+            originalBg = "#FFFFFF"; // default to white
+        $obj.css("backgroundColor", highlightBg)
+            .animate({ backgroundColor: originalBg }, animateMs, null, function () {
+                $obj.css("backgroundColor", originalBg); 
+            });
     }
 });
 })( jQuery ); 
