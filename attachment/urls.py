@@ -147,12 +147,12 @@ class AttachmentHandler(BaseHandler):
     
     @tornado.web.authenticated
     def get(self, avatarUrl, include_body=True):
+        attachment = Attachment.query.filter_by(url= avatarUrl).first()
         attachmentPath = options.attachmentPath
         filePath = '%s/%s'%(attachmentPath, avatarUrl)
         if os.path.exists(filePath):
             
-            mime_type, encoding = mimetypes.guess_type(filePath)
-            
+            mime_type = attachment.contentType 
             if mime_type is None:
                 mime_type = "image/png"
             stat_result = os.stat(filePath)
