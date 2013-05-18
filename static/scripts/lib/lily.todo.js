@@ -45,6 +45,7 @@
                 }
                 $button.attr("href", url.substring(0, url.length - 6) + "done")
                 that.$element.removeClass("completed").appendTo(that.$uncompleteContainer)
+                that.$element.attr("data-behavior", "has_hover_content")
                 $.lily.hideWait($button)
             }
         }

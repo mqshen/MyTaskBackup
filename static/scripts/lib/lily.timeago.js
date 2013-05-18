@@ -17,7 +17,7 @@
             seconds: "刚刚",
             minute: "一分钟前",
             minutes: "%d分钟前",
-            hour: "一个小时前",
+            hour: "一小时前",
             hours: "%d 小时前",
             day: "一天前",
             days: "%d天前",

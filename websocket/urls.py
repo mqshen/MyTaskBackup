@@ -13,7 +13,11 @@ import tornado.websocket
 from core.util import serialize
 from core.escape import json_encode
 
-def send_message(userId, teamId, model):
+def send_message(userId, teamId, modelType, operationType, model):
+    '''
+        modelType: 实体类型
+        operationType: 操作类型
+    '''
     for handler in [ handler for handler in UpdatesHandler.waiters.get(teamId) if handler.current_user.id != userId] :
         try:
             result = None
@@ -22,6 +26,7 @@ def send_message(userId, teamId, model):
                     result = {"content": [serialize(item) for item in model]}
                 else:
                     result = serialize(model)
+                result.update({"modelType": modelType, "operationType": operationType})
                 handler.write_message(json_encode(result))
         except:
             logging.error('Error sending message', exc_info=True)

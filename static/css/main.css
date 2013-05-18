@@ -2429,3 +2429,33 @@ div.sheet>header>p, div.sheet div.sheet_body>section>header>p, div.sheet div.she
 font-size: 13px;
 color: #777;
 }
+div.sheet.has_sidebar>aside {
+display: inline-block;
+vertical-align: top;
+width: 200px;
+padding: 0 0 20px 40px;
+text-align: left;
+font-size: 13px;
+}
+div.sheet.has_sidebar>div.sheet_body {
+display: inline-block;
+vertical-align: top;
+width: 645px;
+padding-right: 0;
+}
+div.sheet>header.has_buttons {
+padding-bottom: 5px;
+border-bottom: 1px solid #e5e5e5;
+}
+div.sheet.todolists.has_sidebar>aside>p {
+margin-bottom: 10px;
+}
+div.sheet.has_sidebar>aside select {
+width: 70%;
+}
+div.sheet.stub>header, div.sheet.inactive>header {
+padding: 10px 20px;
+margin: 0;
+background: none;
+border: none;
+}

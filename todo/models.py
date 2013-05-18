@@ -9,7 +9,7 @@ from sqlalchemy.orm import relationship
 from attachment.models import Attachment
 
 
-__all__ = ['TodoList', 'TodoItem']
+__all__ = ['TodoList', 'TodoItem', 'TodoComment', 'TodoListComment']
 
 class TodoList(db.Model):
     id = Column(Integer, primary_key=True)
@@ -21,6 +21,7 @@ class TodoList(db.Model):
     createTime = Column(DateTime)
 
     todoItems = relationship("TodoItem", backref="todolist")
+    comments = relationship("TodoListComment", backref="todolist")
 
 class TodoItem(db.Model):
     eagerRelation = ['worker']
@@ -53,3 +54,20 @@ class TodoComment(db.Model):
     createTime = Column(DateTime)
 
     attachments = relationship("Attachment", secondary=attachment_todocomment_rel , backref="todocomment")
+
+attachment_todolistcomment_rel = Table('attachment_todolistcomment_rel', db.Model.metadata,
+    Column('attachment_id', Integer, ForeignKey('attachment.id')),
+    Column('todolistcomment_id', Integer, ForeignKey('todolistcomment.id'))
+)
+
+class TodoListComment(db.Model):
+    eagerRelation = ['attachments', 'own']
+    id = Column(Integer, primary_key=True)
+    content = Column(Text)
+    own_id = Column(Integer, ForeignKey('user.id'))
+    project_id = Column(Integer, ForeignKey('project.id'))
+    todolist_id = Column(Integer, ForeignKey('todolist.id'))
+    team_id = Column(Integer, ForeignKey('team.id'))
+    createTime = Column(DateTime)
+
+    attachments = relationship("Attachment", secondary=attachment_todolistcomment_rel , backref="todolistcomment")

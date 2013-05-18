@@ -36,7 +36,8 @@ class MessageHandler(BaseHandler):
     _error_message = "email or password incorrect!"
     @tornado.web.authenticated
     def get(self, projectId):
-        self.render("topic/message.html", projectId= projectId)
+        project = Project.query.filter_by(id=projectId).first()
+        self.render("topic/messages.html", project= project)
 
     @tornado.web.authenticated
     def post(self, projectId):
@@ -196,7 +197,7 @@ class CommentHandler(BaseHandler):
                     attachment.team_id = teamId
                     db.session.add(attachment)
             db.session.commit()
-            send_message(currentUser.id, teamId, comment)
+            send_message(currentUser.id, teamId, 2, 1, comment)
 
             self.writeSuccessResult(comment)
 

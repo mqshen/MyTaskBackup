@@ -4,7 +4,7 @@ Created on Feb 4, 2013
 @author: GoldRatio
 '''
 from user.models import User
-from .models import TodoList, TodoItem, TodoComment
+from .models import TodoList, TodoItem, TodoComment, TodoListComment
 from operation.models import Operation
 from attachment.models import Attachment
 from project.models import Project
@@ -37,7 +37,8 @@ class TodoListHandler(BaseHandler):
 
     @tornado.web.authenticated
     def get(self, projectId):
-        self.render("topic/message.html", projectId= projectId)
+        project = Project.query.filter_by(id=projectId).first()
+        self.render("todo/todolists.html", project= project)
 
     @tornado.web.authenticated
     def post(self, projectId):
@@ -60,6 +61,48 @@ class TodoListHandler(BaseHandler):
             db.session.commit()
             self.writeSuccessResult(todoList)
 
+class TodoListDetailHandler(BaseHandler):
+    _error_message = "email or password incorrect!"
+
+    @tornado.web.authenticated
+    def get(self, projectId, todolistId):
+        project = Project.query.filter_by(id=projectId).first()
+        todolist = TodoList.query.filter_by(id=todolistId).first()
+        self.render("todo/todolist.html", todolist= todolist, project= project)
+
+    @tornado.web.authenticated
+    def post(self, projectId, todolistId):
+        form = CommentForm(self.request.arguments, locale_code=self.locale.code)
+        if form.validate():
+            currentUser = self.current_user
+            teamId = currentUser.teamId
+            now = datetime.now()
+            todoComment = TodoListComment(content=form.content.data, todolist_id=todolistId,
+                own_id=currentUser.id, project_id= projectId, team_id=teamId, createTime= now, attachments=[])
+            todCommentId = todoComment.id
+
+
+            url = "/project/%s/todolist/%s/"%(projectId, todolistId)
+
+            for attachment in form.attachment.data:
+                attachment = Attachment.query.filter_by(url=attachment).first()
+                if attachment is not None:
+                    attachment.project_id = projectId
+                    attachment.team_id = teamId
+                    todoComment.attachments.append(attachment)
+
+            db.session.add(todoComment)
+            db.session.flush()
+
+            operation = Operation(own_id = currentUser.id, createTime= now, operation_type=2, target_type=1,
+                target_id=todolistId, title= "", digest= "", team_id= teamId, project_id= projectId, url= url)
+
+            db.session.add(operation)
+
+            db.session.commit()
+            send_message(currentUser.id, teamId, 2, 3, todoComment)
+
+            self.writeSuccessResult(todoComment)
 class TodoItemHandler(BaseHandler):
     _error_message = ""
 
@@ -187,12 +230,14 @@ class TodoItemCommentHandler(BaseHandler):
             db.session.add(operation)
 
             db.session.commit()
-            send_message(currentUser.id, teamId, todoComment)
+            send_message(currentUser.id, teamId, 2, 4, todoComment)
 
             self.writeSuccessResult(todoComment)
 
 handlers = [
     ('/project/([0-9]+)/todolist', TodoListHandler),
+    ('/project/([0-9]+)/todolist/([0-9]+)', TodoListDetailHandler),
+    ('/project/([0-9]+)/todolist/([0-9]+)/comment', TodoListDetailHandler),
     ('/project/([0-9]+)/todolist/([0-9]+)/todoitem', TodoItemHandler),
     ('/project/([0-9]+)/todolist/([0-9]+)/todoitem/([0-9]+)', TodoItemDetailHandler),
     ('/project/([0-9]+)/todolist/([0-9]+)/todoitem/([0-9]+)/(done|undone|trash)', TodoItemModifyHandler),

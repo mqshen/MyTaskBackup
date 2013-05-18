@@ -59,7 +59,7 @@
                 <section class="topics">
                     <header class="has_buttons">
                         <h1>
-                            <a href="/project/{{project.id}}/topics">讨论</a>
+                            <a href="/project/{{project.id}}/message">讨论</a>
                         </h1>
                         <a class="action_button button" href="/project/{{project.id}}/message/new">发起新讨论</a>
                     </header>
@@ -141,7 +141,7 @@
                                         <a class="edit" href="#">Edit</a>
                                     </div>
                                     <h3 >
-                                        <a class="linked_title" href="/project/{{project.id}}/todolist/">
+                                        <a class="linked_title" href="/project/{{project.id}}/todolist/{{todolist.id}}">
                                             {{ todolist.title}}
                                         </a>
                                     </h3>
@@ -301,6 +301,7 @@
                         </li>
                         {% end %}
                     </ul>
+                </section>
             </div>
         </div>
     </div>
