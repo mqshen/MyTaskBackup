@@ -22,11 +22,12 @@ class Project(db.Model):
     own_id = Column(Integer, ForeignKey('user.id'))    
     team_id = Column(Integer, ForeignKey('team.id'))
     createTime = Column(DateTime)
-
+    repositoryName = Column(String(180))
     discussionNum = Column(Integer, default=0)
     todoNum = Column(Integer, default=0)
     fileNum = Column(Integer, default=0)
     documentNum = Column(Integer, default=0)
+    repository = Column(Integer, default=0)
 
     users = relationship("User", secondary=project_user_rel, backref="projects")
     todoItems = relationship("TodoItem", backref="project")

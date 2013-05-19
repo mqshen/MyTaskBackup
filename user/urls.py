@@ -151,6 +151,8 @@ class SettingHandler(BaseHandler):
         if form.password.data is not None:
             if form.password.data != form.confirmPassword.data :
                 self.writeFailedResult()
+                self.finish()
+                return
             m = hashlib.md5()
             m.update(('%s%s%s'%(options.salt, 
                                form.email.data, 

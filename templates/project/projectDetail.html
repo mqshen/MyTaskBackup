@@ -13,10 +13,12 @@
                             {{len(project.users)}}个项目成员
                         </span>
                     </a>
-                    <a href="/project/{{project.id}}/summary">
-                        <span class="link">项目日志</span><br>
+                    {% if project.repository == 1 %}
+                    <a href="/git/{{project.team_id}}/{{project.repositoryName}}">
+                        <span class="link">Git</span><br>
                         <span class="detail">最近没有修改</span>
                     </a>
+                    {% end %}
                 </div>
                 <div >
                     <div class="collapsed_content">

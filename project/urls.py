@@ -3,6 +3,7 @@ Created on Feb 4, 2013
 
 @author: GoldRatio
 '''
+import os
 from .models import Project
 from operation.models import Operation
 from topic.models import Message 
@@ -13,10 +14,11 @@ import tornado
 from tornado.options import options
 from core.BaseHandler import BaseHandler 
 import core.web 
-from forms import Form, TextField, ListField, IntField
+from forms import Form, TextField, ListField, IntField, BooleanField
 from datetime import datetime
 from core.database import db
 import json
+import pinyin
 
 
 class ProjectForm(Form):
@@ -29,6 +31,7 @@ class ProjectAccessForm(Form):
     operation = TextField('operation')
 
 class ProjectHandler(BaseHandler):
+    _error_message = "项目已存在"
 
     @tornado.web.authenticated
     def get(self):
@@ -43,6 +46,12 @@ class ProjectHandler(BaseHandler):
         teamId = currentUser.teamId 
         form = ProjectForm(self.request.arguments, locale_code=self.locale.code)
         
+        project = Project.query.filter_by(title=form.name.data, team_id=teamId).first()
+        if project :
+            self.writeFailedResult()
+            self.finish()
+            return
+
         users = []
         for userId in form.member.data:
             users.append(User.query.filter_by(id=userId).first())
@@ -52,9 +61,11 @@ class ProjectHandler(BaseHandler):
                 own_id=currentUser.id, team_id=teamId, createTime= now, users = users)
         db.session.add(project)
         db.session.flush()
+        needRepository = 0
+
 
         url = "/project/%d"%project.id
-        operation = Operation(own_id = currentUser.id, createTime= now, operation_type=0, target_type=0,
+        operation = Operation(own_id = currentUser.id, createTime= now, operation_type=0, target_type=0, 
                 target_id=project.id, title= project.title, team_id= teamId, project_id= project.id, url= url)
 
         db.session.add(operation)
