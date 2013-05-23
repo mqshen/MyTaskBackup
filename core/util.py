@@ -11,6 +11,7 @@ from core.database import db
 def serialize(model):
     """Transforms a model into a dictionary which can be dumped to JSON."""
     # first we get the names of all the columns on your model
+    result = None
     if isinstance(model, db.Model):
         columns = [c.key for c in class_mapper(model.__class__).columns]
         result = dict((c, getattr(model, c)) for c in columns if c not in options.jsonFilter)
