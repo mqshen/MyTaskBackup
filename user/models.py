@@ -86,7 +86,6 @@ class UserObj(object):
         self.avatar = user.avatar
         self.teams = []
         for team in user.teams:
-            print(team)
             self.teams.append(TeamObj(team))
         if teamId:
             self._teamId = teamId

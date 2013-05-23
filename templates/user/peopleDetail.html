@@ -41,7 +41,7 @@
                                     <input href="/project/{{project.id}}/todolist/{{todoItem.todolist_id}}/todoitem/{{todoItem.id}}/done"
                                         name="todo_complete" data-toggle="post" type="checkbox" value="1">
                                     <span class="content" >
-                                        <a href="/project/{{project.id}}/todo/" class="editable" data-type="textarea" name="description">
+                                        <a href="/project/{{project.id}}/todolist/{{todoItem.todolist_id}}/todoitem/{{todoItem.id}}" class="editable" data-type="textarea" name="description">
                                             {{ todoItem.description }}
                                         </a>
                                     </span>
@@ -73,6 +73,13 @@
                                             </span>
                                         </span>
                                     </form>
+                                    <span class="pill has_balloon blank showing exclusively_expanded expanded" data-hovercontent-strategy="visibility">
+                                        <a class="popover-btn" href="/project/{{project.id}}" >
+                                            <span name="worker.name" class="echo">
+                                                {{todoItem.project.title}}
+                                            </span>
+                                        </a>
+                                    </span>
                                 </span>
                             </div>
                         </li>
@@ -133,6 +140,13 @@
                                             </span>
                                         </span>
                                     </form>
+                                    <span class="pill has_balloon blank showing exclusively_expanded expanded" data-hovercontent-strategy="visibility">
+                                        <a class="popover-btn" href="/project/{{project.id}}" >
+                                            <span name="worker.name" class="echo">
+                                                {{todoItem.project.title}}
+                                            </span>
+                                        </a>
+                                    </span>
                                 </span>
                             </div>
                         </li>
