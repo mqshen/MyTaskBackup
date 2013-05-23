@@ -177,6 +177,9 @@ class TodoItemModifyHandler(BaseHandler):
             myOperation = Operation(own_id = currentUser.id, createTime= now, operation_type=3, target_type=4,
                 target_id=todoItem.id, title= todoItem.description, team_id= teamId, project_id= projectId, url= url)
             db.session.add(myOperation)
+            db.session.commit()
+            self.writeSuccessResult()
+            return
 
         elif operation == "undone" :
             url = '/project/todolist/%s/todoitem/%d'%(todoListId, todoItem.id)

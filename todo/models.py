@@ -36,7 +36,7 @@ class TodoItem(db.Model):
     done = Column(Integer, default=0)
     createTime = Column(DateTime)
 
-    comments = relationship("TodoComment", backref="todoitem")
+    comments = relationship("TodoComment", backref="todoitem", cascade="all,delete")
 
 attachment_todocomment_rel = Table('attachment_todocomment_rel', db.Model.metadata,
     Column('attachment_id', Integer, ForeignKey('attachment.id')),
