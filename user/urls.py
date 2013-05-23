@@ -275,7 +275,7 @@ class JoinHandler(BaseHandler):
         self.redirect("/")
 
 
-class LoginHandler(BaseHandler):
+class SignOutHandler(BaseHandler):
     _error_message = "email or password incorrect!"
     def get(self):
         self.post()
