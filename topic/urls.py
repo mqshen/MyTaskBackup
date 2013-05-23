@@ -111,8 +111,6 @@ class MessageDetailHandler(BaseHandler):
         for attachment in form.attachment.data:
             attachment = Attachment.query.filter_by(url=attachment).first()
             if attachment is not None:
-                attachment.project_id = projectId
-                attachment.team_id = teamId
                 message.attachments.append(attachment)
                 
         db.session.add(message)
@@ -149,9 +147,7 @@ class CommentDetailHandler(BaseHandler):
         for attachment in form.attachment.data:
             attachment = Attachment.query.filter_by(url=attachment).first()
             if attachment is not None:
-                attachment.project_id = projectId
-                attachment.team_id = teamId
-                db.session.add(attachment)
+                meeesage.attachments.append(attachment)
                 
         for url in form.attachmentDel.data:
             for attachment in message.attachments:
@@ -172,7 +168,13 @@ class CommentHandler(BaseHandler):
             message = Message.query.filter_by(id=messageId).with_lockmode("update").first()
             now = datetime.now()
             comment = Comment(content=form.content.data, message_id=messageId ,
-                own_id=currentUser.id, project_id= projectId, team_id=teamId, createTime= now)
+                own_id=currentUser.id, project_id= projectId, team_id=teamId, createTime= now, attachments = [])
+
+            for attachment in form.attachment.data:
+                attachment = Attachment.query.filter_by(url=attachment).first()
+                if attachment is not None:
+                    comment.attachments.append(attachment)
+
             db.session.add(comment)
             db.session.flush()
             commentId = comment.id
@@ -190,12 +192,6 @@ class CommentHandler(BaseHandler):
 
             db.session.add(operation)
 
-            for attachment in form.attachment.data:
-                attachment = Attachment.query.filter_by(url=attachment).first()
-                if attachment is not None:
-                    attachment.project_id = projectId
-                    attachment.team_id = teamId
-                    db.session.add(attachment)
             db.session.commit()
             send_message(currentUser.id, teamId, 2, 1, comment)
 
