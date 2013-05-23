@@ -49,7 +49,13 @@ class MessageHandler(BaseHandler):
             digest = html2text(form.content.data)
 
             message = Message(title=form.title.data, content=form.content.data, 
-                own_id=currentUser.id, project_id= projectId, team_id=teamId, comment_digest= digest)
+                own_id=currentUser.id, project_id= projectId, team_id=teamId, comment_digest= digest, attachments=[])
+
+            for attachment in form.attachment.data:
+                attachment = Attachment.query.filter_by(url=attachment).first()
+                if attachment is not None:
+                    message.attachments.append(attachment)
+
             db.session.add(message)
             db.session.flush()
             messageId = message.id
@@ -59,12 +65,6 @@ class MessageHandler(BaseHandler):
                 target_id=messageId, title= message.title, team_id= teamId, project_id= projectId, url= url)
             db.session.add(operation)
 
-            for attachment in form.attachment.data:
-                attachment = Attachment.query.filter_by(url=attachment).first()
-                if attachment is not None:
-                    attachment.project_id = projectId
-                    attachment.team_id = teamId
-                    db.session.add(attachment)
             db.session.commit()
             self.writeSuccessResult(message, successUrl='/project/%s/message/%d'%(projectId, message.id))
 

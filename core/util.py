@@ -5,22 +5,25 @@ Created on May 2, 2013
 '''
 from sqlalchemy.orm import class_mapper
 from tornado.options import options
-
+import json
 from core.database import db
 
 def serialize(model):
     """Transforms a model into a dictionary which can be dumped to JSON."""
     # first we get the names of all the columns on your model
-    columns = [c.key for c in class_mapper(model.__class__).columns]
-    result = dict((c, getattr(model, c)) for c in columns if c not in options.jsonFilter)
-    if hasattr(model, 'eagerRelation'):
-        for key in model.eagerRelation:
-            value = getattr(model, key)
-            if isinstance(value, list):
-                result.update({key: [serialize(item) for item in value]})
-            else:
-                result.update({key: serialize(value)})
-        columns.extend(model.eagerRelation)
+    if isinstance(model, db.Model):
+        columns = [c.key for c in class_mapper(model.__class__).columns]
+        result = dict((c, getattr(model, c)) for c in columns if c not in options.jsonFilter)
+        if hasattr(model, 'eagerRelation'):
+            for key in model.eagerRelation:
+                value = getattr(model, key)
+                if isinstance(value, list):
+                    result.update({key: [serialize(item) for item in value]})
+                else:
+                    result.update({key: serialize(value)})
+            columns.extend(model.eagerRelation)
+    else:
+        json.dumps(model, default=lambda o: o.__dict__)
     # then we return their values in a dict
     
     return result
