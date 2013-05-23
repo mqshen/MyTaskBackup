@@ -275,9 +275,20 @@ class JoinHandler(BaseHandler):
         self.redirect("/")
 
 
+class LoginHandler(BaseHandler):
+    _error_message = "email or password incorrect!"
+    def get(self):
+        self.post()
+
+    def post(self):
+        self.session.clear()
+        self.redirect("/")
+
+
 handlers = [
     ('/register', RegisterHandler),
     ('/login', LoginHandler),
+    ('/signOut', SignOutHandler),
     ('/team', TeamNewHandler),
     ('/team/([0-9]+)', TeamHandler),
     ('/settings', SettingHandler),
