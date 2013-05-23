@@ -22,7 +22,7 @@ def serialize(model):
                 else:
                     result.update({key: serialize(value)})
             columns.extend(model.eagerRelation)
-    else:
+    elif model:
         result = json.dumps(model, default=lambda o: o.__dict__)
     # then we return their values in a dict
     
