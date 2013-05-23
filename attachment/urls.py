@@ -147,7 +147,7 @@ class AttachmentHandler(BaseHandler):
     
     @tornado.web.authenticated
     def get(self, avatarUrl, include_body=True):
-        attachment = Attachment.query.filter_by(url= avatarUrl).first()
+        attachment = Attachment.query.filter_by(url= avatarUrl[:-6]).first()
         attachmentPath = options.attachmentPath
         filePath = '%s/%s'%(attachmentPath, avatarUrl)
         if os.path.exists(filePath):
