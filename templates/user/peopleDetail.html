@@ -24,7 +24,7 @@
                     <h5 class="" style="">今日任务</h5>
                     <ul class="todos">
                         {% for todoItem in todoItems %} 
-                        {% if (todoItem.deadline is not None and todoItem.deadline.date() < date.today() ) %}
+                        {% if (todoItem.deadline is not None and todoItem.deadline.date() <= date.today() ) %}
                         {% set project = todoItem.project %}
                         <li class="todo show editable_container" data-behavior="has_hover_content" 
                             href="/project/{{project.id}}/todolist/{{todoItem.todolist_id}}/todoitem/{{todoItem.id}}">
