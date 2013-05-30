@@ -46,7 +46,7 @@ class JoinForm(Form):
 
 
 class RegisterHandler(BaseHandler):
-    _error_message = "用户已存在"
+    _error_message = "���������������"
     def get(self):
         self.rawRender("register.html")
 
@@ -96,7 +96,9 @@ class LoginHandler(BaseHandler):
                 self.session["user"] = UserObj(currentUser, currentUser.teams[0].id)
                 self.redirect("/")
             else:
+                session = self.session
                 self.session["user"] = UserObj(currentUser)
+                self.session._save()
                 self.rawRender("teamSelect.html", currentUser=currentUser)
 
 class TeamHandler(BaseHandler):
@@ -192,7 +194,7 @@ class PeopleHandler(BaseHandler):
             inviteProject = InviteProject(invite_id= inviteId, project_id= projectId) 
             db.session.add(inviteProject)
 
-        subject = "%s邀请您加入%s"%(currentUser.name, team.title)
+        subject = "%s���������������%s"%(currentUser.name, team.title)
         for email in form.email.data :
             hashCode = uuid4().hex
             user = db.session.execute("select user.* from user, team_user_rel where id=user_id and team_id=:teamId and email=:email", 

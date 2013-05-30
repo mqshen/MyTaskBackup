@@ -15,6 +15,8 @@ from sqlalchemy.util import to_list
 from sqlalchemy.sql import operators, extract
 from tornado.ioloop import PeriodicCallback
 from tornado.options import options
+from mysql.connector import errors
+import sqlalchemy.interfaces
 
 """
 DjangoQuery From
@@ -210,12 +212,14 @@ class SQLAlchemy(object):
     def create_db(self):
         self.Model.metadata.create_all(self.engine)
 
+
 db = SQLAlchemy(
     #: string like
     #: mysql://user:pass@host:port/db?charset=utf8
     options.sqlalchemy_engine,
 
     #: dictionary like
-    #: {'pool_recycle': 3600}
+    pool_recycle = 3600, 
+    max_overflow = 10
 )
 db.echo = True

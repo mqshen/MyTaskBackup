@@ -19,8 +19,14 @@ class BaseHandler(tornado.web.RequestHandler):
 
     @property
     def session(self):
+        if hasattr(self, "_session"):
+            return self._session
+        
         sessionid = self.get_secure_cookie('sid')
-        return Session(self.application.session_store, sessionid)
+        if sessionid:
+            sessionid = sessionid.decode("utf-8")
+        self._session = Session(self.application.session_store, sessionid)
+        return self._session
 
     def get_current_user(self):
         return self.session['user'] if self.session and 'user' in self.session else None

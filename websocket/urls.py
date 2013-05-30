@@ -3,20 +3,16 @@ Created on Feb 4, 2013
 
 @author: GoldRatio
 '''
-from project.models import Project
-from todo.models import TodoItem
 import logging
-import tornado
 from core.session import Session
-from datetime import datetime
 import tornado.websocket
 from core.util import serialize
 from core.escape import json_encode
 
 def send_message(userId, teamId, modelType, operationType, model):
     '''
-        modelType: 实体类型
-        operationType: 操作类型
+        modelType: 
+        operationType: 
     '''
     for handler in [ handler for handler in UpdatesHandler.waiters.get(teamId) if handler.current_user.id != userId] :
         try:
@@ -50,21 +46,23 @@ class UpdatesHandler(tornado.websocket.WebSocketHandler):
 
     def open(self):
         currentUser = self.current_user
-        teamId = currentUser.teamId 
-        if teamId in UpdatesHandler.waiters:
-            handlerArray = UpdatesHandler.waiters.get(teamId)
-            handlerArray.add(self)
-        else:
-            handlerArray = set()
-            handlerArray.add(self)
-            UpdatesHandler.waiters.update({teamId: handlerArray})
+        if currentUser:
+            teamId = currentUser.teamId 
+            if teamId in UpdatesHandler.waiters:
+                handlerArray = UpdatesHandler.waiters.get(teamId)
+                handlerArray.add(self)
+            else:
+                handlerArray = set()
+                handlerArray.add(self)
+                UpdatesHandler.waiters.update({teamId: handlerArray})
 
     def on_close(self):
         currentUser = self.current_user
-        teamId = currentUser.teamId 
-        if teamId in UpdatesHandler.waiters:
-            handlerArray = UpdatesHandler.waiters.get(teamId)
-            handlerArray.remove(self)
+        if currentUser:
+            teamId = currentUser.teamId 
+            if teamId in UpdatesHandler.waiters:
+                handlerArray = UpdatesHandler.waiters.get(teamId)
+                handlerArray.remove(self)
 
 
     @classmethod
