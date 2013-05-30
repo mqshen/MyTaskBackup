@@ -15,10 +15,12 @@
         this.callback = $content.data("callback")
         this.$content.insertAfter($content)
         var that = this
-        $('[data-behavior="submit"]', this.$content).click(function(){
+        $('[data-behavior="confirm"]', this.$content).click(function(e){
+            e.preventDefault()
             that.submit(0)
         })
-        $('[data-behavior="cancel"]', this.$content).click(function(){
+        $('[data-behavior="cancel"]', this.$content).click(function(e){
+            e.preventDefault()
             that.submit(1)
         })
         

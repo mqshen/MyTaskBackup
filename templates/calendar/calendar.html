@@ -90,7 +90,8 @@
                                 <tr>
                                     <td>
                                         <strong>
-                                            <textarea name="summary" data-behavior="autoresize placeholder submit_on_enter dirty_tracking" rows="1" 
+                                            <textarea name="summary" data-behavior="autoresize placeholder submit_on_enter dirty_tracking" 
+                                                rows="1" data-toggle="remote"
                                                 data-type="textarea" data-placeholder="Name the event" data-autoresize="true" 
                                                 style="resize: none; overflow: hidden;">
                                                 新事件
@@ -106,7 +107,7 @@
                             <tbody>
                                 <tr>
                                     <td class="time">
-                                        <input type="text" value="" data-type="text" 
+                                        <input type="text" value="" data-type="text" data-toggle="remote"
                                             placeholder="在什么时候? (9am, 1pm, etc.)">
                                     </td>
                                 </tr>
@@ -120,7 +121,7 @@
                                     <td class="description">
                                         <textarea name="description" data-behavior="autoresize placeholder dirty_tracking" rows="1" 
                                             data-type="textarea" data-placeholder="Add an optional note" data-autoresize="true" 
-                                            style="resize: none; overflow: hidden; min-height: 21px;">
+                                            style="resize: none; overflow: hidden; min-height: 21px;" name="note" data-toggle="remote">
                                         </textarea>
                                     </td>
                                 </tr>
@@ -141,7 +142,7 @@
                                                         <label>日历:</label>
                                                     </td>
                                                     <td>
-                                                        <select name="bucket" data-behavior="bucket_selector">
+                                                        <select name="bucket" data-behavior="bucket_selector" data-toggle="remote">
                                                             <optgroup label="Calendars">
                                                                 <option value="Calendar:533348" selected="selected">General</option>
                                                                 <option value="Calendar:533350">New calendar</option>
@@ -157,8 +158,8 @@
                                                         <label>开始:</label>
                                                     </td>
                                                     <td class="date" data-behavior="date_entry">
-                                                        <input type="text" class="date hasDatepicker" readonly="" tabindex="-1" 
-                                                            data-toggle="datepick" id="dp1369911710713">
+                                                        <input type="text" class="date" readonly="" tabindex="-1" 
+                                                            data-toggle="datepick" name="start_time" id="dp1369911710713">
                                                     </td>
                                                 </tr>
                                                 <tr>
@@ -167,7 +168,7 @@
                                                     </td>
                                                     <td class="date" data-behavior="date_entry">
                                                         <input type="text" class="date hasDatepicker" readonly="" tabindex="-1" 
-                                                            data-toggle="datepick" id="dp1369911710714">
+                                                            data-toggle="datepick" name="end_time" id="dp1369911710714">
                                                     </td>
                                                 </tr>
                                             </tbody>
@@ -180,7 +181,7 @@
                 </section>
                 <footer>
                     <p class="submit">
-                        <button data-behavior="submit" class="action_button green">保存</button>
+                        <button data-behavior="confirm" class="action_button green">保存</button>
                         or <a href="javascript:;" class="cancel" data-role="cancel" data-behavior="cancel">Close</a>
                     </p>
                 </footer>
