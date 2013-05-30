@@ -46,7 +46,7 @@ class JoinForm(Form):
 
 
 class RegisterHandler(BaseHandler):
-    _error_message = "���������������"
+    _error_message = "用户名已存在"
     def get(self):
         self.rawRender("register.html")
 

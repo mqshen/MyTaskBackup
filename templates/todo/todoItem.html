@@ -36,7 +36,7 @@
                                     <div>
                                         <span class="wrapper">
                                             <input href="/project/{{project.id}}/todolist/{{todolist.id}}/todoitem/{{todoItem.id}}/done"
-                                                name="todo_complete" data-toggle="post" type="checkbox" value="1">
+                                            name="todo_complete" data-toggle="post" type="checkbox" {% if todoItem.done == 1 %} checked="true" {% end %} value="1">
                                             <span class="content" >
                                                 <a href="/project/{{project.id}}/todolist/{{todolist.id}}/todoitem/{{todoItem.id}}" 
                                                     class="editable" data-type="textarea" name="description">
