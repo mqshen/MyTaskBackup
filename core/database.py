@@ -220,6 +220,7 @@ db = SQLAlchemy(
 
     #: dictionary like
     pool_recycle = 3600, 
-    max_overflow = 10
+    max_overflow = 10,
+    isolation_level="READ COMMITTED"
 )
 db.echo = True
