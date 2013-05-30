@@ -1,3 +1,120 @@
+html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em, img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var, b, u, i, center, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td, article, aside, canvas, details, embed, figure, figcaption, footer, header, hgroup, menu, nav, output, ruby, section, summary, time, mark, audio, video {
+    margin: 0;
+    padding: 0;
+    border: 0;
+}
+
+body {
+    color: #333333;
+}
+
+h1, h2, h3, h4, h5, h6 {
+font-weight: bold;
+}
+.button, .minibutton {
+position: relative;
+display: inline-block;
+padding: 7px 15px;
+font-size: 13px;
+font-weight: bold;
+color: #333;
+text-shadow: 0 1px 0 rgba(255,255,255,0.9);
+white-space: nowrap;
+background-color: #eaeaea;
+background-image: -moz-linear-gradient(#fafafa, #eaeaea);
+background-image: -webkit-linear-gradient(#fafafa, #eaeaea);
+background-image: linear-gradient(#fafafa, #eaeaea);
+background-repeat: repeat-x;
+border-radius: 3px;
+border: 1px solid #ddd;
+border-bottom-color: #c5c5c5;
+box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+vertical-align: middle;
+cursor: pointer;
+-webkit-touch-callout: none;
+-webkit-user-select: none;
+-khtml-user-select: none;
+-moz-user-select: none;
+-ms-user-select: none;
+user-select: none;
+-webkit-appearance: none;
+}
+a {
+color: inherit;
+text-decoration: none;
+padding: 2px 0;
+-webkit-tap-highlight-color: rgba(0,0,0,0.25);
+cursor: pointer;
+}
+a {
+margin: 0;
+padding: 0;
+font-size: 100%;
+vertical-align: baseline;
+background: transparent;
+}
+a {
+text-decoration: none;
+}
+.button:hover,.button:active,.minibutton:hover,.minibutton:active {
+	text-decoration: none;
+	background-color: #dadada;
+	background-image: -moz-linear-gradient(#eaeaea, #dadada);
+	background-image: -webkit-linear-gradient(#eaeaea, #dadada);
+	background-image: linear-gradient(#eaeaea, #dadada);
+	background-repeat: repeat-x;
+	border-color: #ccc #ccc #b5b5b5
+}
+.action_button.green {
+vertical-align: baseline;
+margin-top: 0;
+border-color: #016c43;
+background-color: #00a264;
+font-size: 12px;
+line-height: 17px;
+padding: 3px 12px;
+color: #fff;
+-webkit-box-shadow: 0px 1px 0px #016c43;
+-moz-box-shadow: 0px 1px 0px #016c43;
+box-shadow: 0px 1px 0px #016c43;
+}
+input[type=submit], input[type=checkbox], button {
+cursor: pointer;
+}
+.clear, footer, header {
+clear: both;
+}
+article, aside, figure, footer, header, hgroup, nav, section {
+display: block;
+}
+ul, ol {
+margin: 0 0 10px;
+}
+ul {
+list-style: none;
+}
+button, input, select, textarea {
+margin: 0;
+}
+input, select {
+vertical-align: middle;
+}
+strong, th {
+font-weight: bold;
+}
+tbody {
+display: table-row-group;
+vertical-align: middle;
+border-color: inherit;
+}
+tbody {
+display: table-row-group;
+vertical-align: middle;
+border-color: inherit;
+}
+ul li, ol li {
+margin-bottom: 5px;
+}
 html {
 background: url(../images/wallpapers/paper.jpg) #f5efe6;
 -webkit-tap-highlight-color: rgba(0,0,0,0);
@@ -661,7 +778,7 @@ border-radius: 12px;
 	position: absolute;
 	left: -9999px;
 	top: -9999px;
-	z-index: 10000
+	z-index: 2000
 }
 
 .popover h3 {
@@ -838,6 +955,7 @@ border-radius: 12px;
 }
 
 .lily-days-table td {
+    padding: 0px;
 	width: 14%;
 	cursor: pointer;
     font-size: 12px;
@@ -882,7 +1000,7 @@ box-sizing: border-box;
     text-align: center;
 }
 div.workspace>div.flat_container div.sheet, div.workspace>div.stack_container div.sheet {
-width: 960px;
+width: 100%;
 display: inline-block;
 }
 div.sheet.inactive div.sheet {
@@ -2458,4 +2576,221 @@ padding: 10px 20px;
 margin: 0;
 background: none;
 border: none;
+}
+div.calendar_display div.left>aside {
+width: 260px;
+}
+div.calendar_display div.left>aside div.new_calendar_event {
+float: right;
+}
+div.calendar_display div.left>aside div.new_calendar_event>a {
+font-size: 11px;
+}
+div.calendar_display div.left>aside section.calendars>h4 {
+margin: 0 0 12px 0;
+color: #7d7a75;
+font-size: 16px;
+font-weight: normal;
+border-bottom: 1px solid #dcd9d3;
+padding-bottom: 3px;
+}
+div.calendar_display div.left>aside section.calendars>ul li {
+position: relative;
+margin: 5px 0;
+font-size: 13px;
+padding-left: 27px;
+line-height: 17px;
+}
+div.calendar_display .swatch {
+display: inline-block;
+margin: 0 3px -4px -27px;
+border: 2px solid #fff;
+vertical-align: baseline;
+-webkit-box-shadow: 0 0 2px rgba(0,0,0,0.4);
+-moz-box-shadow: 0 0 2px rgba(0,0,0,0.4);
+box-shadow: 0 0 2px rgba(0,0,0,0.4);
+-webkit-border-radius: 4px;
+-moz-border-radius: 4px;
+border-radius: 4px;
+}
+div.calendar_display div.left>aside section.calendars>ul li>a[data-behavior=zoom_in] {
+margin-right: 50px;
+}
+div.calendar_display div.left>aside section.calendars>ul li>a {
+vertical-align: top;
+display: inline-block;
+word-break: break-all;
+word-wrap: break-word;
+color: #1c5c76;
+text-decoration: underline;
+}
+div.calendar_display .swatch>a.active {
+background: transparent url(../images/swatch_checkmark.png) no-repeat center center;
+}
+div.calendar_display .swatch>a {
+display: block;
+padding: 0;
+height: 14px;
+width: 16px;
+}
+div.calendar_display div.left>aside section.calendars>ul li>a[data-behavior=edit_bucket] {
+position: absolute;
+top: 0;
+right: 0;
+color: #7D7A75;
+font-size: 11px;
+-webkit-transition: opacity 120ms ease-in-out;
+-moz-transition: opacity 120ms ease-in-out;
+}
+div.calendar_grid div.days_of_week {
+display: table;
+table-layout: fixed;
+width: 100%;
+}
+div.calendar_grid div.week {
+position: relative;
+}
+div.calendar_grid div.week div.dates_wrapper {
+display: table;
+table-layout: fixed;
+width: 100%;
+}
+div.calendar_grid div.week div.dates {
+display: table-row;
+}
+div.calendar_grid div.week div.dates div.date {
+display: table-cell;
+overflow: hidden;
+width: 14.28571%;
+border-right: 1px solid #dcd9d3;
+border-top: 1px solid #dcd9d3;
+height: 90px;
+margin: 0;
+padding: 0 0 10px 0;
+line-height: normal;
+}
+div.calendar_grid div.week div.dates div.date.current_month div.day {
+color: #666;
+}
+div.calendar_grid div.week div.dates div.date div.day {
+font-size: 11px;
+text-align: right;
+color: #dcd9d3;
+height: 18px;
+padding: 6px 8px 0 0;
+}
+div.calendar_grid div.days_of_week div.days div.day {
+display: table-cell;
+width: 14.28571%;
+text-align: center;
+font-size: 11px;
+padding: 0 0 3px 0;
+color: #666;
+}
+div.calendar_grid div.week div.dates div.date.today {
+background: #ffc;
+}
+div.calendar_grid div.days_of_week div.days {
+display: table-row;
+}
+div.calendar_grid div.week div.dates div.date div.day {
+font-size: 11px;
+text-align: right;
+color: #dcd9d3;
+height: 18px;
+padding: 6px 8px 0 0;
+}
+div.calendar_grid div.week div.dates div.date div.todos>div.todo {
+text-indent: 0;
+padding-left: 27px;
+}
+div.calendar_grid div.week div.dates div.date div.event {
+padding: 0 8px 0 15px;
+text-indent: -7px;
+overflow: hidden;
+}
+div.calendar_grid div.week div.dates div.date div.todos>div.todo>span.wrapper {
+margin-left: -19px;
+position: relative;
+}
+div.calendar_grid div.week div.dates div.date div.event span.event {
+cursor: pointer;
+}
+div.calendar_grid div.week div.event span.event {
+font-size: 12px;
+}
+div.calendar_grid div.week div.dates div.date div.todos>div.todo>span.wrapper>input[type=checkbox] {
+vertical-align: baseline;
+margin: 0 2px 0 0;
+padding: 0;
+display: inline-block;
+}
+form.calendar_event_editor_form fieldset textarea {
+margin: 0;
+padding: 0;
+font-size: inherit !important;
+font-weight: inherit !important;
+font-style: inherit !important;
+background-color: transparent !important;
+line-height: normal;
+outline: none;
+border: none;
+width: 100%;
+resize: none;
+border-bottom: 1px dotted #ccc;
+vertical-align: middle;
+}
+form.calendar_event_editor_form fieldset.event_date input[type=text] {
+width: 178px;
+border: 1px solid #ddd;
+padding: 2px 5px;
+border-radius: 3px;
+-webkit-border-radius: 3px;
+-moz-border-radius: 3px;
+}
+form.calendar_event_editor_form fieldset input[type=text], form.calendar_event_editor_form fieldset textarea {
+margin: 0;
+padding: 0;
+font-size: inherit !important;
+font-weight: inherit !important;
+font-style: inherit !important;
+background-color: transparent !important;
+line-height: normal;
+outline: none;
+border: none;
+width: 100%;
+resize: none;
+border-bottom: 1px dotted #ccc;
+vertical-align: middle;
+}
+form.calendar_event_editor_form fieldset table td.label {
+color: black;
+width: 30px;
+padding-right: 10px;
+text-align: right;
+}
+form.calendar_event_editor_form fieldset table {
+width: 100%;
+font-size: 12px;
+}
+div.ui-datepicker {
+display: none;
+text-align: center;
+cursor: default;
+background: #fff;
+padding: 6px 12px 12px;
+border: 1px solid #aaa;
+-webkit-border-radius: 6px;
+-moz-border-radius: 6px;
+border-radius: 6px;
+-webkit-box-shadow: 0 1px 6px rgba(0,0,0,0.3);
+-moz-box-shadow: 0 1px 6px rgba(0,0,0,0.3);
+box-shadow: 0 1px 6px rgba(0,0,0,0.3);
+}
+form.calendar_event_editor_form fieldset.event_date div.end_date {
+margin-top: 3px;
+}
+form.calendar_event_editor_form fieldset table td {
+line-height: 2em;
+padding: 0px;
 }

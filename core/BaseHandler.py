@@ -53,6 +53,8 @@ class BaseHandler(tornado.web.RequestHandler):
             if item is not None:
                 if isinstance(item, db.Model):
                     result.update({key : serialize(item)})
+                elif isinstance(item, list):
+                    result.update({key: [serialize(element) for element in item]})
                 else:
                     result.update({key : item})
         self.write(json_encode(result))

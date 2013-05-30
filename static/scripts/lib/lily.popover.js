@@ -12,7 +12,15 @@
         this.mainOffset = $('#workspace').offset()
         var $content = $(this.$element.attr("data-conent"))
         this.$content = $content.clone();
+        this.callback = $content.data("callback")
         this.$content.insertAfter($content)
+        var that = this
+        $('[data-behavior="submit"]', this.$content).click(function(){
+            that.submit(0)
+        })
+        $('[data-behavior="cancel"]', this.$content).click(function(){
+            that.submit(1)
+        })
         
     }
 
@@ -58,44 +66,20 @@
                 //that.$element.show()
                 
                 that.$content.fadeIn()
-                function processResponse(data) {
-                    var date = data.deadline
-                    var workerName = data.worker.name
-                    console.log(date)
-                    that.$element.find('[name=deadlineDate]').text(date.substring(0, 10));
-                    that.$element.find('[name="worker.name"]').text(workerName);
-                    $.lily.hideWait(that.$element)
-                }
                 function dateSelectCallback(date) {
-                    var workerId = that.$content.find("select").val()
-                    var workerName = that.$content.find("select").find("option:selected").text()
-                    that.$element.find('input[name=deadLine]').val($.lily.format.formatDate(date, 'yyyy-mm-dd 23:59:59'));
-                    that.$element.find('input[name=workerId]').val(workerId);
-                	if(that.$element.attr("data-remote") == "true") {
-                		that.hide()
-                		var url = that.$element.attr("href");
-                		var requestData = $.lily.collectRequestData(that.$element);
-                		requestData[that.$element.attr("data-date-name")] = $.lily.format.formatDate(date, 'yyyy-mm-dd 23:59:59')
-                		$.lily.showWait(that.$element);
-                		$.lily.ajax({url: url,
-                			dataType: 'json',
-                			data: requestData,
-                	        type: 'POST',
-                	        processResponse: processResponse
-                	    })
-                	}
-                	else {
-                    	that.$element.find('[name=deadlineDate]').text($.lily.format.formatDate(date));
-                    	that.$element.find('[name=workerName]').text(workerName);
-                    	that.hide();
-                	}
+                    that.submit(date)
                 }
                 $('.datepicker', that.$content).calendar({
 			    	selectFun: dateSelectCallback,
 			    	target: that.$element
 			    })
-                
             })
+        },
+
+        submit: function(date) {
+            var that = this
+            if(that.callback)
+                that.callback(date, that)
         },
 
         hide: function(e) {
@@ -106,6 +90,10 @@
             this.isShown = false
             this.$content.fadeOut()
             this.removeBackdrop()
+        },
+
+        destory: function(){
+            this.$content.remove()
         },
 
         removeBackdrop: function () {

@@ -3,11 +3,11 @@
 {% block title %}MyTask{% end %}
 
 {% block body%}
-    <div class="container flat_container calendar_container">
+    <div class="container flat_container calendar_container" style="position: relative;">
         <div class="panel calendar">
             <div id="calendar_display_singleton" class="calendar_display calendar_list_visible" >
                 <div class="right">
-                    <div class="sheet">
+                    <div class="sheet" id='myCalendar'>
                         <header id="calendar_navigation_singleton" class="calendar_navigation" data-autoview="">
                             <button class="toggle_calendar_list hide action_button" >
                                 <span class="hide">⇤ Hide calendar list</span>
@@ -24,7 +24,7 @@
                                 </button>
                             </nav>
                             <h1 data-behavior="expandable" class="calendar_title">
-                                <a href="#" data-behavior="jump_to_month">
+                                <a href="#" data-behavior="jump_to_month" id="myCalendar_title">
                                     May 2013
                                 </a>
                                 <div id="calendar_jump_singleton" class="position_reference" style="display: none;" data-autoview="">
@@ -35,6 +35,8 @@
                                 </div>
                             </h1>
                         </header>
+                        <div id="calendar_grid_singleton" class="calendar_grid" data-autoview="">
+                        </div>
                     </div>
                 </div>
 
@@ -51,28 +53,23 @@
                                         <span class="swatch" style="background-color: #2c5322">
                                             <a href="#" class="active" data-behavior="toggle_bucket"></a>
                                         </span>
-                                        <a href="#" data-behavior="zoom_in" title="Only show this calendar">General</a>
-                                        <a href="#" data-behavior="edit_bucket" title="">Settings</a>
+                                        <a href="#" data-behavior="zoom_in" title="Only show this calendar">我的日历</a>
+                                        <a href="#" data-behavior="edit_bucket" title="">设置</a>
                                     </li>
                                 </ul>
-                                <div class="calendar_list_blank_slate">
-                                    <div class="blank_slate_arrow"></div>
-                                    <div>
-                                        <h5>Share your calendars</h5>
-                                        <p>Click Settings to share your calendars with other people.</p>
-                                    </div>
-                                </div>
                             </section>
                             <section class="calendars">
-                                <h4>Projects</h4>
+                                <h4>项目</h4>
                                 <ul>
+                                    {% for project in projects %}
                                     <li data-bucket-type="project" data-bucket-id="2409861" class="">
                                         <span class="swatch" style="background-color: #3185c5">
                                             <a href="#" class="active" data-behavior="toggle_bucket"></a>
                                         </span>
-                                        <a href="#" title="Only show this calendar">Explore Basecamp!</a>
-                                        <a href="#" title="Change this calendar's name, color, and more">Settings</a>
+                                        <a href="#" title="Only show this calendar">{{project.title}}</a>
+                                        <a href="#" data-behavior="edit_bucket" title="Change this calendar's name, color, and more">设置</a>
                                     </li>
+                                    {% end %}
                                 </ul>
                             </section>
                         </div>
@@ -81,5 +78,155 @@
             </div>
         </div>
     </div>
+
+<div class="popover direction-right-top" style="display: none" id="tpl-event-popover">
+    <div class="popover-content">
+        <form class="calendar_event_editor_form">
+            <div class="collapsed_content">
+                <header>
+                    <fieldset class="event_name">
+                        <table border="0" cellspacing="0" cellpadding="0">
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <strong>
+                                            <textarea name="summary" data-behavior="autoresize placeholder submit_on_enter dirty_tracking" rows="1" 
+                                                data-type="textarea" data-placeholder="Name the event" data-autoresize="true" 
+                                                style="resize: none; overflow: hidden;">
+                                                新事件
+                                            </textarea>
+                                        </strong>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </fieldset>
+                    <fieldset class="event_name">
+                        <table border="0" cellspacing="0" cellpadding="0">
+                            <tbody>
+                                <tr>
+                                    <td class="time">
+                                        <input type="text" value="" data-type="text" 
+                                            placeholder="在什么时候? (9am, 1pm, etc.)">
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </fieldset>
+                    <fieldset class="event_note">
+                        <table>
+                            <tbody>
+                                <tr>
+                                    <td class="description">
+                                        <textarea name="description" data-behavior="autoresize placeholder dirty_tracking" rows="1" 
+                                            data-type="textarea" data-placeholder="Add an optional note" data-autoresize="true" 
+                                            style="resize: none; overflow: hidden; min-height: 21px;">
+                                        </textarea>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </fieldset>
+                </header>
+                <section>
+                    <div class="slider">
+                        <ul class="slides">
+                            <li class="slide active">
+                                <fieldset class="event_date">
+                                    <div class="start_date">
+                                        <table border="0" cellspacing="0" cellpadding="0">
+                                            <tbody>
+                                                <tr>
+                                                    <td class="label">
+                                                        <label>日历:</label>
+                                                    </td>
+                                                    <td>
+                                                        <select name="bucket" data-behavior="bucket_selector">
+                                                            <optgroup label="Calendars">
+                                                                <option value="Calendar:533348" selected="selected">General</option>
+                                                                <option value="Calendar:533350">New calendar</option>
+                                                            </optgroup>
+                                                            <optgroup label="Projects">
+                                                                <option value="Project:2969932">Explore Basecamp!</option>
+                                                            </optgroup>
+                                                        </select>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="label">
+                                                        <label>开始:</label>
+                                                    </td>
+                                                    <td class="date" data-behavior="date_entry">
+                                                        <input type="text" class="date hasDatepicker" readonly="" tabindex="-1" 
+                                                            data-toggle="datepick" id="dp1369911710713">
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="label">
+                                                        <label>结束:</label>
+                                                    </td>
+                                                    <td class="date" data-behavior="date_entry">
+                                                        <input type="text" class="date hasDatepicker" readonly="" tabindex="-1" 
+                                                            data-toggle="datepick" id="dp1369911710714">
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </fieldset> 
+                            </li>
+                        </ul>
+                    </div>
+                </section>
+                <footer>
+                    <p class="submit">
+                        <button data-behavior="submit" class="action_button green">保存</button>
+                        or <a href="javascript:;" class="cancel" data-role="cancel" data-behavior="cancel">Close</a>
+                    </p>
+                </footer>
+            </div>
+        </form>
+    </div>
+    <div class="popover-arrow"></div>
+</div>
 {% end %}
 
+{% block script %}
+$(function(){
+
+var $eventElement 
+
+function createEventCallback(flag, that) {
+    if(flag == 1) {
+        $eventElement.remove()        
+        that.destory()
+    }
+    else {
+        var data = $.lily.collectRequestData(that.$content);
+        console.log(data)
+    }
+
+}
+
+$('#tpl-event-popover').data("callback", createEventCallback)
+
+function addNewEvent($dayElement, day){
+    var $eventContainer = $('.all_day', $dayElement)
+    if($eventContainer.length == 0 ) {
+        $eventContainer = $('<div class="events all_day"></div>')
+        $dayElement.append($eventContainer) 
+    }
+    $eventElement = $('<div class="event " data-id="5597784" >' 
+        + '<span class="event" style="color: #cc6633" title="Calendar: General">'
+        + '•&nbsp;<span class="title popover-btn" data-toggle="popover" data-conent="#tpl-event-popover">新事件</span></span></div>')
+    $eventContainer.append($eventElement)
+}
+$('#myCalendar').myCalendar({
+    title: '#myCalendar_title',
+    body: '#calendar_grid_singleton',
+    url: '/fetchEvent',
+    selector: addNewEvent
+})
+
+})
+{% end %}
