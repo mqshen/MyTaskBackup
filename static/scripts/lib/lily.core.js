@@ -187,6 +187,12 @@ $.extend( $.lily, {
         	if(!selected)
         		requestName += "Del"
         	
+            var $parent = $this.closest('[data-toggle="select-radio"]')
+
+            if($parent) {
+            	orginRequestData[requestName] = contentValue
+                return
+            } 
         	if(orginRequestData[requestName]) {
             	orginRequestData[requestName].push(contentValue)
         	}

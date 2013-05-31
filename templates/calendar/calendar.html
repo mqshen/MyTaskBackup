@@ -45,17 +45,93 @@
                         <div id="calendar_list_singleton" class="calendar_list">
                             <section class="calendars">
                                 <div class="new_calendar_event">
-                                    <a href="#" data-behavior="add_calendar" class="decorated">+ Add a calendar</a>
+                                    <a href="javascrtipt:;" class="decorated popover-btn" data-toggle="popover" 
+                                        data-content="#tpl-calendar-popover">+ 添加日历</a>
                                 </div>
                                 <h4>日历</h4>
-                                <ul class="have_not_been_shared">
+                                <ul class="have_not_been_shared" id="calendar_list">
+                                    {% for calendar in calendars %}
                                     <li class="calendar" id="calendar_451504" data-bucket-type="calendar" data-bucket-id="451504">
-                                        <span class="swatch" style="background-color: #2c5322">
-                                            <a href="#" class="active" data-behavior="toggle_bucket"></a>
+                                        <span class="swatch" style="background-color: #{{calendar.color}}">
+                                            <a href="javascript:;" class="btn selected" data-toggle="select" data-behavior="toggle_bucket"></a>
                                         </span>
-                                        <a href="#" data-behavior="zoom_in" title="Only show this calendar">我的日历</a>
-                                        <a href="#" data-behavior="edit_bucket" title="">设置</a>
+                                        <a href="javascript:;" class="calendar_title" title="Only show this calendar">{{calendar.title}}</a>
+                                        <a href="javascript:;" class="popover-btn" data-toggle="popover" data-post="{{calendar.id}}" title="">设置
+                                        </a>
+<div class="popover direction-right-top calendar_editor calendar_display" style="display: none" >
+    <div class="popover-content balloon">
+        <form>
+            <header>
+                <fieldset class="calendar_settings">
+                    <h3>
+                        <textarea name="title" data-behavior="autoresize placeholder submit_on_enter" rows="1" data-type="textarea" 
+                            data-placeholder="Name this calendar" class="placeholding" data-autoresize="true" name="title"
+                            data-toggle="remote" placeholder="我的日历" style="resize: none; overflow: hidden; min-height: 20px;">
+                            {{calendar.title}}
+                        </textarea>
+                    </h3>
+                    <p>选择颜色</p>
+                    <div class="swatches" data-toggle="select-radio">
+                        <label class="swatch btn {% if calendar.color == "3185c5" %} selected {% end %}" name="color" data-toggle="select" data-content="3185c5" style="background-color: #3185c5"></label>
+                        <label class="swatch btn {% if calendar.color == "000099" %} selected {% end %}" name="color" data-toggle="select" data-content="000099" style="background-color: #000099"></label>
+                        <label class="swatch btn {% if calendar.color == "3B9E93" %} selected {% end %}" name="color" data-toggle="select" data-content="3B9E93" style="background-color: #3B9E93"></label>
+                        <label class="swatch btn {% if calendar.color == "009900" %} selected {% end %}" name="color" data-toggle="select" data-content="009900" style="background-color: #009900"></label>
+                        <label class="swatch btn {% if calendar.color == "aa0000" %} selected {% end %}" name="color" data-toggle="select" data-content="aa0000" style="background-color: #aa0000"></label>
+                        <label class="swatch btn {% if calendar.color == "ec61a2" %} selected {% end %}" name="color" data-toggle="select" data-content="ec61a2" style="background-color: #ec61a2"></label>
+                        <label class="swatch btn {% if calendar.color == "cc6633" %} selected {% end %}" name="color" data-toggle="select" data-content="cc6633" style="background-color: #cc6633"></label>
+                        <label class="swatch btn {% if calendar.color == "666666" %} selected {% end %}" name="color" data-toggle="select" data-content="666666" style="background-color: #666666"></label>
+                        <label class="swatch btn {% if calendar.color == "000000" %} selected {% end %}" name="color" data-toggle="select" data-content="000000" style="background-color: #000000"></label>
+                        <label class="swatch btn {% if calendar.color == "660099" %} selected {% end %}" name="color" data-toggle="select" data-content="660099" style="background-color: #660099"></label>
+                        <label class="swatch btn {% if calendar.color == "ff9c00" %} selected {% end %}" name="color" data-toggle="select" data-content="ff9c00" style="background-color: #ff9c00"></label>
+                        <label class="swatch btn {% if calendar.color == "e207c1" %} selected {% end %}" name="color" data-toggle="select" data-content="e207c1" style="background-color: #e207c1"></label>
+                        <label class="swatch btn {% if calendar.color == "a5460d" %} selected {% end %}" name="color" data-toggle="select" data-content="a5460d" style="background-color: #a5460d"></label>
+                        <label class="swatch btn {% if calendar.color == "650606" %} selected {% end %}" name="color" data-toggle="select" data-content="650606" style="background-color: #650606"></label>
+                        <label class="swatch btn {% if calendar.color == "482a15" %} selected {% end %}" name="color" data-toggle="select" data-content="482a15" style="background-color: #482a15"></label>
+                        <label class="swatch btn {% if calendar.color == "2c5322" %} selected {% end %}" name="color" data-toggle="select" data-content="2c5322" style="background-color: #2c5322"></label>
+                        <label class="swatch btn {% if calendar.color == "b3a543" %} selected {% end %}" name="color" data-toggle="select" data-content="b3a543" style="background-color: #b3a543"></label>
+                        <label class="swatch btn {% if calendar.color == "46647c" %} selected {% end %}" name="color" data-toggle="select" data-content="46647c" style="background-color: #46647c"></label>
+                    </div>
+                </fieldset>
+            </header>
+            <div data-behavior="calendar_accesses">
+                <section>
+                    <div class="slider" data-behavior="slider">
+                        <ul class="slides" style="width: 200%;">
+                            <li class="slide" data-slide-index="1" style="width: 220px;">
+                                <div class="subscribable change_accesses">
+                                    <div class="invitees">
+                                        <h4>用户邀请</h4>
+                                        <section class="invite">
+                                            {% for member in [member for member in team.members if member.id != currentUser.id ]%}
+                                            <article class="person btn"  data-content="{{member.id}}" data-toggle="select" name="member">
+                                                <div class="avatar">
+                                                    <img class="avatar" height="40" src="/avatar/{{ member.avatar }}" title="" width="140">
+                                                </div>
+                                                <h3>
+                                                    <a href="/member/{{ member.id }}">{{ member.name }}</a>
+                                                </h3>
+                                            </article>
+                                            {% end %}
+                                        </section>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </section>
+            </div>
+            <footer>
+                <p class="submit">
+                    <button data-behavior="confirm" class="action_button">添加</button>
+                    or <a href="#" class="cancel" data-behavior="cancel">取消</a>
+                </p>
+            </footer>
+        </form>
+    </div>
+    <div class="popover-arrow"></div>
+</div>
                                     </li>
+                                    {% end %}
                                 </ul>
                             </section>
                             <section class="calendars">
@@ -190,6 +266,78 @@
     </div>
     <div class="popover-arrow"></div>
 </div>
+
+<div class="popover direction-right-top calendar_editor calendar_display" style="display: none" id="tpl-calendar-popover">
+    <div class="popover-content balloon">
+        <form>
+            <header>
+                <fieldset class="calendar_settings">
+                    <h3>
+                        <textarea name="title" data-behavior="autoresize placeholder submit_on_enter" rows="1" data-type="textarea" 
+                            data-placeholder="Name this calendar" class="placeholding" data-autoresize="true" name="title"
+                            data-toggle="remote" placeholder="我的日历" style="resize: none; overflow: hidden; min-height: 20px;">
+                        </textarea>
+                    </h3>
+                    <p>选择颜色</p>
+                    <div class="swatches" data-toggle="select-radio">
+                        <label class="swatch btn" name="color" data-toggle="select" data-content="3185c5" style="background-color: #3185c5"></label>
+                        <label class="swatch btn" name="color" data-toggle="select" data-content="000099" style="background-color: #000099"></label>
+                        <label class="swatch btn" name="color" data-toggle="select" data-content="3B9E93" style="background-color: #3B9E93"></label>
+                        <label class="swatch btn" name="color" data-toggle="select" data-content="009900" style="background-color: #009900"></label>
+                        <label class="swatch btn" name="color" data-toggle="select" data-content="aa0000" style="background-color: #aa0000"></label>
+                        <label class="swatch btn" name="color" data-toggle="select" data-content="ec61a2" style="background-color: #ec61a2"></label>
+                        <label class="swatch btn" name="color" data-toggle="select" data-content="cc6633" style="background-color: #cc6633"></label>
+                        <label class="swatch btn" name="color" data-toggle="select" data-content="666666" style="background-color: #666666"></label>
+                        <label class="swatch btn" name="color" data-toggle="select" data-content="000000" style="background-color: #000000"></label>
+                        <label class="swatch btn" name="color" data-toggle="select" data-content="660099" style="background-color: #660099"></label>
+                        <label class="swatch btn" name="color" data-toggle="select" data-content="ff9c00" style="background-color: #ff9c00"></label>
+                        <label class="swatch btn" name="color" data-toggle="select" data-content="e207c1" style="background-color: #e207c1"></label>
+                        <label class="swatch btn" name="color" data-toggle="select" data-content="a5460d" style="background-color: #a5460d"></label>
+                        <label class="swatch btn" name="color" data-toggle="select" data-content="650606" style="background-color: #650606"></label>
+                        <label class="swatch btn" name="color" data-toggle="select" data-content="482a15" style="background-color: #482a15"></label>
+                        <label class="swatch btn" name="color" data-toggle="select" data-content="2c5322" style="background-color: #2c5322"></label>
+                        <label class="swatch btn" name="color" data-toggle="select" data-content="b3a543" style="background-color: #b3a543"></label>
+                        <label class="swatch btn" name="color" data-toggle="select" data-content="46647c" style="background-color: #46647c"></label>
+                    </div>
+                </fieldset>
+            </header>
+            <div data-behavior="calendar_accesses">
+                <section>
+                    <div class="slider" data-behavior="slider">
+                        <ul class="slides" style="width: 200%;">
+                            <li class="slide" data-slide-index="1" style="width: 220px;">
+                                <div class="subscribable change_accesses">
+                                    <div class="invitees">
+                                        <h4>用户邀请</h4>
+                                        <section class="invite">
+                                            {% for member in [member for member in team.members if member.id != currentUser.id ]%}
+                                            <article class="person btn"  data-content="{{member.id}}" data-toggle="select" name="member">
+                                                <div class="avatar">
+                                                    <img class="avatar" height="40" src="/avatar/{{ member.avatar }}" title="" width="140">
+                                                </div>
+                                                <h3>
+                                                    <a href="/member/{{ member.id }}">{{ member.name }}</a>
+                                                </h3>
+                                            </article>
+                                            {% end %}
+                                        </section>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </section>
+            </div>
+            <footer>
+                <p class="submit">
+                    <button data-behavior="confirm" class="action_button">添加</button>
+                    or <a href="#" class="cancel" data-behavior="cancel">取消</a>
+                </p>
+            </footer>
+        </form>
+    </div>
+    <div class="popover-arrow"></div>
+</div>
 {% end %}
 
 {% block script %}
@@ -204,12 +352,51 @@ function createEventCallback(flag, that) {
     }
     else {
         var data = $.lily.collectRequestData(that.$content);
-        console.log(data)
     }
 
 }
+function calendarCallback(element, that) {
+    if(that.$element.attr("data-post")) {
+       var $target = that.$element.parent() 
+       $('span.swatch', $target).css("background-color", '#' + element.color)
+       $('.calendar_title', $target).text(element.title)
+       return
+    }
+    var $calendar = $('<li class="calendar" id="calendar_451504" data-bucket-type="calendar" data-bucket-id="451504">'
+        + '<span class="swatch" style="background-color: #' + element.color + '">'
+        + '<a href="javascript:;" class="active btn" data-toggle="select" data-behavior="toggle_bucket"></a>'
+        + '</span>'
+        + '<a href="javascript:;" class="calendar_title" title="Only show this calendar">' + element.title 
+        + '</a><a href="javascript:;" data-toggle="popover" data-post="' + element.id + '" title="">设置</a>'
+        + '</li>')
+    $('#calendar_list').append($calendar)
+}
 
+function createCalendarcallback(flag, that) {
+    if(flag == 1) {
+        that.hide()
+    }
+    else {
+        var data = $.lily.collectRequestData(that.$content);
+        if(that.$element.attr("data-post"))
+            $.extend(data, {id: that.$element.attr("data-post")})
+        $.lily.ajax({
+            url : '/calendar',
+            data : data,
+	    	type: 'post',
+            processResponse : function(reponseData) {calendarCallback(reponseData, that)}
+	    });
+    }
+}
+function beforeCreateCalendar($source, $target) {
+
+}
+function afterCreateCalendar($source, $target) {
+}
 $('#tpl-event-popover').data("callback", createEventCallback)
+$('.calendar_editor').data("callback", createCalendarcallback)
+$('#tpl-calendar-popover').data("beforeCall", beforeCreateCalendar)
+$('#tpl-calendar-popover').data("afterCall", afterCreateCalendar)
 
 function addNewEvent($dayElement, day){
     var $eventContainer = $('.all_day', $dayElement)
@@ -219,7 +406,7 @@ function addNewEvent($dayElement, day){
     }
     $eventElement = $('<div class="event " data-id="5597784" >' 
         + '<span class="event" style="color: #cc6633" title="Calendar: General">'
-        + '•&nbsp;<span class="title popover-btn" data-toggle="popover" data-conent="#tpl-event-popover">新事件</span></span></div>')
+        + '•&nbsp;<span class="title popover-btn" data-toggle="popover" data-content="#tpl-event-popover">新事件</span></span></div>')
     $eventContainer.append($eventElement)
 }
 $('#myCalendar').myCalendar({

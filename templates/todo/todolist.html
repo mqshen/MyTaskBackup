@@ -72,11 +72,11 @@
                                                     data-remote="true" id="edit_todo_41824572" method="post" data-type="html">
                                                     <span style="position:relative">
                                                         <span class="pill has_balloon blank showing exclusively_expanded expanded{% if todoItem.deadline is not None %} {% if todoItem.deadline.date() < date.today() %} delay {% end %}{% if todoItem.deadline.date() == date.today() %} current {% end %}{% end %}"
-                                                            data-toggle="popover" data-conent="#tpl-todo-popover"
+                                                            data-toggle="popover" data-content="#tpl-todo-popover"
                                                             data-hovercontent-strategy="visibility">
                                                             <a class="popover-btn data-toggle="popover" 
                                                                 data-remote="true" href="/project/{{project.id}}/todolist/{{todolist.id}}/todoitem/{{todoItem.id}}" 
-                                                                data-conent="#tpl-todo-popover">
+                                                                data-content="#tpl-todo-popover">
                                                                 <span name="worker.name" class="echo"> 
                                                                 {% if todoItem.worker is None %}
                                                                     未分配
@@ -124,7 +124,7 @@
                                                 data-autoresize="true" style="resize: none; overflow: hidden; min-height: 18px;"></textarea>
                                             <span style="position:relative">
                                                 <span class="pill has_balloon blank ignore_hover"> 
-                                                    <a class="popover-btn" href="javascript:;" data-toggle="popover" data-conent="#tpl-todo-popover">
+                                                    <a class="popover-btn" href="javascript:;" data-toggle="popover" data-content="#tpl-todo-popover">
                                                         <input type="hidden" data-toggle="remote" name="deadLine">
                                                         <input type="hidden" data-toggle="remote" name="workerId">
                                                         <span name="workerName"> 
@@ -173,11 +173,11 @@
                                                     data-remote="true" id="edit_todo_41824572" method="post" data-type="html">
                                                     <span style="position:relative">
                                                         <span class="pill has_balloon blank showing exclusively_expanded expanded"
-                                                            data-toggle="popover" data-conent="#tpl-todo-popover"
+                                                            data-toggle="popover" data-content="#tpl-todo-popover"
                                                             data-hovercontent-strategy="visibility">
                                                             <a class="popover-btn" data-toggle="popover" 
                                                                 data-remote="true" href="/project/{{project.id}}/todolist/{{todolist.id}}/todoitem/{{todoItem.id}}" 
-                                                                data-conent="#tpl-todo-popover">
+                                                                data-content="#tpl-todo-popover">
                                                                 <span name="worker.name" class="echo"> 
                                                                     {{todoItem.worker.name}}
                                                                     <input type="hidden" data-toggle="remote" name="workerId" value="{{todoItem.worker.id}}">

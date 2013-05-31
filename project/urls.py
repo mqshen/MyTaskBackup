@@ -54,7 +54,7 @@ class ProjectHandler(BaseHandler):
 
         users = []
 
-        user = users.append(User.query.filter_by(id=currentUser.id).first())
+        user = User.query.filter_by(id=currentUser.id).first()
         users.append(user)
 
         for userId in form.member.data:

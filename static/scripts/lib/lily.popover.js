@@ -10,10 +10,17 @@
         this.$element = $(element)
         this.options = $.extend({}, $.fn.popover.defaults, options)
         this.mainOffset = $('#workspace').offset()
-        var $content = $(this.$element.attr("data-conent"))
-        this.$content = $content.clone();
-        this.callback = $content.data("callback")
-        this.$content.insertAfter($content)
+        if(this.$element.attr("data-content")) {
+            var $content = $(this.$element.attr("data-content"))
+            this.$content = $content.clone();
+            this.$content.insertAfter($content)
+            this.callback = $content.data("callback")
+            this.isAddContent = true
+        }
+        else {
+            this.$content = $('.popover', this.$element.parent())
+            this.callback = this.$content.data("callback")
+        }
         var that = this
         $('[data-behavior="confirm"]', this.$content).click(function(e){
             e.preventDefault()
@@ -47,6 +54,10 @@
             this.backdrop(function () {
                 var offset = that.$element.offset()
                 var shownbottom = $(window).height() - offset.top + $(window).scrollTop()
+                if(!that.isAddContent ) {
+                    offset.top = 0
+                    offset.left = that.$element.parent().width()
+                }
                 if(shownbottom > that.$content.height()) {
                     that.$content.css({
                         top: offset.top - that.options.gap ,//- that.$element.height()/2,
