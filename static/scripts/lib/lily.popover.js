@@ -106,7 +106,9 @@
         },
 
         destory: function(){
+            this.hide()
             this.$content.remove()
+            this.data('popover', null)
         },
 
         removeBackdrop: function () {

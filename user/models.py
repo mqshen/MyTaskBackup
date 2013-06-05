@@ -28,6 +28,7 @@ class Team(db.Model):
     projects = relationship("Project", backref="team")
     invitedUser = relationship("InviteUser", primaryjoin="InviteUser.team_id == Team.id", backref="team")
 
+
 class User(db.Model):
     id = Column(Integer, primary_key=True)
     name = Column(String(30))
@@ -46,6 +47,14 @@ class User(db.Model):
     ownedTodoComments = relationship("TodoComment", backref="own")
     ownedTodoListComments = relationship("TodoListComment", backref="own")
     todoItems = relationship("TodoItem", primaryjoin="User.id == TodoItem.worker_id", backref="worker")
+
+class Cookie(db.Model):
+    __tablename__ = 'user_cookie'
+    user_id = Column(Integer, ForeignKey('user.id'), primary_key=True)
+    sid = Column(String(40))
+
+    user = relationship("User", backref="cookie")
+
 
 class TeamUserRel(db.Model):
     __tablename__ = 'team_user_rel'

@@ -3,7 +3,7 @@ Created on Feb 4, 2013
 
 @author: GoldRatio
 '''
-from .models import User, Team, InviteProject, InviteUser, UserObj, TeamUserRel
+from .models import User, Team, InviteProject, InviteUser, UserObj, TeamUserRel, Cookie
 from todo.models import TodoItem
 import logging
 import tornado
@@ -76,6 +76,19 @@ class RegisterHandler(BaseHandler):
 class LoginHandler(BaseHandler):
     _error_message = "email or password incorrect!"
     def get(self):
+        sessionid = self.get_secure_cookie('sid')
+        cookie = Cookie.query.filter_by(sid= sessionid).first()
+        if cookie and cookie.user:
+            currentUser = cookie.user
+            self.set_secure_cookie("sid", self.session.sessionid)
+            if len(currentUser.teams) == 1:
+                self.session["user"] = UserObj(currentUser, currentUser.teams[0].id)
+                self.redirect("/")
+            else:
+                self.session["user"] = UserObj(currentUser)
+                self.session._save()
+                self.rawRender("teamSelect.html", currentUser=currentUser)
+            return
         self.rawRender("login.html")
 
     def post(self):
@@ -92,11 +105,15 @@ class LoginHandler(BaseHandler):
             self.render("login.html", form = form, errorMessage = self._error_message)
         else:
             self.set_secure_cookie("sid", self.session.sessionid)
+
+            cookie = Cookie(user_id= currentUser.id, sid= self.session.sessionid)
+            db.session.add(cookie)
+            db.session.commit()
+
             if len(currentUser.teams) == 1:
                 self.session["user"] = UserObj(currentUser, currentUser.teams[0].id)
                 self.redirect("/")
             else:
-                session = self.session
                 self.session["user"] = UserObj(currentUser)
                 self.session._save()
                 self.rawRender("teamSelect.html", currentUser=currentUser)
