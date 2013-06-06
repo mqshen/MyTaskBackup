@@ -6,6 +6,7 @@ Created on Feb 4, 2013
 import os
 from .models import Project
 from operation.models import Operation
+from attachment.models import Attachment
 from topic.models import Message 
 from todo.models import TodoList
 from user.models import Team, User
@@ -29,6 +30,9 @@ class ProjectForm(Form):
 class ProjectAccessForm(Form):
     userId = IntField('userId')
     operation = TextField('operation')
+
+class ProjectFilesForm(Form):
+    attachment = ListField('attachment')
 
 class ProjectHandler(BaseHandler):
     _error_message = "项目已存在"
@@ -102,7 +106,10 @@ class ProjectDetailHandler(BaseHandler):
         project = Project.query.filter_by(id=projectId).first()
         messages = Message.query.filter_by(project_id=projectId).order_by(Message.createTime).limit(5).all()
         todolists = TodoList.query.filter_by(project_id=projectId).all()
-        self.render("project/projectDetail.html", project= project, messages= messages, todolists= todolists)
+        from attachment.models import Attachment
+        files = Attachment.query.filter_by(project_id=projectId).order_by(Attachment.createTime.desc()).limit(5).all()
+
+        self.render("project/projectDetail.html", project= project, messages= messages, todolists= todolists, files= files)
 
 
 class ProjectAccessHandler(BaseHandler):
@@ -130,9 +137,39 @@ class ProjectAccessHandler(BaseHandler):
 
         self.writeSuccessResult(successUrl='/')
 
+class ProjectFilesHandler(BaseHandler):
+    @tornado.web.authenticated
+    @core.web.authenticatedProject
+    def get(self, projectId):
+        project = Project.query.filter_by(id=projectId).first()
+        files = Attachment.query.filter_by(project_id=projectId).order_by(Attachment.createTime.desc()).all()
+        self.render("files/files.html", project= project, files= files)
+
+    @tornado.web.authenticated
+    @core.web.authenticatedProject
+    def post(self, projectId):
+        form = ProjectFilesForm(self.request.arguments, locale_code=self.locale.code)
+        project = Project.query.filter_by(id= projectId).with_lockmode("update").first()
+        files = []
+        for fileUrl in form.attachment.data:
+            attachment = Attachment.query.filter_by(url = fileUrl).first()
+            attachment.project_id = projectId
+            files.append(attachment)
+            db.session.add(attachment)
+
+        project.fileNum = project.fileNum + len(files)
+
+        db.session.add(project)
+        db.session.commit()
+
+        self.writeSuccessResult(files= files)
+        
+
+
 handlers = [
     ('/', ProjectHandler),
     ('/project', ProjectHandler),
+    ('/project/([0-9]+)/files', ProjectFilesHandler),
     ('/project/([0-9]+)', ProjectDetailHandler),
     ('/project/([0-9]+)/access', ProjectAccessHandler),
     ('/project/new', NewProjectHandler),

@@ -10,8 +10,10 @@
         this.$element = $(element)
         this.options = $.extend({}, $.fn.popover.defaults, options)
         this.mainOffset = $('#workspace').offset()
+        var afterCall
         if(this.$element.attr("data-content")) {
             var $content = $(this.$element.attr("data-content"))
+            afterCall = $content.data("afterCall")
             this.$content = $content.clone();
             this.$content.insertAfter($content)
             this.callback = $content.data("callback")
@@ -20,6 +22,7 @@
         else {
             this.$content = $('.popover', this.$element.parent())
             this.callback = this.$content.data("callback")
+            afterCall = this.$content.data("afterCall")
         }
         var that = this
         $('[data-behavior="confirm"]', this.$content).click(function(e){
@@ -30,6 +33,9 @@
             e.preventDefault()
             that.submit(1)
         })
+
+        if(afterCall)
+            afterCall(this.$element, this.$content)
         
     }
 

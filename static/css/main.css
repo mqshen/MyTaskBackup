@@ -2856,3 +2856,68 @@ background-repeat: no-repeat;
 div.calendar_display .swatch>a.selected {
 background: transparent url(../images/swatch_checkmark.png) no-repeat center center;
 }
+div.sheet.project section.grouped_by_date article>table>tbody>tr>td.icon, div.sheet>div.sheet_body section.grouped_by_date article>table>tbody>tr>td.icon {
+text-align: right;
+width: 120px;
+}
+div.sheet.project section.grouped_by_date article>table>tbody>tr>td, div.sheet>div.sheet_body section.grouped_by_date article>table>tbody>tr>td {
+height: 60px;
+vertical-align: middle;
+}
+section.attachments.grouped_by_date article.attachment>table>tbody>tr>td.icon img.thumbnail {
+max-width: 120px;
+}
+div.sheet.project>div.sheet_body section.attachments.grouped_by_date h3.filename {
+font-size: 16px;
+}
+div.sheet.project section.grouped_by_date article>table>tbody>tr>td.text h3, div.sheet>div.sheet_body section.grouped_by_date article>table>tbody>tr>td.text h3 {
+font-size: 16px;
+line-height: 20px;
+font-weight: bold;
+margin: 0;
+color: black;
+max-width: 600px;
+}
+section.attachments.grouped_by_date article.attachment>table>tbody>tr>td.text div.authorship {
+clear: left;
+max-width: 600px;
+overflow: hidden;
+text-overflow: ellipsis;
+white-space: nowrap;
+}
+section.attachments.grouped_by_date article.attachment>table>tbody>tr>td.text div.authorship p.meta {
+max-width: 480px;
+font-size: 12px;
+color: #999;
+margin: 0;
+}
+section.attachments.grouped_by_date article.attachment>table>tbody>tr>td.text div.authorship p.actions a {
+color: #1c5c76;
+text-decoration: underline;
+}
+div.sheet.project section.grouped_by_date>header, div.sheet>div.sheet_body section.grouped_by_date>header {
+border-top: 1px solid #e5e5e5;
+position: relative;
+height: 0px;
+padding: 0;
+margin: 0;
+}
+div.sheet.project section.grouped_by_date>header>div, div.sheet>div.sheet_body section.grouped_by_date>header>div {
+position: absolute;
+top: 10px;
+left: 0;
+font-size: 13px;
+line-height: 17px;
+color: #aa9c84;
+}
+div.sheet.project section.grouped_by_date>header>div>h2, div.sheet>div.sheet_body section.grouped_by_date>header>div>h2 {
+font-size: 13px;
+line-height: 17px;
+margin: 0;
+color: black;
+font-weight: normal;
+white-space: nowrap;
+}
+div.sheet.project section.grouped_by_date article, div.sheet>div.sheet_body section.grouped_by_date article {
+margin: 10px 0px 10px 150px;
+}

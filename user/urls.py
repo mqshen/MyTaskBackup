@@ -106,7 +106,11 @@ class LoginHandler(BaseHandler):
         else:
             self.set_secure_cookie("sid", self.session.sessionid)
 
-            cookie = Cookie(user_id= currentUser.id, sid= self.session.sessionid)
+            cookie = Cookie.query.filter_by(user_id = currentUser.id).first()
+            if cookie:
+                cookie.sid = self.session.sessionid
+            else:
+                cookie = Cookie(user_id= currentUser.id, sid= self.session.sessionid)
             db.session.add(cookie)
             db.session.commit()
 
@@ -211,7 +215,7 @@ class PeopleHandler(BaseHandler):
             inviteProject = InviteProject(invite_id= inviteId, project_id= projectId) 
             db.session.add(inviteProject)
 
-        subject = "%s���������������%s"%(currentUser.name, team.title)
+        subject = "%s邀请您加入%s"%(currentUser.name, team.title)
         for email in form.email.data :
             hashCode = uuid4().hex
             user = db.session.execute("select user.* from user, team_user_rel where id=user_id and team_id=:teamId and email=:email", 

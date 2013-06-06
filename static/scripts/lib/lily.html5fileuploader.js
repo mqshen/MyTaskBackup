@@ -47,7 +47,7 @@ $.extend( $.lily, {
 			// start upload
 			xhr.open("POST", options.url, true);
             xhr.setRequestHeader("Content-type", file.type)
-			xhr.setRequestHeader("X_FILENAME", file.name);
+			xhr.setRequestHeader("X_FILENAME", encodeURIComponent(file.name));
 			xhr.send(file);
 		}
     }

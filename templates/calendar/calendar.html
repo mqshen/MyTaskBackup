@@ -60,8 +60,9 @@
                                         </a>
 <div class="popover direction-right-top calendar_editor calendar_display" style="display: none" >
     <div class="popover-content balloon">
-        <form>
+        <form method="post" href="/calendar" class="calendar_editor_form">
             <header>
+                <input type="hidden" name="id" data-toggle="remote">
                 <fieldset class="calendar_settings">
                     <h3>
                         <textarea name="title" data-behavior="autoresize placeholder submit_on_enter" rows="1" data-type="textarea" 
@@ -122,7 +123,7 @@
             </div>
             <footer>
                 <p class="submit">
-                    <button data-behavior="confirm" class="action_button">添加</button>
+                    <button data-toggle="submit" class="action_button" data-disabled-with="正在修改...">修改</button>
                     or <a href="#" class="cancel" data-behavior="cancel">取消</a>
                 </p>
             </footer>
@@ -269,7 +270,7 @@
 
 <div class="popover direction-right-top calendar_editor calendar_display" style="display: none" id="tpl-calendar-popover">
     <div class="popover-content balloon">
-        <form>
+        <form >
             <header>
                 <fieldset class="calendar_settings">
                     <h3>
@@ -356,12 +357,11 @@ function createEventCallback(flag, that) {
 
 }
 function calendarCallback(element, that) {
-    if(that.$element.attr("data-post")) {
-       var $target = that.$element.parent() 
-       $('span.swatch', $target).css("background-color", '#' + element.color)
-       $('.calendar_title', $target).text(element.title)
-       return
-    }
+    var $target = that.closest('li') 
+    $('span.swatch', $target).css("background-color", '#' + element.color)
+    $('.calendar_title', $target).text(element.title)
+}
+function createCalendarCallback(element, that) {
     var $calendar = $('<li class="calendar" id="calendar_451504" data-bucket-type="calendar" data-bucket-id="451504">'
         + '<span class="swatch" style="background-color: #' + element.color + '">'
         + '<a href="javascript:;" class="active btn" data-toggle="select" data-behavior="toggle_bucket"></a>'
@@ -388,15 +388,27 @@ function createCalendarcallback(flag, that) {
 	    });
     }
 }
+
 function beforeCreateCalendar($source, $target) {
 
 }
+
 function afterCreateCalendar($source, $target) {
+    var id = $source.attr("data-post")
+    $("[name=id]", $target).val(id)
+}
+function afterEditCalendar($source, $target) {
+    var id = $source.attr("data-post")
+    $("[name=id]", $target).val(id)
 }
 $('#tpl-event-popover').data("callback", createEventCallback)
 $('.calendar_editor').data("callback", createCalendarcallback)
 $('#tpl-calendar-popover').data("beforeCall", beforeCreateCalendar)
 $('#tpl-calendar-popover').data("afterCall", afterCreateCalendar)
+
+$('.calendar_editor').data("doResponse", calendarCallback)
+$('.calendar_editor_form').data("afterCall", afterEditCalendar)
+
 
 function addNewEvent($dayElement, day){
     var $eventContainer = $('.all_day', $dayElement)

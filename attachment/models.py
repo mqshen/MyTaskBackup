@@ -11,6 +11,7 @@ from sqlalchemy.orm import relationship
 __all__ = ['Attachment']
 
 class Attachment(db.Model):
+    eagerRelation = ['own']
     id = Column(Integer, primary_key=True)
     url = Column(String(60))
     name = Column(String(100))

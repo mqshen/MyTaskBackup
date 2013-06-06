@@ -149,7 +149,8 @@ $.extend( $.lily, {
     		var $this = $(this)
             if($this.attr("type") == "checkbox" && !$this.attr("checked"))
                 return
-            var value = $this.val()
+            var value = $this.val().trim()
+            console.log(value)
             if(value && !$.lily.format.isEmpty(value) ){
                 var name = $this.attr("name")
                 if(name.endsWith("[]")){
@@ -189,7 +190,7 @@ $.extend( $.lily, {
         	
             var $parent = $this.closest('[data-toggle="select-radio"]')
 
-            if($parent) {
+            if($parent.length > 0) {
             	orginRequestData[requestName] = contentValue
                 return
             } 

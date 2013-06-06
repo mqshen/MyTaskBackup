@@ -21,6 +21,7 @@ import email.utils
 import stat
 import datetime
 import sys
+import urllib
 from PIL import Image
 from io import BytesIO
 
@@ -200,6 +201,8 @@ class AttachmentHandler(BaseHandler):
             height = 0
 
             filename = self.request.headers.get("X_filename")
+            if filename:
+                filename = urllib.parse.unquote(filename)
 
             fileName = generateFileName()
             attachmentPath = options.attachmentPath
