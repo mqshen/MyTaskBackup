@@ -2918,6 +2918,6 @@ color: black;
 font-weight: normal;
 white-space: nowrap;
 }
-div.sheet.project section.grouped_by_date article, div.sheet>div.sheet_body section.grouped_by_date article {
+div.sheet.project div.files section.grouped_by_date article, div.sheet>div.sheet_body div.files section.grouped_by_date article {
 margin: 10px 0px 10px 150px;
 }
