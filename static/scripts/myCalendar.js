@@ -148,7 +148,7 @@
 						continue;
 					}
 					if (days == this.currentDay) {
-						html += "<div class='date current_month today' data-date='" +new Date(this.year ,this.month, firstMonthDay ).format('yyyy-mm-dd') 
+						html += "<div class='date current_month today' data-date='" +new Date(this.year ,this.month, days).format('yyyy-mm-dd') 
                             + "'><div class='day'>" + (days++) + "</div></div>";
 					} 
 					else {
