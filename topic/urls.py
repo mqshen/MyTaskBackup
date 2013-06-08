@@ -47,6 +47,7 @@ class MessageHandler(BaseHandler):
             teamId = currentUser.teamId
             now = datetime.now()
             digest = html2text(form.content.data)
+            digest = digest[:100]
 
             message = Message(title=form.title.data, content=form.content.data, 
                 own_id=currentUser.id, project_id= projectId, team_id=teamId, comment_digest= digest, attachments=[])
