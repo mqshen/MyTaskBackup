@@ -151,13 +151,26 @@ class ProjectFilesHandler(BaseHandler):
         form = ProjectFilesForm(self.request.arguments, locale_code=self.locale.code)
         project = Project.query.filter_by(id= projectId).with_lockmode("update").first()
         files = []
+        fileNames = []
         for fileUrl in form.attachment.data:
             attachment = Attachment.query.filter_by(url = fileUrl).first()
             attachment.project_id = projectId
             files.append(attachment)
+            fileNames.append(attachment.name)
             db.session.add(attachment)
 
         project.fileNum = project.fileNum + len(files)
+
+        now = datetime.now()
+
+        url = "/project/%s/files"%(project.id)
+        title = ','.join(fileNames)
+        title = title[:30]
+        currentUser = self.current_user
+        teamId = currentUser.teamId 
+        operation = Operation(own_id = currentUser.id, createTime= now, operation_type=11, target_type=6,
+            target_id= project.id, title= title, team_id= teamId, project_id= project.id, url= url)
+        db.session.add(operation)
 
         db.session.add(project)
         db.session.commit()

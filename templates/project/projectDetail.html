@@ -645,10 +645,9 @@ $(function(){
         for(var i in responseData.files) {
             var data = responseData.files[i]
             console.log(data)
-            var imageUrl = '/static/images/document.png'
             var imageStr
             if(data.fileType == '0')
-                imageStr = '<img alt="" class="thumbnail editable" src="' + imageUrl + '" data-type="image" data-content="' 
+                imageStr = '<img alt="" class="thumbnail editable" src="/attachment/' + data.url + '" data-type="image" data-content="' 
                     + data.url + '" data-width="' + data.width + '" data-append="#attachments_container" data-height="' + data.height + '">'
             else
                 imageStr = '<img alt="" class="" src="/static/images/document.png">'

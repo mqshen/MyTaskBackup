@@ -2921,3 +2921,6 @@ white-space: nowrap;
 div.sheet.project div.files section.grouped_by_date article, div.sheet>div.sheet_body div.files section.grouped_by_date article {
 margin: 10px 0px 10px 150px;
 }
+.project_card .timeago {
+    float: right;
+}

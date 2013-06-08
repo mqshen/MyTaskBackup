@@ -23,6 +23,18 @@
                             <a class="project_card" href="/project/{{project.id}}" title="{{project.title}}">
                                 <h5>{{project.title}}</h5>
                                 <p style="margin-bottom: 5px;">{{project.description}}</p>
+                                {% for operation in project.recentlyOperation %}
+                                <p style="font-size: 12px;">
+                                    <span class="creator">
+                                        {{operation.operation_type_name}}
+                                        {{operation.target_type_name}}
+                                    </span>
+                                    <span>
+                                        {{operation.title}}                                
+                                    </span>                               
+                                    <time class="timeago" data-time="{{operation.createTime}}" style=""></time>
+                                </p>
+                                {% end %}
                                 <div class="people">
                                     {% for people in project.users %}
                                     <img class="avatar" height="40" src="/avatar/{{people.avatar}}" title="{{people.name}}" width="40">
@@ -40,3 +52,8 @@
     </div>
 {% end %}
 
+{% block script %}
+$(function(){
+ $('.timeago').timeago()
+})
+{% end %}
