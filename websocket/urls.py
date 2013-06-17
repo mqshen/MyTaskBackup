@@ -14,6 +14,7 @@ def send_message(userId, teamId, modelType, operationType, model):
         modelType: 
         operationType: 
     '''
+    '''
     for handler in [ handler for handler in UpdatesHandler.waiters.get(teamId) if handler.current_user.id != userId] :
         try:
             result = None
@@ -26,6 +27,8 @@ def send_message(userId, teamId, modelType, operationType, model):
                 handler.write_message(json_encode(result))
         except:
             logging.error('Error sending message', exc_info=True)
+    '''
+    logging.info('this is a info message')
 
 class UpdatesHandler(tornado.websocket.WebSocketHandler):
     waiters = {}
