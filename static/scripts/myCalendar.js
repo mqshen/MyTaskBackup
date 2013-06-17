@@ -251,8 +251,11 @@
                     var description = todoItem.description
                     if(description.length > 7 )
                         description = description.substring(0, 7) + '...'
+                    var checkFlag = ''
+                    if(todoItem.done)
+                        checkFlag = 'checked'
                     var $todoElement = $('<div class="event todo " data-id="45285047" data-behavior="calendar_todo"><span class="wrapper event">'
-                        + '<input type="checkbox" value="1" data-behavior="toggle_todo" data-url="/project/' + todoItem.project_id 
+                        + '<input type="checkbox" value="1" ' + checkFlag + ' data-behavior="toggle_todo" data-url="/project/' + todoItem.project_id 
                         + '/todolist' + todoItem.todolist_id + '/todoitem/' + todoItem.id + '/done">'
                         + '<span class="content" title="' + todoItem.description  + '" style="color:#3185c5">' + description + '</span></span></div>')
                     $todoContainer.append($todoElement)
