@@ -2791,7 +2791,10 @@ form.calendar_event_editor_form fieldset table td {
 line-height: 2em;
 padding: 0px;
 }
-div.calendar_editor div.balloon fieldset.calendar_settings input[type=text], div.calendar_editor div.balloon fieldset.calendar_settings textarea, div.project_editor div.balloon fieldset.calendar_settings input[type=text], div.project_editor div.balloon fieldset.calendar_settings textarea {
+div.calendar_editor div.balloon fieldset.calendar_settings input[type=text], 
+div.calendar_editor div.balloon fieldset.calendar_settings textarea, 
+div.project_editor div.balloon fieldset.calendar_settings input[type=text], 
+div.project_editor div.balloon fieldset.calendar_settings textarea {
 margin: 0;
 padding: 0;
 -webkit-appearance: none;
@@ -2819,7 +2822,8 @@ width: 0px;
 height: 0px;
 display: none;
 }
-div.calendar_editor div.balloon fieldset.calendar_settings div.swatches label.swatch, div.project_editor div.balloon fieldset.calendar_settings div.swatches label.swatch {
+div.calendar_editor div.balloon fieldset.calendar_settings div.swatches label.swatch, 
+div.project_editor div.balloon fieldset.calendar_settings div.swatches label.swatch {
 display: -moz-inline-box;
 -moz-box-orient: vertical;
 display: inline-block;

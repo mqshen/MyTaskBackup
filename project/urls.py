@@ -177,12 +177,33 @@ class ProjectFilesHandler(BaseHandler):
 
         self.writeSuccessResult(files= files)
         
+class ColorForm(Form):
+    color = TextField('color')
 
+class ProjectColorHandler(BaseHandler):
+    @tornado.web.authenticated
+    @core.web.authenticatedProject
+    def get(self, projectId):
+        self.post(projectId)
+
+    @tornado.web.authenticated
+    @core.web.authenticatedProject
+    def post(self, projectId):
+        project = Project.query.filter_by(id=projectId).first()
+        form = ColorForm(self.request.arguments, locale_code=self.locale.code)
+
+        project.color = form.color.data
+
+        db.session.add(project)
+        db.session.commit()
+
+        self.writeSuccessResult(project)
 
 handlers = [
     ('/', ProjectHandler),
     ('/project', ProjectHandler),
     ('/project/([0-9]+)/files', ProjectFilesHandler),
+    ('/project/([0-9]+)/color', ProjectColorHandler),
     ('/project/([0-9]+)', ProjectDetailHandler),
     ('/project/([0-9]+)/access', ProjectAccessHandler),
     ('/project/new', NewProjectHandler),

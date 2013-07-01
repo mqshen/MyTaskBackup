@@ -29,6 +29,7 @@ class Project(db.Model):
     fileNum = Column(Integer, default=0)
     documentNum = Column(Integer, default=0)
     repository = Column(Integer, default=0)
+    color = Column(String(10))
 
     users = relationship("User", secondary=project_user_rel, backref="projects")
     todoItems = relationship("TodoItem", backref="project")

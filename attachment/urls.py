@@ -208,6 +208,8 @@ class AttachmentHandler(BaseHandler):
             attachmentPath = options.attachmentPath
             filePath = '%s/%s'%(attachmentPath, fileName)
 
+            print(contentType)
+
             if contentType in options.allowImageFileType:
                 fileType = '0'
                 stream = BytesIO(fileDescription)
