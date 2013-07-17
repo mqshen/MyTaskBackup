@@ -3,7 +3,7 @@ from core.session import Session
 
 from core.escape import json_encode
 from core.util import serialize
-from user.models import User
+from model.user import User
 from core.database import db
 
 

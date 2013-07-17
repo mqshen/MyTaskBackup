@@ -4,12 +4,57 @@ import os.path
 import redis
 from core.session import RedisSessionStore
 from tornado.options import options
-from core.urlResolver import urlResolver
 from core.quemail import QueMail
 
 class Application(tornado.web.Application):
     def __init__(self, settings):
-        handlers = urlResolver().resolverUrls()
+        from controller.attachment import AttachmentHandler, AvatarHandler
+        from controller.search import AutoCompleteHandler
+        from controller.mycalendar import  CalendarHandler, CalendarEventHandler
+        from controller.operation import OperationHandler 
+        from controller.project import ProjectHandler, ProjectFilesHandler, ProjectColorHandler, ProjectDetailHandler, ProjectAccessHandler, NewProjectHandler
+        from controller.todo import TodoListHandler, TodoListDetailHandler, TodoItemHandler, TodoItemDetailHandler, TodoItemModifyHandler, TodoItemCommentHandler
+        from controller.topic import MessageHandler, MessageDetailHandler, NewMessageHandler, CommentHandler, CommentDetailHandler
+        from controller.user import RegisterHandler, LoginHandler, SignOutHandler, TeamNewHandler, TeamHandler, SettingHandler, PeopleHandler, NewPeopleHandler, PeopleDetailHandler, JoinHandler
+        handlers = [
+            ('/', ProjectHandler),
+            ('/attachment', AttachmentHandler),
+            ('/attachment/([0-9A-Za-z]+)', AttachmentHandler),
+            ('/avatar', AvatarHandler),
+            ('/avatar/([0-9A-Za-z]+)', AvatarHandler),
+            ('/calendar', CalendarHandler),
+            ('/fetchEvent', CalendarEventHandler),
+            ('/operation', OperationHandler),
+            ('/project', ProjectHandler),
+            ('/project/([0-9]+)/files', ProjectFilesHandler),
+            ('/project/([0-9]+)/color', ProjectColorHandler),
+            ('/project/([0-9]+)', ProjectDetailHandler),
+            ('/project/([0-9]+)/access', ProjectAccessHandler),
+            ('/project/new', NewProjectHandler),
+            ('/project/([0-9]+)/todolist', TodoListHandler),
+            ('/project/([0-9]+)/todolist/([0-9]+)', TodoListDetailHandler),
+            ('/project/([0-9]+)/todolist/([0-9]+)/comment', TodoListDetailHandler),
+            ('/project/([0-9]+)/todolist/([0-9]+)/todoitem', TodoItemHandler),
+            ('/project/([0-9]+)/todolist/([0-9]+)/todoitem/([0-9]+)', TodoItemDetailHandler),
+            ('/project/([0-9]+)/todolist/([0-9]+)/todoitem/([0-9]+)/(done|undone|trash)', TodoItemModifyHandler),
+            ('/project/([0-9]+)/todolist/([0-9]+)/todoitem/([0-9]+)/comment', TodoItemCommentHandler),
+            ('/project/([0-9]+)/message', MessageHandler),
+            ('/project/([0-9]+)/message/([0-9]+)', MessageDetailHandler),
+            ('/project/([0-9]+)/message/new', NewMessageHandler),
+            ('/project/([0-9]+)/message/([0-9]+)/comment', CommentHandler),
+            ('/project/([0-9]+)/message/([0-9]+)/comment/([0-9]+)', CommentDetailHandler),
+            ('/register', RegisterHandler),
+            ('/login', LoginHandler),
+            ('/signOut', SignOutHandler),
+            ('/team', TeamNewHandler),
+            ('/team/([0-9]+)', TeamHandler),
+            ('/settings', SettingHandler),
+            ('/people', PeopleHandler),
+            ('/people/new', NewPeopleHandler),
+            ('/people/([0-9]+)', PeopleDetailHandler),
+            ('/join/([0-9a-z]+)', JoinHandler),
+            ('/autocomplete', AutoCompleteHandler),
+        ]
         pool = redis.ConnectionPool(host='localhost', port=6379, db=0)
         r = redis.Redis(connection_pool=pool)
         self.session_store = RedisSessionStore(r)

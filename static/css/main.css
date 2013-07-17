@@ -523,7 +523,6 @@ font-size: 24px;
 line-height: 28px;
 min-height: 29px;
 color: #000;
-font-weight: bold;
 margin-bottom: 3px;
 display: inline-block;
 position: relative;
@@ -1031,6 +1030,7 @@ div.sheet.message.new>div.sheet_body article header h3 {
 margin: 0;
 }
 div.sheet.message.new>div.sheet_body article header h3 textarea {
+    outline: none;
 padding: 0 0 2px;
 margin: 0;
 border: 0;

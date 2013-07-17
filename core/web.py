@@ -6,8 +6,8 @@ Created on May 12, 2013
     
 import functools
 from tornado.web import HTTPError
-from topic.models import Message
-from todo.models import TodoList, TodoItem
+from model.topic import Message
+from model.todo import TodoList, TodoItem
 
 def authenticatedTeam(method):
     """Decorate methods with this to require that the user be logged in.

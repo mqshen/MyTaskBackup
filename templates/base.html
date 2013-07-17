@@ -26,8 +26,8 @@
                     </ul>
                 </div>
                 <div class="jumpto" data-behavior="jumpto">
-                    <input type="text" data-behavior="placeholder" placeholder="搜索项目、成员或标签">
-                    <dl></dl>
+                    <input type="text" id="autocomplete" data-behavior="placeholder" placeholder="搜索项目、成员或标签">
+                    <div id="autocomplete_container"></div>
                 </div>
             </nav>
         </header>
@@ -54,6 +54,7 @@
     <script src="{{ static_url("scripts/lib/lily.imageView.js")}}" type="text/javascript"></script>
     <script src="{{ static_url("scripts/lib/lily.autoAdd.js")}}" type="text/javascript"></script>
     <script src="{{ static_url("scripts/lib/lily.timeago.js")}}" type="text/javascript"></script>
+    <script src="{{ static_url("scripts/lib/lily.autoComplete.js")}}" type="text/javascript"></script>
     <script src="{{ static_url("scripts/myCalendar.js")}}" type="text/javascript"></script>
 
     <script type="text/javascript">
@@ -61,6 +62,14 @@
     </script>
     <script type="text/javascript">
 $(function(){
+        function renderAutoComplete(data) {
+        }
+        $('#autocomplete').autoComplete({
+            url: '/autocomplete',
+            requestName: 'token',
+            minLength: 1,
+            render: renderAutoComplete
+        })
         /*
     var WebSocket = window.WebSocket || window.MozWebSocket;
     if (WebSocket) {
