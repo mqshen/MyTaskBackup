@@ -207,7 +207,7 @@
                                         </article>
                                         {% end %}
                                         <article class="comment editable_container" id="new_comment_container"
-                                            href="/project/{{project.id}}/message/{{message.id}}/comment">
+                                            href="/project/{{project.id}}/message/{{message.id}}/comment" data-target-class="new_comment">
                                             <a href="/people/{comment.own.id}" class="editable" data-type="html">
                                                 <img class="avatar" src="/avatar/{{currentUser.avatar}}">
                                             </a>
@@ -283,7 +283,7 @@
                     + '<img class="avatar" src="/avatar/' + data.own.avatar + '">'
                     + '</a>'
                     + '<div class="formatted_content">'
-                    + '<strong>' + data.own.name + '</strong>-'
+                    + '<strong>' + data.own.name + '</strong>:'
                     + '<div class="editable" name="content" data-type="textarea">'
                     + data.content
                     + '</div>'

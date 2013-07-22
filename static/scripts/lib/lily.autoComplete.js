@@ -35,13 +35,12 @@
 
 	AutoComplete.prototype = {
 		showQuery: function() {
-			if(this.transaction)
-				return;
 			var value = this.$element.val();
 			if(value.length < this.options.minLength)
 				return;
 			this.transaction = true;
 			var self = this;
+            this.request_token = value
 			this.requestData[this.options.requestName] = value;
 			$.lily.ajax({
 			    url: this.options.url,
@@ -54,6 +53,9 @@
 		},
 		
 		processData: function(data) {
+            if(data[this.options.requestName] !== this.request_token)
+                return
+            console.log("begin process!")
             if(this.options.render) {
                 this.options.render(data)
             }
@@ -67,7 +69,6 @@
 			    this.show()
 			    var self = this
 			    $('li', this.resultContainer).click($.proxy(this.selectItem, this))
-			    this.transaction = false
             }
 		},
 		

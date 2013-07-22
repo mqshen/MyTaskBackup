@@ -17,7 +17,7 @@ from datetime import datetime
 from core.database import db
 from core.html2text import html2text
 from websocket.urls import send_message
-from mysolr import Solr
+import pysolr
 import core.web
 
 
@@ -67,20 +67,35 @@ class MessageHandler(BaseHandler):
                 target_id=messageId, title= message.title, team_id= teamId, project_id= projectId, url= url)
             db.session.add(operation)
 
+            project = Project.query.filter_by(id=projectId).with_lockmode("update").first()
+            project.discussionNum = project.discussionNum + 1
+            
+            db.session.add(project)
+
             db.session.commit()
 
             try:
-                documentId = 'message_%d'%messageId
+                documentId = 'message%d'%messageId
                 documentTitle = form.title.data
+                solr = pysolr.Solr(options.solr_url, timeout=10)
+                solr.add([{'id': documentId ,
+                    'title': documentTitle,
+                    'type': 'message',
+                    'timestamp': now.strftime("%Y-%m-%dT%H:%M:%SZ"),
+                    'text': allDigest
+                }]
+                )
+                '''
                 solr = Solr(base_url=options.solr_url)
-                document = [{'id': documentId,
-                        'title': documentTitle,
-                        'type': 'message',
-                        'timestamp': now.strftime("%Y-%m-%dT%H:%M:%SZ"),
-                        'text': allDigest
-                        }]
+                document = [{'id': documentId ,
+                    'title': documentTitle,
+                    'type': 'message',
+                    'timestamp': now.strftime("%Y-%m-%dT%H:%M:%SZ"),
+                    'text': allDigest
+                }]
                 solr.update(document, 'json', commit=False)
                 solr.commit()
+                '''
             except:
                 pass
 
@@ -197,6 +212,7 @@ class CommentHandler(BaseHandler):
             db.session.flush()
             commentId = comment.id
             digest = html2text(form.content.data)
+            digest = digest[:100]
 
             message.comment_num = message.comment_num + 1
             message.comment_digest = digest

@@ -16,14 +16,19 @@
 
             function initFrame() {
                 this.$editor.width(this.$element.width())
+                this.$iframe = this.$editor
+                if (this.options.css) {
+					this.$editor.contents().find('head').append('<link rel="stylesheet" href="' + this.options.css + '" />');
+				}
+				this.$editor.contents().find('html').css("overflow", "hidden")
 				this.$editor = this.$editor.contents().find("body").attr('contenteditable', true)
                 this.$editor.css({
                     'margin': '5px 0px',
-                    'background-color': 'rgb(255, 255, 255)',
+                    'background-color': '#fafafa',
                     'color': 'rgb(0, 0, 0)',
                     'cursor': 'auto',
-                    'font-family': '"Helvetica Neue", helvetica, arial, sans-serif' ,
-                    'font-size': '17px',
+                    'font-family': '"ProximaNova","Helvetica Neue",helvetica,arial,sans-serif',
+                    'font-size': '15px',
                     'font-style': 'normal',
                     'font-variant': 'normal',
                     'font-weight': 'normal',
@@ -38,16 +43,19 @@
                     'word-spacing': '0px'
                 })
 
+                this.$editor.addClass("wysiwyg_editor");
 			    this.$editor.html(html);
 			}
 
+		    this.window = window;	
+            this.document = document;
 			this.$editor = $('<iframe class="wysihtml5-sandbox" frameborder="0"></iframe>').load(function(){
                 initFrame.call(self);
                 self.document = self.$editor[0].ownerDocument;
+                self.document.body.focus()
+                self.window = self.document.defaultView || window
 		    });
 			this.$element.hide();
-		    this.window = window;	
-            this.document = document;
             var html = '';
 			// get html
 			html = this.$element.val();
@@ -56,14 +64,20 @@
 			this.$box.insertAfter(this.$element).append(this.$editor).append(this.$element);
 			html = this.paragraphy(html);
 			this.$editor.html(html);
+
             this.keyup()
             this.keydown()
+            this.paste()
 			this.buildToolbar();
             // buttons response
 			if (this.options.activeButtons !== false && this.options.toolbar !== false) {
 			    var observeFormatting = $.proxy(function() { this.observeFormatting(); }, this);
 			    this.$editor.click(observeFormatting).keyup(observeFormatting);
             }
+            if (this.options.fixed) {
+				this.observeScroll();
+				$(document).scroll($.proxy(this.observeScroll, this));
+			}
         },
         
         buildFileContainer: function() {
@@ -74,7 +88,7 @@
 				return false;
 			}
 
-			this.$toolbar = $('<div>').addClass('editor_toolbar').addClass("fixed");
+			this.$toolbar = $('<div>').addClass('editor_toolbar');
 
             this.$box.prepend(this.$toolbar);
 
@@ -125,6 +139,38 @@
 			return button;
 		},
 
+        paste: function() {
+            this.$editor.bind('paste', $.proxy(function(e) {
+			    if (this.options.cleanup === false) {
+			    	return true;
+			    }
+
+			    this.pasteRunning = true;
+
+			    this.setBuffer();
+
+			    if (this.options.autoresize === true) {
+			    	this.saveScroll = this.document.body.scrollTop;
+			    }
+			    else {
+			    	this.saveScroll = this.$editor.scrollTop();
+			    }
+
+			    var frag = this.extractContent();
+
+			    setTimeout($.proxy(function() {
+			    	var pastedFrag = this.extractContent();
+			    	this.$editor.append(frag);
+
+			    	this.restoreSelection();
+
+			    	var html = this.getFragmentHtml(pastedFrag);
+			    	this.pasteCleanUp(html);
+			    	this.pasteRunning = false;
+
+			    }, this), 1);
+		    }, this));
+        },
 		keydown: function() {
 			this.$editor.keydown($.proxy(function(e) {
 				var key = e.keyCode || e.which;
@@ -219,18 +265,36 @@
 			}, this));
 		},
         // SAFARI SHIFT KEY + ENTER
-		safariShiftKeyEnter: function(e, key)
-		{
-			if (e.shiftKey && key === 13)
-			{
+		safariShiftKeyEnter: function(e, key) {
+			if (e.shiftKey && key === 13) {
 				e.preventDefault();
 				this.insertNodeAtCaret($('<span><br /></span>').get(0));
 				this.syncCode();
 				return false;
 			}
-			else
-			{
+			else {
 				return true;
+			}
+		},
+        // FORMAT EMPTY
+		formatEmpty: function(e) {
+			var html = $.trim(this.$editor.html());
+			if ($.lily.browser('mozilla')) {
+				html = html.replace(/<br>/i, '');
+			}
+
+			var thtml = html.replace(/<(?:.|\n)*?>/gm, '');
+
+			if (html === '' || thtml === '') {
+				e.preventDefault();
+				var node = $(this.options.emptyHtml).get(0);
+				this.$editor.html(node);
+				this.setSelection(node, 0, node, 0);
+				this.syncCode();
+				return false;
+			}
+			else {
+				this.syncCode();
 			}
 		},
 
@@ -254,6 +318,7 @@
 
 				// new line p
 				if (key === 13 && !e.shiftKey && !e.ctrlKey && !e.metaKey) {
+                    this.heightCala(20)
 					if ($.lily.browser('webkit')) {
 						this.formatNewLine(e);
 					}
@@ -265,6 +330,28 @@
 				}
 				this.syncCode();
 			}, this));
+		},
+        observeScroll: function() {
+			var scrolltop = $(document).scrollTop();
+			var boxtop = this.$box.offset().top;
+			var left = 0;
+
+			if (scrolltop > boxtop) {
+				var width = '100%';
+				if (this.options.fixedBox) {
+					left = this.$box.offset().left;
+					width = this.$box.innerWidth();
+				}
+
+				this.fixed = true;
+				this.$toolbar.css({ position: 'fixed', width: width, zIndex: 1005, top: this.options.fixedTop + 'px', left: left });
+                this.$toolbar.addClass("fixed");
+			}
+			else {
+				this.fixed = false;
+				this.$toolbar.css({ position: 'relative', width: 'auto', zIndex: 1, top: 0, left: left });
+                this.$toolbar.removeClass("fixed");
+			}
 		},
 		observeFormatting: function() {
 			var parent = this.getCurrentNode();
@@ -322,9 +409,21 @@
 		syncCode: function() {
 			this.$element.val(this.$editor.html());
 		},
+        heightCala: function() {
+            var minHeight = this.$iframe.css("min-height")
+            if(!minHeight)
+                minHeight = 20
+            minHeight = parseInt(minHeight , 10);
+            var height = this.$editor.outerHeight()
+            console.log(height)
+            this.$iframe.css("min-height", height)
+        },
 		// Get elements, html and text
 		getCurrentNode: function() {
 			if (typeof this.window.getSelection !== 'undefined') {
+                var selectedNode = this.getSelectedNode()
+                if(selectedNode.tagName === 'BLOCKQUOTE')
+                    return selectedNode;
 				return this.getSelectedNode().parentNode;
 			}
 			else if (typeof this.document.selection !== 'undefined') {
@@ -366,6 +465,29 @@
 			}
 			this.document.execCommand(cmd, false, param);
 		},
+        // BUFFER
+		setBuffer: function()
+		{
+			this.saveSelection();
+			this.options.buffer = this.$editor.html();
+		},
+        // SELECTION AND NODE MANIPULATION
+		getFragmentHtml: function (fragment) {
+			var cloned = fragment.cloneNode(true);
+			var div = this.document.createElement('div');
+			div.appendChild(cloned);
+			return div.innerHTML;
+		},
+
+		extractContent: function() {
+			var node = this.$editor.get(0);
+			var frag = this.document.createDocumentFragment(), child;
+			while ((child = node.firstChild)) {
+				frag.appendChild(child);
+			}
+
+			return frag;
+		},
 		execCommand: function(cmd, param) {
 			try {
 				var parent;
@@ -377,6 +499,7 @@
 					else {
 						this.pasteHtmlAtCaret(param);
 					}
+                    this.calcHeight()
 				}
 				else if (cmd === 'unlink') {
 					parent = this.getParentNode();
@@ -506,6 +629,71 @@
 			}
 			return [sel.focusNode, sel.focusOffset];
 		},
+
+        setSelection: function (orgn, orgo, focn, foco) {
+			if (focn == null) {
+				focn = orgn;
+			}
+			if (foco == null) {
+				foco = orgo;
+			}
+			if (!$.lily.oldIE()) {
+				var sel = this.getSelection();
+				if (!sel) {
+					return;
+				}
+				if (sel.collapse && sel.extend) {
+					sel.collapse(orgn, orgo);
+					sel.extend(focn, foco);
+				}
+                //IE 9
+				else {
+					r = this.document.createRange();
+					r.setStart(orgn, orgo);
+					r.setEnd(focn, foco);
+
+					try {
+						sel.removeAllRanges();
+					}
+					catch (e) {}
+
+					sel.addRange(r);
+				}
+			}
+			else {
+				var node = this.$editor.get(0);
+				var range = node.document.body.createTextRange();
+
+				this._moveBoundary(node.document, range, false, focn, foco);
+				this._moveBoundary(node.document, range, true, orgn, orgo);
+				return range.select();
+			}
+		},
+
+        restoreSelection: function() {
+			if (typeof this.savedSel !== 'undefined' && 
+                this.savedSel !== null && this.savedSelObj !== null && 
+                this.savedSel[0].tagName !== 'BODY') {
+				if (this.options.iframe === false && $(this.savedSel[0]).closest('.redactor_editor').size() == 0) {
+					this.$editor.focus();
+				}
+				else {
+					if ($.lily.browser('opera')) {
+						this.$editor.focus();
+					}
+
+					this.setSelection(this.savedSel[0], this.savedSel[1], this.savedSelObj[0], this.savedSelObj[1]);
+
+					if ($.lily.browser('mozilla')) {
+						this.$editor.focus();
+					}
+				}
+			}
+			else {
+				this.$editor.focus();
+			}
+		},
+
 		// Selection
 		getSelection: function() {
 			var doc = this.document;
@@ -589,7 +777,7 @@
 			this.$editor.html(html).show();
 
 			if (this.$editor.html() === '') {
-				this.setCode(this.opts.emptyHtml);
+				this.setCode(this.options.emptyHtml);
 			}
 
 			this.$editor.focus();
@@ -606,7 +794,6 @@
 			if (json !== false) {
 				var html = ''
 				if (link !== true) {	
-					console.log(json)
 					html = '<p><img src="' + $.lily.contextPath + '/image/' + json.imageUrl + '" /></p>'
 				}
 				else {
@@ -703,9 +890,102 @@
 			return R('\n</p>$', '</p>')
 		},
 
+        // REMOVE TAGS
+		stripTags: function(html) {
+			var allowed = this.options.allowedTags;
+			var tags = /<\/?([a-z][a-z0-9]*)\b[^>]*>/gi;
+			return html.replace(tags, function ($0, $1) {
+				return $.inArray($1.toLowerCase(), allowed) > '-1' ? $0 : '';
+			});
+		},
+
+        // PASTE CLEANUP
+		pasteCleanUp: function(html) {
+			var parent = this.getParentNode();
+			// clean up pre
+			if ($(parent).get(0).tagName === 'PRE') {
+				html = this.cleanupPre(html);
+				this.pasteCleanUpInsert(html);
+				return true;
+			}
+
+			// remove comments and php tags
+			html = html.replace(/<!--[\s\S]*?-->|<\?(?:php)?[\s\S]*?\?>/gi, '');
+
+			// remove nbsp
+			html = html.replace(/(&nbsp;){2,}/gi, '&nbsp;');
+
+			// remove google docs marker
+			html = html.replace(/<b\sid="internal-source-marker(.*?)">([\w\W]*?)<\/b>/gi, "$2");
+
+			// strip tags
+			html = this.stripTags(html);
+
+			// prevert
+			html = html.replace(/<td><\/td>/gi, '[td]');
+			html = html.replace(/<td>&nbsp;<\/td>/gi, '[td]');
+			html = html.replace(/<td><br><\/td>/gi, '[td]');
+			html = html.replace(/<a(.*?)href="(.*?)"(.*?)>([\w\W]*?)<\/a>/gi, '[a href="$2"]$4[/a]');
+			html = html.replace(/<iframe(.*?)>([\w\W]*?)<\/iframe>/gi, '[iframe$1]$2[/iframe]');
+			html = html.replace(/<video(.*?)>([\w\W]*?)<\/video>/gi, '[video$1]$2[/video]');
+			html = html.replace(/<audio(.*?)>([\w\W]*?)<\/audio>/gi, '[audio$1]$2[/audio]');
+			html = html.replace(/<embed(.*?)>([\w\W]*?)<\/embed>/gi, '[embed$1]$2[/embed]');
+			html = html.replace(/<object(.*?)>([\w\W]*?)<\/object>/gi, '[object$1]$2[/object]');
+			html = html.replace(/<param(.*?)>/gi, '[param$1]');
+			html = html.replace(/<img(.*?)style="(.*?)"(.*?)>/gi, '[img$1$3]');
+
+			// remove attributes
+			html = html.replace(/<(\w+)([\w\W]*?)>/gi, '<$1>');
+
+			// remove empty
+			html = html.replace(/<[^\/>][^>]*>(\s*|\t*|\n*|&nbsp;|<br>)<\/[^>]+>/gi, '');
+			html = html.replace(/<[^\/>][^>]*>(\s*|\t*|\n*|&nbsp;|<br>)<\/[^>]+>/gi, '');
+
+			// revert
+			html = html.replace(/\[td\]/gi, '<td>&nbsp;</td>');
+			html = html.replace(/\[a href="(.*?)"\]([\w\W]*?)\[\/a\]/gi, '<a href="$1">$2</a>');
+			html = html.replace(/\[iframe(.*?)\]([\w\W]*?)\[\/iframe\]/gi, '<iframe$1>$2</iframe>');
+			html = html.replace(/\[video(.*?)\]([\w\W]*?)\[\/video\]/gi, '<video$1>$2</video>');
+			html = html.replace(/\[audio(.*?)\]([\w\W]*?)\[\/audio\]/gi, '<audio$1>$2</audio>');
+			html = html.replace(/\[embed(.*?)\]([\w\W]*?)\[\/embed\]/gi, '<embed$1>$2</embed>');
+			html = html.replace(/\[object(.*?)\]([\w\W]*?)\[\/object\]/gi, '<object$1>$2</object>');
+			html = html.replace(/\[param(.*?)\]/gi, '<param$1>');
+			html = html.replace(/\[img(.*?)\]/gi, '<img$1>');
+
+
+			// convert div to p
+			if (this.options.convertDivs) {
+				html = html.replace(/<div(.*?)>([\w\W]*?)<\/div>/gi, '<p>$2</p>');
+			}
+
+			// remove span
+			html = html.replace(/<span>([\w\W]*?)<\/span>/gi, '$1');
+
+			html = html.replace(/\n{3,}/gi, '\n');
+
+			// remove dirty p
+			html = html.replace(/<p><p>/gi, '<p>');
+			html = html.replace(/<\/p><\/p>/gi, '</p>');
+
+			// FF fix
+			if ($.lily.browser('mozilla')) {
+				html = html.replace(/<br>$/gi, '');
+			}
+			this.pasteCleanUpInsert(html);
+		},
+
+        pasteCleanUpInsert: function(html) {
+			this.execCommand('inserthtml', html);
+
+			if (this.options.autoresize === true) {
+				$(this.document.body).scrollTop(this.saveScroll);
+			}
+			else {
+				this.$editor.scrollTop(this.saveScroll);
+			}
+		},
 
         show: function() {
-        	
         },
 
         resetForm: function() {
@@ -795,7 +1075,7 @@
         buttons: [
             'bold', 'italic', 'deleted', '|', 
             'unorderedlist', 'orderedlist', '|',
-            'outdent','indent'], 
+            'blockquote'], 
 		activeButtons: ['deleted', 'italic', 'bold', 'underline', 'unorderedlist', 'orderedlist', 'blockquote'], 
 		activeButtonsStates: {
 			b: 'bold',
@@ -806,7 +1086,8 @@
 			strike: 'deleted',
 			ul: 'unorderedlist',
 			ol: 'orderedlist',
-			u: 'underline'
+			u: 'underline',
+			blockquote: 'blockquote'
 		},
 		toolbar: {
 			html:
@@ -869,7 +1150,25 @@
 				title: localization.file,
 				func: 'showFile'
 			},
-        }
+            blockquote:
+		    {
+				title: localization.quote,
+				exec: 'formatblock',
+				className: 'redactor_format_blockquote'
+			}
+        },
+        css: '/static/css/main.css',
+        emptyHtml: '<p><br /></p>',
+        allowedTags: ["form", "input", "button", "select", "option", "datalist", "output", "textarea", "fieldset", "legend",
+					"section", "header", "hgroup", "aside", "footer", "article", "details", "nav", "progress", "time", "canvas",
+					"code", "span", "div", "label", "a", "br", "p", "b", "i", "del", "strike", "u",
+					"img", "video", "source", "track", "audio", "iframe", "object", "embed", "param", "blockquote",
+					"mark", "cite", "small", "ul", "ol", "li", "hr", "dl", "dt", "dd", "sup", "sub",
+					"big", "pre", "code", "figure", "figcaption", "strong", "em", "table", "tr", "td",
+					"th", "tbody", "thead", "tfoot", "h1", "h2", "h3", "h4", "h5", "h6"],
+        fixed: true,
+        fixedBox: true,
+        fixedTop: 5
     }
     $.fn.editor.Constructor = Editor 
     

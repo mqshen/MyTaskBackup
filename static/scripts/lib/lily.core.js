@@ -77,6 +77,12 @@ $.extend( $.lily, {
 		}
 		return match[1] == browser;
 	},
+    oldIE: function() {
+			if ($.lily.browser('msie') && parseInt($.lily.browser('version'), 10) < 9) {
+				return true;
+			}
+			return false;
+	},
 	ajax: function(options) {
 		//console.log(options);
 		//try{initAutoOutTimer();}catch(e){};

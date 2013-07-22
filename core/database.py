@@ -7,10 +7,9 @@ from sqlalchemy import Integer
 from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
 from sqlalchemy.orm import Query
-from sqlalchemy.ext.declarative import declarative_base, declared_attr
-
 from sqlalchemy.orm import joinedload, joinedload_all
 from sqlalchemy.orm.util import _entity_descriptor
+from sqlalchemy.ext.declarative import declarative_base, declared_attr
 from sqlalchemy.util import to_list
 from sqlalchemy.sql import operators, extract
 from tornado.ioloop import PeriodicCallback

@@ -4,6 +4,12 @@
 	<head>
         <title>{% block title %}MyTask{% end %}</title>
 	    <link rel="stylesheet" href="{{ static_url("css/main.css")}}" type="text/css"/>
+        <style>
+            html {
+                background: url(/static/images/wallpapers/paper.jpg) #f5efe6;
+                -webkit-tap-highlight-color: rgba(0,0,0,0);
+            }
+        </style>
     </head>
     <body>
         <header>
@@ -27,7 +33,7 @@
                 </div>
                 <div class="jumpto" data-behavior="jumpto">
                     <input type="text" id="autocomplete" data-behavior="placeholder" placeholder="搜索项目、成员或标签">
-                    <div id="autocomplete_container"></div>
+                    <div id="autocomplete_container" ></div>
                 </div>
             </nav>
         </header>
@@ -63,6 +69,22 @@
     <script type="text/javascript">
 $(function(){
         function renderAutoComplete(data) {
+            var lastType
+            var $documentContainer = $('#autocomplete_container')
+            $documentContainer.empty()
+            var highlighting= data.highlighting
+            for(var i in data.documents) {
+                var result = $.parseJSON(data.documents[i])
+                if(lastType !== result.type) {
+                    var typeDisplay = '讨论'
+                    $documentContainer.append('<div class="ac-row-label">' + typeDisplay + '</div>')
+                    lastType = result.type
+                }
+                var $row = $('<div class="ac-row" id=":48" data-behavior="selected_content">' + highlighting[result.id].text + '</div>')
+                $documentContainer.append($row)
+            }
+            $documentContainer.append($('<div class="show_all" data-behavior="selected_content">'
+                + '<a data-stacker="false" href="/search?q=' + data.token + '">搜索所有的讨论，待办…</a></div>'))
         }
         $('#autocomplete').autoComplete({
             url: '/autocomplete',

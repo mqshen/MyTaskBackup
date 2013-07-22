@@ -7,7 +7,7 @@ Created on Feb 4, 2013
 from tornado.options import options
 from forms import Form, TextField, ListField, IntField, BooleanField
 from core.BaseHandler import BaseHandler 
-from mysolr import Solr
+import pysolr
 import tornado
 
 class AutoCompleteForm(Form):
@@ -18,9 +18,12 @@ class AutoCompleteHandler(BaseHandler):
     @tornado.web.authenticated
     def get(self):
         form = AutoCompleteForm(self.request.arguments, locale_code=self.locale.code)
-        solr = Solr(base_url= options.solr_url)
-        query = {'q' : 'title:%s'%form.token.data, 'facet' : 'true'}
-        response = solr.search(**query)
+        solr = pysolr.Solr(options.solr_url, timeout=10)
+        token = form.token.data
+        response = solr.search('title:%s'%token, **{
+            'fl':'id, title, type',
+            'hl': 'true'
+        })
         
-        self.writeSuccessResult(response.documents)
+        self.writeSuccessResult(documents= response.docs, highlighting= response.highlighting, token=token)
 

@@ -30,6 +30,7 @@
                     myResponse(data, self.$element, self.$target)
 			}
 			$form.data('doResponse', doResponse);
+
                 
 			$('.editable', this.$editorContainer).each(function(){
 				var $this = $(this)
@@ -38,7 +39,7 @@
 				if(dataType == "textarea") {
 					$obj = $('<textarea style="resize: none; overflow: hidden; min-height: 18px;" data-toggle="remote"></textarea>')
                     if($this.attr("name") === "content")
-                        $obj.width("800px")
+                        $obj.width("778px")
 				    $obj.val($this.html().trim())
 				}
                 else if(dataType == "html") {
@@ -71,6 +72,8 @@
                     $obj.appendTo($(dataAppend, $form))
                 else
                     $obj.appendTo($form)
+                if(!self.focusElement && dataType == 'input')
+                    self.focusElement = $obj
 			})
             this.$editorContainer.css("display", "none")
             this.$editorContainer.empty()
@@ -170,6 +173,8 @@
 				this.init()
 			this.$target.toggle()
 			this.$editorContainer.toggle()
+            if(this.focusElement)
+                this.focusElement.focus()
 		},
 
         distory: function() {

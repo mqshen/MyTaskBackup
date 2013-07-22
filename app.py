@@ -12,10 +12,12 @@ class Application(tornado.web.Application):
         from controller.search import AutoCompleteHandler
         from controller.mycalendar import  CalendarHandler, CalendarEventHandler
         from controller.operation import OperationHandler 
-        from controller.project import ProjectHandler, ProjectFilesHandler, ProjectColorHandler, ProjectDetailHandler, ProjectAccessHandler, NewProjectHandler
+        from controller.project import ProjectHandler, ProjectFilesHandler, ProjectColorHandler, ProjectDetailHandler, \
+                ProjectAccessHandler, NewProjectHandler
         from controller.todo import TodoListHandler, TodoListDetailHandler, TodoItemHandler, TodoItemDetailHandler, TodoItemModifyHandler, TodoItemCommentHandler
         from controller.topic import MessageHandler, MessageDetailHandler, NewMessageHandler, CommentHandler, CommentDetailHandler
-        from controller.user import RegisterHandler, LoginHandler, SignOutHandler, TeamNewHandler, TeamHandler, SettingHandler, PeopleHandler, NewPeopleHandler, PeopleDetailHandler, JoinHandler
+        from controller.user import RegisterHandler, LoginHandler, SignOutHandler, TeamNewHandler, TeamHandler, SettingHandler, \
+                PeopleHandler, NewPeopleHandler, PeopleDetailHandler, JoinHandler
         handlers = [
             ('/', ProjectHandler),
             ('/attachment', AttachmentHandler),
