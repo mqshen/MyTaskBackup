@@ -81,10 +81,9 @@
 			this.$editorContainer.insertAfter(this.$target)
 
             var $buttonObj = $('<p class="submit">'
-                + '<button tabindex="1" class="btn btn-primary" id="btn-post" data-toggle="submit" data-disable-with="正在保存...">保存</button>' 
+                + '<button tabindex="1" class="action_button" id="btn-post" data-toggle="submit" data-disable-with="正在保存...">保存</button>' 
                 + '<a tabindex="2" href="javascript:;" class="btn btn-x" id="link-cancel-post">取消</a></p>')
 			$buttonObj.appendTo($form)
-            $('textarea[name=content]', $form).editor()
 			var self = this
 			$('#link-cancel-post', this.$editorContainer).click(function(){
 				self.toggle()
@@ -173,6 +172,7 @@
 				this.init()
 			this.$target.toggle()
 			this.$editorContainer.toggle()
+            $('textarea[name=content]', this.$editorContainer).editor()
             if(this.focusElement)
                 this.focusElement.focus()
 		},

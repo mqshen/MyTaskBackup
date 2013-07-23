@@ -1275,7 +1275,6 @@ border-top-right-radius: 0px;
 border-bottom-right-radius: 0px;
 border-bottom-left-radius: 0px;
 border-top-left-radius: 0px;
-height: 175px;
 resize: none;
 min-height: 200px;
 }
@@ -2321,7 +2320,7 @@ width: 100% !important;
 div.formatted_content p, div.formatted_content div, div.formatted_content ol, div.formatted_content ul, body.wysiwyg_editor p, body.wysiwyg_editor div, body.wysiwyg_editor ol, body.wysiwyg_editor ul {
 margin: 0;
 }
-div.formatted_content ul, div.formatted_content ol, body.wysiwyg_editor ul, body.wysiwyg_editor ol {
+div.formatted_content ul, div.formatted_content ol, div.wysiwyg_editor ul, div.wysiwyg_editor ol {
 margin: 0;
 padding: 0 0 0 40px;
 }
@@ -3022,11 +3021,12 @@ padding: 8px 12px;
 .ac-row em {
 font-weight: bold;
 }
-div.formatted_content ul li, body.wysiwyg_editor ul li {
+div.formatted_content ul li, div.wysiwyg_editor ul li {
 list-style-type: square;
 }
-div.formatted_content blockquote, body.wysiwyg_editor blockquote {
+div.formatted_content blockquote, div.wysiwyg_editor blockquote {
     border-left: 3px solid #D0E5F2;
+    margin-left: 20px;
 font-style: normal;
 padding: 0 0 0 10px;
 display: block;

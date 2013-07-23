@@ -15,46 +15,38 @@
             var self = this
 
             function initFrame() {
-                this.$editor.width(this.$element.width())
-                this.$iframe = this.$editor
-                if (this.options.css) {
-					this.$editor.contents().find('head').append('<link rel="stylesheet" href="' + this.options.css + '" />');
-				}
-				this.$editor.contents().find('html').css("overflow", "hidden")
-				this.$editor = this.$editor.contents().find("body").attr('contenteditable', true)
-                this.$editor.css({
-                    'margin': '5px 0px',
-                    'background-color': '#fafafa',
-                    'color': 'rgb(0, 0, 0)',
-                    'cursor': 'auto',
-                    'font-family': '"ProximaNova","Helvetica Neue",helvetica,arial,sans-serif',
-                    'font-size': '15px',
-                    'font-style': 'normal',
-                    'font-variant': 'normal',
-                    'font-weight': 'normal',
-                    'line-height': '25px',
-                    'letter-spacing': 'normal',
-                    'text-align': 'start',
-                    'text-decoration': 'none',
-                    'text-indent': '0px',
-                    'text-rendering': 'auto',
-                    'word-break': 'normal',
-                    'word-wrap': 'break-word',
-                    'word-spacing': '0px'
-                })
-
-                this.$editor.addClass("wysiwyg_editor");
-			    this.$editor.html(html);
 			}
 
 		    this.window = window;	
             this.document = document;
-			this.$editor = $('<iframe class="wysihtml5-sandbox" frameborder="0"></iframe>').load(function(){
-                initFrame.call(self);
-                self.document = self.$editor[0].ownerDocument;
-                self.document.body.focus()
-                self.window = self.document.defaultView || window
-		    });
+			this.$editor = $('<div class="wysihtml5-sandbox" contenteditable="true" frameborder="0"></div>')
+            this.$editor.width(this.$element.width())
+            if (this.options.css) {
+				this.$editor.contents().find('head').append('<link rel="stylesheet" href="' + this.options.css + '" />');
+			}
+            this.$editor.css({
+                'margin': '5px 0px',
+                'background-color': '#fafafa',
+                'color': 'rgb(0, 0, 0)',
+                'cursor': 'auto',
+                'font-family': '"ProximaNova","Helvetica Neue",helvetica,arial,sans-serif',
+                'font-size': '15px',
+                'font-style': 'normal',
+                'font-variant': 'normal',
+                'font-weight': 'normal',
+                'line-height': '25px',
+                'letter-spacing': 'normal',
+                'text-align': 'start',
+                'text-decoration': 'none',
+                'text-indent': '0px',
+                'text-rendering': 'auto',
+                'word-break': 'normal',
+                'word-wrap': 'break-word',
+                'word-spacing': '0px'
+            })
+
+            this.$editor.addClass("wysiwyg_editor");
+			this.$editor.html(html);
 			this.$element.hide();
             var html = '';
 			// get html
@@ -318,7 +310,6 @@
 
 				// new line p
 				if (key === 13 && !e.shiftKey && !e.ctrlKey && !e.metaKey) {
-                    this.heightCala(20)
 					if ($.lily.browser('webkit')) {
 						this.formatNewLine(e);
 					}
@@ -409,15 +400,6 @@
 		syncCode: function() {
 			this.$element.val(this.$editor.html());
 		},
-        heightCala: function() {
-            var minHeight = this.$iframe.css("min-height")
-            if(!minHeight)
-                minHeight = 20
-            minHeight = parseInt(minHeight , 10);
-            var height = this.$editor.outerHeight()
-            console.log(height)
-            this.$iframe.css("min-height", height)
-        },
 		// Get elements, html and text
 		getCurrentNode: function() {
 			if (typeof this.window.getSelection !== 'undefined') {
