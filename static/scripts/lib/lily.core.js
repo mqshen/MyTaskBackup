@@ -155,8 +155,10 @@ $.extend( $.lily, {
     		var $this = $(this)
             if($this.attr("type") == "checkbox" && !$this.attr("checked"))
                 return
-            var value = $this.val().trim()
-            console.log(value)
+            if(this.nodeName !== 'INPUT' && this.nodeName !== 'SELECT')
+                var value = $this.text()
+            else
+                var value = $this.val().trim()
             if(value && !$.lily.format.isEmpty(value) ){
                 var name = $this.attr("name")
                 if(name.endsWith("[]")){
@@ -267,6 +269,18 @@ $.extend( $.lily, {
             .animate({ backgroundColor: originalBg }, animateMs, null, function () {
                 $obj.css("backgroundColor", originalBg); 
             });
+    },
+
+    hexDigits: new Array("0","1","2","3","4","5","6","7","8","9","a","b","c","d","e","f"), 
+
+    rgb2hex: function(rgb) {
+        rgb = rgb.match(/^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/);
+        if(rgb && rgb.length > 2)
+            return $.lily.hex(rgb[1]) + $.lily.hex(rgb[2]) + $.lily.hex(rgb[3]);
+    },
+
+    hex: function(x) {
+        return isNaN(x) ? "00" : $.lily.hexDigits[(x - x % 16) / 16] + $.lily.hexDigits[x % 16];
     }
 });
 })( jQuery ); 

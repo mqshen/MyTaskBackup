@@ -792,7 +792,7 @@ border-radius: 12px;
 }
 
 .popover .popover-content {
-	padding: 10px 15px;
+	padding: 10px 20px;
 	background: #fff;
 	border: 1px solid #ddd;
 	-moz-border-radius: 5px;
@@ -848,10 +848,22 @@ border-radius: 12px;
 	left: -9px;
 }
 
+.popover.direction-down-bottom .popover-arrow {
+	background-position: 0 -20px;
+	bottom: 0px;
+	right: -9px;
+}
+
 .popover.direction-right-top .popover-arrow {
 	background-position: 0 -20px;
 	bottom: 15px;
 	left: -9px;
+}
+
+.popover.direction-up-top .popover-arrow {
+	background-position: 0 0px;
+	top: -9px;
+	right: 20px;
 }
 
 .popover.direction-top-right .popover-arrow {
@@ -2504,13 +2516,6 @@ padding: 0;
 background: url(../images/arrows.png) no-repeat;
 opacity: 0.4;
 }
-.arrow {
-font-size: 0;
-line-height: 0;
-width: 0;
-border-style: solid;
-border-width: 12px;
-}
 .shade {
 -moz-transition-property: visibility,background;
 -moz-transition-duration: 300ms;
@@ -2682,7 +2687,7 @@ padding: 0;
 height: 14px;
 width: 16px;
 }
-div.calendar_display div.left>aside section.calendars>ul li>a[data-toggle=popover] {
+div.calendar_display div.left>aside section.calendars>ul li>a.popover-btn {
 position: absolute;
 top: 0;
 right: 0;
@@ -2790,7 +2795,7 @@ border-bottom: 1px dotted #ccc;
 vertical-align: middle;
 }
 form.calendar_event_editor_form fieldset.event_date input[type=text] {
-width: 178px;
+width: 160px;
 border: 1px solid #ddd;
 padding: 2px 5px;
 border-radius: 3px;
@@ -2820,7 +2825,7 @@ text-align: right;
 }
 form.calendar_event_editor_form fieldset table {
 width: 100%;
-font-size: 12px;
+font-size: 13px;
 }
 div.ui-datepicker {
 display: none;
@@ -3032,4 +3037,197 @@ padding: 0 0 0 10px;
 display: block;
 line-height: 22px;
 vertical-align: baseline;
+}
+div.calendar_display div.right {
+-webkit-transition: left 300ms ease-in-out;
+left: 0;
+}
+div.calendar_display.calendar_list_visible button.toggle_calendar_list.hide {
+display: block;
+}
+div.calendar_display button.toggle_calendar_list.hide {
+    display: none;
+}
+div.calendar_display.calendar_list_visible button.toggle_calendar_list.show {
+display: none;
+}
+div.calendar_display button.toggle_calendar_list.show {
+display: block;
+}
+div.calendar_display div.left>aside {
+-webkit-transition: padding-top 150ms ease-in-out,opacity 150ms ease-in-out;
+padding-top: 100px;
+opacity: 0;
+}
+div.calendar_display.calendar_list_visible div.left>aside {
+-webkit-transition: padding-top 150ms 150ms ease-in-out,opacity 150ms 150ms ease-in-out;
+padding-top: 0;
+opacity: 1;
+}
+.calendar_settings h3 input {
+margin: 0;
+padding: 0;
+font-size: 14px !important;
+font-weight: inherit !important;
+font-style: inherit !important;
+background-color: transparent !important;
+line-height: normal;
+outline: none;
+border: none;
+width: 100%;
+resize: none;
+border-bottom: 1px dotted #ccc;
+vertical-align: middle;
+}
+div.calendar_grid div.week div.dates div.date div.event.selected {
+background-color: rgba(0,0,0,0.067);
+outline: 1px solid #dcd9d3;
+cursor: pointer;
+}
+form.calendar_event_editor_form header {
+background-color: #f7f7f7;
+margin: -10px -20px 0 -20px;
+padding: 20px 20px 15px;
+border: none;
+border-radius: 4px 4px 0 0;
+border-bottom: 1px solid #dedede;
+font-size: 14px;
+-webkit-box-shadow: none;
+-moz-box-shadow: none;
+box-shadow: none;
+}
+.popover .arrow {
+position: absolute;
+}
+.arrow {
+font-size: 0;
+line-height: 0;
+width: 0;
+border-style: solid;
+border-width: 12px;
+}
+.popover.direction-right-top .arrow {
+border-color: transparent #ccc transparent transparent;
+left: -24px;
+top: 24px;
+}
+.popover.direction-right-bottom .arrow {
+border-color: transparent #ccc transparent transparent;
+left: -24px;
+bottom: 24px;
+}
+.popover.direction-right-top .arrow+.arrow {
+border-color: transparent #f7f7f7 transparent transparent;
+margin-left: 2px;
+}
+form.calendar_event_editor_form fieldset.event_name {
+font-size: 20px !important;
+}
+form.calendar_event_editor_form fieldset.event_note, form.calendar_event_editor_form fieldset.event_time {
+font-size: 16px !important;
+}
+div.calendar_grid div.week div.dates div.date div.event span.event span.time {
+color: #aaa;
+display: inline-block;
+margin-left: 7px;
+}
+div.calendar_grid div.week div.event {
+min-height: 16px;
+line-height: 13px;
+word-break: break-word;
+}
+div.calendar_grid div.week div.events.spanned {
+position: absolute;
+top: 24px;
+height: 0;
+}
+div.calendar_grid div.week div.events {
+width: 100%;
+}
+div.calendar_grid div.week div.events.spanned div.event.slot_1 {
+left: 14.28571%;
+}
+div.calendar_grid div.week div.events.spanned div.event.slot_2 {
+left: 28.57143%;
+}
+div.calendar_grid div.week div.events.spanned div.event.slot_3 {
+left: 42.85714%;
+}
+div.calendar_grid div.week div.events.spanned div.event.slot_4 {
+left: 57.14285%;
+}
+div.calendar_grid div.week div.events.spanned div.event.slot_5 {
+left: 71.42857%;
+}
+div.calendar_grid div.week div.events.spanned div.event.slot_6 {
+left: 85.71428%;
+}
+div.calendar_grid div.week div.events.spanned div.event.width_1 {
+width: 14.28571%;
+}
+div.calendar_grid div.week div.events.spanned div.event.width_2 {
+width: 28.57143%;
+}
+div.calendar_grid div.week div.events.spanned div.event.width_3 {
+width: 42.85714%;
+}
+div.calendar_grid div.week div.events.spanned div.event.width_4 {
+width: 57.14285%;
+}
+div.calendar_grid div.week div.events.spanned div.event.width_5 {
+width: 71.42857%;
+}
+div.calendar_grid div.week div.events.spanned div.event.width_6 {
+width: 85.71428%;
+}
+div.calendar_grid div.week div.events.spanned div.event {
+position: absolute;
+width: 100%;
+border-radius: 10px;
+overflow: hidden;
+white-space: nowrap;
+text-overflow: ellipsis;
+color: #fff;
+cursor: pointer;
+z-index: 3;
+}
+div.calendar_grid div.week div.events.spanned div.row {
+height: 0;
+width: 100%;
+float: left;
+clear: left;
+}
+div.calendar_grid div.week div.events.spanned div.spacer {
+height: 18px;
+width: 0;
+float: left;
+clear: left;
+}
+div.calendar_grid div.week div.dates div.date div.events.spanned {
+position: relative;
+top: auto;
+height: auto;
+zoom: 1;
+}
+div.calendar_grid div.week div.dates div.date div.events.spanned:after {
+content: ".";
+display: block;
+height: 0;
+clear: both;
+visibility: hidden;
+}
+div.calendar_grid div.week div.events.spanned span.event {
+color: #fff;
+}
+div.calendar_grid div.week div.events.spanned span.event span.title {
+padding-left: 9px;
+}
+div.calendar_grid div.week div.events.spanned div.event.wraps_next {
+border-radius: 10px 0 0 10px;
+}
+div.calendar_grid div.week div.events.spanned div.event.wraps_prev {
+border-radius: 0 10px 10px 0;
+}
+div.calendar_grid div.week div.events.spanned div.event.wraps_prev.wraps_next {
+border-radius: 0;
 }

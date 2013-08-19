@@ -28,8 +28,8 @@
 				return __method.apply(context, a);
 			}
 		}
-		
 	}
+
 	/**
 	 * 连续count个当前字符串连接
 	 * @param {int} count
@@ -38,7 +38,6 @@
 	String.prototype.times = function(count) {
     	return count < 1 ? '' : new Array(count + 1).join(this);
   	}
-
 
     String.prototype.endsWith = function(suffix) {
         return this.indexOf(suffix, this.length - suffix.length) !== -1;
@@ -95,7 +94,9 @@
 	Date.prototype.isSameDay = function( compareDate ) {
         if(typeof compareDate != 'object')
             return false;
-		return ( this.getFullYear() === compareDate.getFullYear() && this.getMonth() === compareDate.getMonth() && this.getDate() === compareDate.getDate() );
+		return ( this.getFullYear() === compareDate.getFullYear() && 
+            this.getMonth() === compareDate.getMonth() && 
+            this.getDate() === compareDate.getDate() );
 	};
 	
 	/**
@@ -128,6 +129,11 @@
 	Date.prototype.nextDay = function( ) {
 		return new Date(Date.parse(this)+86400000);
 	};
+
+    Date.prototype.minus = function(date) {
+        var interval = this.getTime() - date.getTime();
+        return interval / 86400000;
+    };
 	
 	
 	
@@ -409,7 +415,47 @@
 				return parsedDate.format( $.lily.format.TIME_FORMAT_DISPLAY );	
 			}
 		},
-		
+        
+        formatInputTime: function(e) {
+            var pattern = /^\s*(\d{1,2})(?:[.:]?([0-5]\d?)?)?(?:[.:]?([0-5]\d?)?)?(?:\s*([ap])(?:\.?m\.?)?|\s*[h]?)?\s*$/i 
+            var t, n, r, i, s, o, u, a, f;
+            a = "" + e;
+            if (e instanceof Date) 
+                r = e.getHours(), s = e.getMinutes(), u = e.getSeconds()
+            else if (i = a.match(pattern)) 
+                f = i[0], 
+                r = i[1], 
+                s = i[2], 
+                u = i[3], 
+                n = i[4], 
+                r = parseInt(r, 10), 
+                s = parseInt(s != null ? s : "0", 10), 
+                u = parseInt(u != null ? u : "0", 10), 
+                t = n != null ? n.match(/a/i) : void 0, 
+                o = n != null ? n.match(/p/i) : void 0, 
+                1 <= r && r <= 11 && o && (r += 12), 
+                r === 12 && t && (r = 0) 
+            var hour = r != null ? r : 0
+            var minute = s != null ? s : 0
+            var second = u != null ? u : 0
+            if (!(0 <= (r = hour) && 
+                r <= 23 && 
+                0 <= (i = minute) && 
+                i <= 59 && 0 <= (s = second) && 
+                s <= 59)) 
+                throw Error("invalid time (" + hour + ", " + minute + ", " + second + ")");
+            ampm = hour < 12 ? "am" : "pm", 
+            hour === 0 ? hour12 = 12 : hour > 12 ? hour12 = hour - 12 : hour12 = hour
+            function normalizeFormat(e) {
+                return e < 10 ? "0" + e : "" + e
+            }
+            n = [normalizeFormat(minute), 
+                    normalizeFormat(second)], 
+            second === 0 && (n.pop(), minute === 0 && n.pop()) 
+            n.length && (n = ":" + n.join(":")) 
+            return "" + hour12 + n + ampm
+        },
+
 		formatDateTime: function( data, format ){
 			var parsedDate = $.lily.format.parseDate( data, $.lily.format.DATETIME_FORMAT );
 			if( format && typeof outFormat === "string" ){

@@ -13,7 +13,7 @@ import tornado
 from tornado.options import options
 from tornado.web import RequestHandler
 from core.BaseHandler import BaseHandler 
-from forms import Form, TextField, ListField, IntField, DateField
+from forms import Form, TextField, ListField, IntField, DateTimeField
 from datetime import datetime
 from core.database import db
 from websocket.urls import send_message
@@ -27,7 +27,7 @@ class CommentForm(Form):
 class TodoItemForm(Form):
     description = TextField('description')
     workerId = IntField('workerId')
-    deadLine = DateField("deadLine")
+    deadLine = DateTimeField("deadLine")
 
 class TodoListForm(Form):
     title = TextField('title')

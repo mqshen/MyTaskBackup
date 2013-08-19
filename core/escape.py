@@ -21,7 +21,7 @@ have crept in over time.
 """
 
 from __future__ import absolute_import, division, print_function, with_statement
-from datetime import datetime
+from datetime import datetime, date, time
 import re
 import sys
 
@@ -51,7 +51,7 @@ except NameError:
 
 _XHTML_ESCAPE_RE = re.compile('[&<>"]')
 _XHTML_ESCAPE_DICT = {'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;'}
-dthandler = lambda obj: obj.isoformat() if isinstance(obj, datetime) else None
+dthandler = lambda obj: obj.isoformat() if isinstance(obj, datetime) or isinstance(obj, date) or isinstance(obj, time) else None
 
 
 def xhtml_escape(value):

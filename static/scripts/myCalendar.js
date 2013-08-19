@@ -125,6 +125,20 @@
 				return false;
 			}
 		},
+
+        getWeekFirstDay: function() {
+			var padding = new Date(this.year, this.month, this.currentDay).getDay();
+            if(padding > this.currentDay) {
+                var lastMonthDay = this.previousMonthLastDay - padding + 1;
+                return new Date(this.year ,this.month - 1, lastMonthDay)
+            }
+            return new Date(this.year ,this.month, this.currentDay - padding)
+        },
+
+        getWeekFirstDayArray: function() {
+            return this.weekFirstDayArray
+        },
+
 		
 		renderDays: function() {
 			var padding = this.firstWeekdayIndex;
@@ -133,36 +147,62 @@
 			var days = 1;
 			var html = '<div class="grid_content"><div class="weeks">'
             this.startDate = this.year + '-' + this.month + '-' + lastMonthDay
+            this.weekFirstDayArray = []
 			for (var i = 1; i <= 6; i++) {
-				html += '<div class="week"><div class="dates_wrapper"><div class="dates">';
+                if(padding > 0)
+                    var weekFirstDay = new Date(this.year ,this.month - 1, lastMonthDay).format('yyyy-mm-dd') ;
+                else if(days > this.days)
+                    var weekFirstDay = new Date(this.year ,this.month + 1, firstMonthDay).format('yyyy-mm-dd') ;
+                else
+                    var weekFirstDay = new Date(this.year ,this.month , days).format('yyyy-mm-dd') ;
+				html += '<div class="week" data-date="' + weekFirstDay + '"><div class="dates_wrapper"><div class="dates">';
 				for(var j = 1; j <= 7; j++) {
 					if (padding-- > 0) {
-						html += "<div class='date' data-date='" + new Date(this.year ,this.month - 1, lastMonthDay).format('yyyy-mm-dd') 
-                            + "'><div class='day'>" + (lastMonthDay++) + "</div></div>";
+                        var day = new Date(this.year ,this.month - 1, lastMonthDay)
+                        if( j == 1) {
+                            this.weekFirstDayArray.push(day)
+                        }
+						html += "<div class='date' data-date='" + day.format('yyyy-mm-dd') 
+                            + "'><div class='day'>" + (lastMonthDay++) + "</div><div class='events spanned'></div></div>";
 						continue;
 					}
 					if (days > this.days) {
-						html += "<div class='date' data-content='next' data-date='" + new Date(this.year ,this.month + 1 , firstMonthDay ).format('yyyy-mm-dd') 
-                            + "'><div class='day' >" + (firstMonthDay++) + "</div></div>";
+                        var day = new Date(this.year ,this.month + 1, firstMonthDay)
+                        if( j == 1) {
+                            this.weekFirstDayArray.push(day)
+                        }
+						html += "<div class='date' data-content='next' data-date='" + day.format('yyyy-mm-dd') 
+                            + "'><div class='day' >" + (firstMonthDay++) + "</div><div class='events spanned'></div></div>";
                         this.endDate =  this.year + "-" + (this.month + 2) + "-" + firstMonthDay
 						continue;
 					}
 					if (days == this.currentDay) {
-						html += "<div class='date current_month today' data-date='" +new Date(this.year ,this.month, days).format('yyyy-mm-dd') 
-                            + "'><div class='day'>" + (days++) + "</div></div>";
+                        var day = new Date(this.year ,this.month , days)
+                        if( j == 1) {
+                            this.weekFirstDayArray.push(day)
+                        }
+						html += "<div class='date current_month today' data-date='" + day.format('yyyy-mm-dd') 
+                            + "'><div class='day'>" + (days++) + "</div><div class='events spanned'></div></div>";
 					} 
 					else {
-						html += "<div class='date current_month' data-date='" + new Date(this.year ,this.month, days ).format('yyyy-mm-dd') 
-                            + "'><div class='day'>" + (days++) + "</div></div>";
+                        var day = new Date(this.year ,this.month , days)
+                        if( j == 1) {
+                            this.weekFirstDayArray.push(day)
+                        }
+						html += "<div class='date current_month' data-date='" + day.format('yyyy-mm-dd') 
+                            + "'><div class='day'>" + (days++) + "</div><div class='events spanned'></div></div>";
 					}
 				}
 				html += "</div></div></div>";
 			}
+            var day = new Date(this.year ,this.month + 1, firstMonthDay)
+            this.weekFirstDayArray.push(day)
 			html += "</div>";
 			return html;
 		}
 	}
-	
+
+    $.Month = Month
 	var MyCalendar = function ( element, options ) {
 		
 		this.init('', element, options);
@@ -205,11 +245,11 @@
 			var calendarObj = $(this.renderCalendar());
 			calendarObj.height(this.options.headHeight);
 			
-			$('.prev', calendarObj).bind('click.myCalendar', function(event) {
+			$('.prev', this.$element).bind('click.myCalendar', function(event) {
 				return self.prevMonth();
 			});
 			
-			$('.next', calendarObj).bind('click.myCalendar', function(event) {
+			$('.next', this.$element).bind('click.myCalendar', function(event) {
 				return self.nextMonth();
 			});
 			
@@ -219,6 +259,7 @@
 			var height = this.$element.height() - this.options.headHeight;
 			
 			this.currentIndex = 0;
+            this.month = month
 			
 			this.monthOjb = $(month.renderDays());
 			
@@ -237,36 +278,7 @@
             var endDate = month.endDate
 
             var that = this
-            function callback(reponseData) {
-                var todoItems = reponseData.todoItems
-                for(var i in todoItems) {
-                    var todoItem = todoItems[i]
-                    var date = todoItem.deadline.substring(0,10)
-                    var $dayElement = $('[data-date=' + date + ']', that.$element)
-                    var $todoContainer = $('.todos', $dayElement)
-                    if($todoContainer.length == 0 ) {
-                        $todoContainer = $('<div class="events todos "></div>')
-                        $dayElement.append($todoContainer) 
-                    }
-                    var description = todoItem.description
-                    if(description.length > 7 )
-                        description = description.substring(0, 7) + '...'
-                    var checkFlag = ''
-                    if(todoItem.done)
-                        checkFlag = 'checked'
-                    var $todoElement = $('<div class="event todo " data-id="45285047" data-behavior="calendar_todo"><span class="wrapper event">'
-                        + '<input type="checkbox" value="1" ' + checkFlag + ' data-behavior="toggle_todo" data-url="/project/' + todoItem.project_id 
-                        + '/todolist' + todoItem.todolist_id + '/todoitem/' + todoItem.id + '/done">'
-                        + '<span class="content" title="' + todoItem.description  + '" style="color:#3185c5">' + description + '</span></span></div>')
-                    $todoContainer.append($todoElement)
-                }
-            }
-            $.lily.ajax({
-                url : this.options.url,
-                data : {start_date: startDate, end_date: endDate},
-	        	type: 'get',
-	        	processResponse : callback
-	        });
+            this.options.changer(startDate, endDate)
         },
 		
 		dayClick: function(event) {
@@ -304,6 +316,7 @@
 				currentDay = this.now.getDate()
 			var month = new Month(this.year, this.currentMonth , currentDay);
 			
+            this.month = month
 			
 			var oldMonthObj = this.monthOjb;
 			this.monthOjb = $("<div class='lily-days-container'>" + month.renderDays() + "</div>");
@@ -312,8 +325,7 @@
 				return self.dayClick(event);
 			});
 			
-			this.$element.append(this.monthOjb);
-				
+			$(this.options.body, this.$element).append(this.monthOjb);
 			oldMonthObj.remove();
 		},
 		
@@ -332,18 +344,23 @@
 			if(this.currentMonth == this.now.getMonth())
 				currentDay = this.now.getDate()
 			var month = new Month(this.year, this.currentMonth , currentDay);
+            this.month = month
 			
 			var oldMonthObj = this.monthOjb;
-			this.monthOjb = $("<div class='lily-days-container'>" + month.renderDays() + "</div>");
+			this.monthOjb = $(month.renderDays() );
 			
 			$('td', this.monthOjb).bind('click.myCalendar-day', function(event) {
 				return self.dayClick(event);
 			});
 			
-			this.$element.append(this.monthOjb);
+			$(this.options.body, this.$element).append(this.monthOjb);
 				
 			oldMonthObj.remove();
 		},
+
+        getWeekFirstDayArray: function() {
+            return this.month.getWeekFirstDayArray()
+        },
 		
 		buildCalendarHead: function() {
 			var monthHtml ;

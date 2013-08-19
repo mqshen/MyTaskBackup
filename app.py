@@ -25,7 +25,7 @@ class Application(tornado.web.Application):
             ('/avatar', AvatarHandler),
             ('/avatar/([0-9A-Za-z]+)', AvatarHandler),
             ('/calendar', CalendarHandler),
-            ('/fetchEvent', CalendarEventHandler),
+            ('/event', CalendarEventHandler),
             ('/operation', OperationHandler),
             ('/project', ProjectHandler),
             ('/project/([0-9]+)/files', ProjectFilesHandler),

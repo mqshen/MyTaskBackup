@@ -8,7 +8,7 @@ from forms.validators import StopValidation, u, unicode, next
 from datetime import datetime
 
 __all__ = (
-    'TextField', 'ListField', 'FileField', 'IntField', 'DateField', 'BooleanField'
+    'TextField', 'ListField', 'FileField', 'IntField', 'DateField', 'BooleanField', 'DateTimeField', 'TimeField'
 )
 
 _unset_value = object()
@@ -298,7 +298,47 @@ class IntField(Field):
 
 
 class DateField(Field):
-    #把字符串转成datetime  
+    #������������������datetime  
+    def string_toDatetime(self, string):  
+        return datetime.strptime(string, "%Y-%m-%d")
+    """
+    this field is the file update
+    """
+    def process_formdata(self, valuelist):
+        if valuelist and len(valuelist[0]) > 0:
+            self.data = self.string_toDatetime(valuelist[0])
+        else:
+            self.data = None                                                                                                                                                                                 
+    def _value(self):
+        return self.data is not None or u('')
+
+class TimeField(Field):
+    #������������������datetime  
+    def string_toTime(self, string):  
+        return datetime.strptime(string, "%H:%M:%S%p")
+    """
+    this field is the file update
+    """
+    def process_formdata(self, valuelist):
+        if valuelist and len(valuelist[0]) > 0:
+            time = valuelist[0]
+            ampm = time[-2:]
+            time = time[:-2]
+            count = time.count(':')
+            if count == 0:
+                time = time + ':00:00' + ampm
+            elif count == 1:
+                time = time + ':00' + ampm
+            temp = self.string_toTime(time)
+            print(temp)
+            self.data = self.string_toTime(time).time()
+        else:
+            self.data = None 
+    def _value(self):
+        return self.data is not None or u('')
+
+class DateTimeField(Field):
+    #������������������datetime  
     def string_toDatetime(self, string):  
         return datetime.strptime(string, "%Y-%m-%d %H:%M:%S")
     """
@@ -308,7 +348,7 @@ class DateField(Field):
         if valuelist and len(valuelist[0]) > 0:
             self.data = self.string_toDatetime(valuelist[0])
         else:
-            self.data = None                                                                                                                                                                                 
+            self.data = None 
     def _value(self):
         return self.data is not None or u('')
 
