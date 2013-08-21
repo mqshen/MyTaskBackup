@@ -155,7 +155,8 @@
                     var weekFirstDay = new Date(this.year ,this.month + 1, firstMonthDay).format('yyyy-mm-dd') ;
                 else
                     var weekFirstDay = new Date(this.year ,this.month , days).format('yyyy-mm-dd') ;
-				html += '<div class="week" data-date="' + weekFirstDay + '"><div class="dates_wrapper"><div class="dates">';
+				html += '<div class="week" data-date="' + weekFirstDay + '"><div class="events spanned"></div>'
+                    + '<div class="dates_wrapper"><div class="dates">';
 				for(var j = 1; j <= 7; j++) {
 					if (padding-- > 0) {
                         var day = new Date(this.year ,this.month - 1, lastMonthDay)
@@ -195,8 +196,11 @@
 				}
 				html += "</div></div></div>";
 			}
+
             var day = new Date(this.year ,this.month + 1, firstMonthDay)
             this.weekFirstDayArray.push(day)
+
+
 			html += "</div>";
 			return html;
 		}
@@ -327,6 +331,7 @@
 			
 			$(this.options.body, this.$element).append(this.monthOjb);
 			oldMonthObj.remove();
+            self.initEvent(month)
 		},
 		
 		nextMonth: function() {
@@ -356,6 +361,7 @@
 			$(this.options.body, this.$element).append(this.monthOjb);
 				
 			oldMonthObj.remove();
+            self.initEvent(month)
 		},
 
         getWeekFirstDayArray: function() {

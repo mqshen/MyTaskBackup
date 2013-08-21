@@ -148,6 +148,21 @@ $.extend( $.lily, {
         }
         return guid;
     },
+
+    changeData: function($targetElement, data) {
+        $('[data-toggle=remote],[data-toggle=datepick]' , $targetElement).each(function () {
+    		var $this = $(this)
+            var name = $this.attr("name")
+            var value = data[name]
+            if(value === undefined || value === 'null')
+                return
+            if(this.nodeName !== 'INPUT' && this.nodeName !== 'SELECT')
+                $this.text(value)
+            else
+                $this.val(value)
+    	})
+ 
+    },
     collectRequestData: function(sourceElement) {
         var orginRequestData = {}
 

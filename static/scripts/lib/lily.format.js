@@ -154,7 +154,7 @@
 		DATETIME_FORMAT : "yyyymmddhhmiss",
 		TIME_FORMAT : "hhmiss",
 		TIME_FORMAT_DISPLAY : "hh:mi:ss",
-		DATE_FORMAT : "yyyymmdd",
+		DATE_FORMAT : "yyyy-mm-dd",
 		DATE_FORMAT_DISPLAY : "yyyy年mm月dd日",
 		DATE_FORMAT_SHORT : "yyyy-mm-dd",
 		

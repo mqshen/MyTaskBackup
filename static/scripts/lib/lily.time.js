@@ -1,30 +1,18 @@
 !function(){
 
     "use strict"
-
-    var Time = function(element, options) {
-        this.$element= $(element)
+    
+    var TimeFormater = function(options) {
         this.options = $.extend({}, $.fn.time.defaults, options)
         this.init()
     }
 
-    Time.prototype = {
-        constructor: Time,
-
+    TimeFormater.prototype = {
+        constructor: TimeFormater,
+    
         init: function() {
             this.pattern = /^\s*(\d{1,2})(?:[.:]?([0-5]\d?)?)?(?:[.:]?([0-5]\d?)?)?(?:\s*([ap])(?:\.?m\.?)?|\s*[h]?)?\s*$/i
-            var self = this
-            this.$element.blur(function() {
-                try {
-                    var formatedTime = self.parse()
-                    self.$element.val(formatedTime)
-                } 
-                catch (t) {
-                    return false 
-                }
-            })
         },
-
         normalize: function(e, t, n) {
             var r, i, s;
             this.hour = e != null ? e : 0, 
@@ -39,8 +27,7 @@
             this.ampm = this.hour < 12 ? "am" : "pm", 
             this.hour === 0 ? this.hour12 = 12 : this.hour > 12 ? this.hour12 = this.hour - 12 : this.hour12 = this.hour
         },
-        parse: function () {
-            var e = this.$element.val()
+        parse: function (e) {
             var t, n, r, i, s, o, u, a, f;
             a = "" + e;
             if (e instanceof Date) 
@@ -76,6 +63,31 @@
         }
     }
 
+    var Time = function(element, options) {
+        this.$element= $(element)
+        this.options = $.extend({}, $.fn.time.defaults, options)
+        this.init()
+    }
+
+    
+    Time.prototype = {
+        constructor: Time,
+
+        init: function() {
+            var self = this
+            this.$element.blur(function() {
+                try {
+                    var formatedTime = $.lily.timFormater.parse(self.$element.val())
+                    self.$element.val(formatedTime)
+                } 
+                catch (t) {
+                    return false 
+                }
+            })
+        },
+
+    }
+
     $.fn.time = function ( option ) {
        return this.each(function () {
            var $this = $(this), 
@@ -87,11 +99,14 @@
        });
     }
 
+    $.fn.Time = Time
+
     $.fn.time.defaults = {
         12: !0,
         "short": !0
     }
     $.fn.time.Constructor =  Time
+    $.lily.timFormater = new TimeFormater( $.fn.time.defaults )
 
 }(window.jQuery)
 

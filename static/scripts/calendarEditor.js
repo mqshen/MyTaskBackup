@@ -11,7 +11,7 @@
         this.options = $.extend({}, $.fn.calendarEditor.defaults, options)
         this.$content = $(this.options.content)
         var self = this
-        $('.popover-btn',this.$element).bind('click.showCalendar', function(e) {
+        this.$element.bind('click.showCalendar', function(e) {
             self.show(e)
         })
         
@@ -37,7 +37,7 @@
             var self = this
             function processResponse(responseData) {
                 if(self.options.processResponse){
-                    self.options.processResponse(responseData, self.$element)
+                    self.options.processResponse(responseData, self.$element, self.requestData)
                     self.hide();
                     self.$form[0].reset();
                 }
@@ -54,11 +54,11 @@
         },
 
         show: function(e) {
-            if (this.isShown )
+            if (this.isShown || $(e.target).hasClass("btn"))
                 return
             this.isShown = true
 
-            var $trigger = $(e.target)
+            var $trigger = $('.popover-btn', this.$element)
 
             if(this.options.isAdd) {
                 this.$id.val('')
@@ -66,6 +66,8 @@
             }
             else {
                 var requestData = $.lily.collectRequestData(this.$element);
+                this.requestData = requestData 
+                $('[name=id]', this.$content).val('')
                 for(var i in requestData ) {
                     var value = requestData[i]
                     if(value && !$.lily.format.isEmpty(value) && value !== 'null') {
@@ -87,12 +89,20 @@
                 that.submit();
             })
 
+            $('.cancel', this.$content).bind('click.cancelCalendar', function(){
+                that.cancel();
+            })
 
-            var leftGap = $trigger.width() 
-            if(this.options.position === 'side')
-                leftGap = 0;
-            else
-                leftGap += this.$content.width();
+            var leftGap = 0
+            var topGap = 0
+            if(this.options.position === 'side') {
+                leftGap += $trigger.outerWidth(true)  + 15
+                topGap = $trigger.height() / 2 - 36
+            }
+            else {
+                leftGap -= this.$content.width() - 36;
+                topGap += $trigger.height() + 12
+            }
             this.backdrop(function () {
                 var offset = $trigger.offset()
                 var shownbottom = $(window).height() - offset.top + $(window).scrollTop()
@@ -114,16 +124,16 @@
                 else {
                     */
                     that.$content.css({
-                        top: offset.top + that.options.gap + that.$element.height() - 62,
-                        left: offset.left + $trigger.width() - leftGap + 15
+                        top: offset.top + topGap,
+                        left: offset.left + leftGap
                     })
                     if(that.options.position === 'side') {
                         that.$content.removeClass("direction-right-bottom")
                         that.$content.addClass("direction-right-top")
                     }
                     else {
-                        that.$content.removeClass("direction-up-top")
-                        that.$content.addClass("direction-down-bottom")
+                        //that.$content.removeClass("direction-up-top")
+                        that.$content.addClass("top_right_side")
                     }
                 //}
                 //that.$element.show()
@@ -133,6 +143,12 @@
                     that.submit(date)
                 }
             })
+        },
+
+        cancel: function() {
+            if(this.options.doCancel)
+                this.options.doCancel()
+            this.hide()
         },
 
         hide: function(e) {
@@ -163,7 +179,7 @@
                 this.$backdrop = $('<div class="backdrop" />')
                     .appendTo(document.body)
                 this.$backdrop.click(function() {
-                    that.hide()
+                    that.cancel()
                 })
                 this.$backdrop.addClass('in')
                 if (!callback) return

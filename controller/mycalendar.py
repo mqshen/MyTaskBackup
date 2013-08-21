@@ -103,7 +103,7 @@ class CalendarEventHandler(BaseHandler):
                 filter(User.id == currentUser.id, Calendar.team_id == teamId,
                     or_(and_(Event.startDate >= form.start_date.data, Event.startDate <= form.end_date.data),
                         and_(Event.endDate >= form.start_date.data, Event.endDate <= form.end_date.data))
-                ).all()
+                ).order_by(Event.startDate).all()
 
         '''
         all_events = []

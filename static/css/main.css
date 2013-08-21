@@ -3120,6 +3120,16 @@ bottom: 24px;
 border-color: transparent #f7f7f7 transparent transparent;
 margin-left: 2px;
 }
+.popover.top_right_side .arrow {
+right: 14px;
+}
+.popover.top_right_side .arrow {
+border-color: transparent transparent #ccc transparent;
+top: -23px;
+}
+.popover.top_right_side .arrow+.arrow {
+border-color: transparent transparent #f7f7f7 transparent;
+}
 form.calendar_event_editor_form fieldset.event_name {
 font-size: 20px !important;
 }
@@ -3154,7 +3164,7 @@ div.calendar_grid div.week div.events.spanned div.event.slot_3 {
 left: 42.85714%;
 }
 div.calendar_grid div.week div.events.spanned div.event.slot_4 {
-left: 57.14285%;
+left: 57.14286%;
 }
 div.calendar_grid div.week div.events.spanned div.event.slot_5 {
 left: 71.42857%;
@@ -3230,4 +3240,12 @@ border-radius: 0 10px 10px 0;
 }
 div.calendar_grid div.week div.events.spanned div.event.wraps_prev.wraps_next {
 border-radius: 0;
+}
+div.calendar_display div.sheet {
+padding: 20px;
+display: block !important;
+width: auto !important;
+}
+div.calendar_grid div.week div.dates div.date:last-of-type {
+border-right: none;
 }
