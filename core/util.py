@@ -20,9 +20,10 @@ def serialize(model):
                 value = getattr(model, key)
                 if isinstance(value, list):
                     result.update({key: [serialize(item) for item in value]})
-                else:
+                elif isinstance(value, db.Model):
                     result.update({key: serialize(value)})
-            columns.extend(model.eagerRelation)
+                else:
+                    result.update({key: value})
     elif isinstance(model, list):
         result = []
         for item in model:

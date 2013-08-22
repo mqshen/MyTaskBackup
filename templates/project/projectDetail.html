@@ -352,7 +352,8 @@
                                                         data-type="image" data-content="{{file.url}}" data-width="{{file.width}}"
                                                         data-append="#attachments_container" data-height="{{file.height}}">
                                                     {% else %}
-                                                    <img alt="" class="" src="/static/images/document.png" >
+                                                    <img alt="" class="" 
+                                                    src="/static/images/filetype/{{file.icon}}.png" >
                                                     {% end %}
                                                 </a>
                                             </figure>
@@ -600,7 +601,7 @@ $(function(){
             + '<a class="remove" data-toggle="remove" href="javascript:;"><span>Remove</span></a>'
 
         if(!isImage) {
-            fileObj += '<div class="icon"><img src="/static/images/document.png" class="file_icon" width="32" height="32"></div>' 
+            fileObj += '<div class="icon"><img src="/static/images/filetype/file.png" class="file_icon" width="32" height="32"></div>' 
         }
         fileObj += '<span class="name">' + file.name + '</span></li>'
 
@@ -617,6 +618,11 @@ $(function(){
             $fileObj.prepend($image)
 
         function fileUploadCallback(data) {
+			if(data.returnCode != '0' && data.returnCode != '000000') {
+                alert(data.errorMessage);
+                $fileObj.remove()
+                return;
+			}
             $fileObj.attr("data-content", data.url)
             $progress.css("width", '100%')
             $fileObj.removeClass("uploading")
@@ -650,7 +656,7 @@ $(function(){
                 imageStr = '<img alt="" class="thumbnail editable" src="/attachment/' + data.url + '" data-type="image" data-content="' 
                     + data.url + '" data-width="' + data.width + '" data-append="#attachments_container" data-height="' + data.height + '">'
             else
-                imageStr = '<img alt="" class="" src="/static/images/document.png">'
+                imageStr = '<img alt="" class="" src="/static/images/filetype/' + data.icon + '.png">'
             var $fileObj = $('<article class="attachment">'
                 + '<table><tbody><tr><td class="icon"><figure class="thumbnail proportinal">'
                 + '<a href="/attachment/' + data.url + '" target="_blank">'

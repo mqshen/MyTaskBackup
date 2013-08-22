@@ -219,7 +219,7 @@ class AttachmentHandler(BaseHandler):
                 image.thumbnail(maxSize, Image.ANTIALIAS)
                 image.save(filePath, 'PNG', optimize = True)
                 filePath += 'origin'
-            elif contentType in options.allowDocumentFileType:
+            elif contentType in options.allowDocumentFileType.keys():
                 fileType = '1'
             else:
                 self.writeFailedResult()
