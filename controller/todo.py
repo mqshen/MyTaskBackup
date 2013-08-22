@@ -124,6 +124,11 @@ class TodoItemHandler(BaseHandler):
                 target_id=todoItem.id, title= todoItem.description, team_id= teamId, project_id= projectId, url= url)
             db.session.add(operation)
 
+            project = Project.query.filter_by(id=projectId).with_lockmode("update").first()
+            project.todoNum = project.todoNum + 1
+            
+            db.session.add(project)
+
             db.session.commit()
             worker = None
             if todoItem.worker_id is not None:

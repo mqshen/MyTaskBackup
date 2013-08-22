@@ -170,10 +170,13 @@ $.extend( $.lily, {
     		var $this = $(this)
             if($this.attr("type") == "checkbox" && !$this.attr("checked"))
                 return
-            if(this.nodeName !== 'INPUT' && this.nodeName !== 'SELECT')
-                var value = $this.text()
-            else
-                var value = $this.val().trim()
+            var value = "";
+            if(this.nodeName !== 'INPUT' && this.nodeName !== 'SELECT' && this.nodeName != 'TEXTAREA') {
+                value = $this.text()
+            }
+            else {
+                value = $this.val().trim()
+            }
             if(value && !$.lily.format.isEmpty(value) ){
                 var name = $this.attr("name")
                 if(name.endsWith("[]")){

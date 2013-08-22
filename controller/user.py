@@ -78,6 +78,7 @@ class LoginHandler(BaseHandler):
     def get(self):
         sessionid = self.get_secure_cookie('sid')
         cookie = Cookie.query.filter_by(sid= sessionid).first()
+        nextUrl = self.get_argument("next", None, True)
         if cookie and cookie.user:
             currentUser = cookie.user
             self.set_secure_cookie("sid", self.session.sessionid)
@@ -87,9 +88,9 @@ class LoginHandler(BaseHandler):
             else:
                 self.session["user"] = UserObj(currentUser)
                 self.session._save()
-                self.rawRender("teamSelect.html", currentUser=currentUser)
+                self.rawRender("teamSelect.html", currentUser=currentUser, nextUrl=nextUrl)
             return
-        self.rawRender("login.html")
+        self.rawRender("login.html", nextUrl=nextUrl)
 
     def post(self):
         form = SigninForm(self.request.arguments, locale_code=self.locale.code)
